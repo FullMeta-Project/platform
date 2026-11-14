@@ -1,0 +1,79 @@
+{
+  "schema": "fullmeta-ui-annotation-catalog/2",
+  "format": "fullmeta-ui-behavior/1",
+  "annotationKey": "x-fullmeta-ui-behavior",
+  "fieldTarget": "field",
+  "fieldContext": "projectEditing",
+  "presentationPayloadPath": ["payload", "presentation"],
+  "widgetSettingsPayloadPath": ["payload", "widget", "settings"],
+  "presentationFields": [
+    { "key": "icon", "label": "Icon", "legacyKey": "x-fullmeta-ui-icon", "type": "text" }
+  ],
+  "groups": [
+    {
+      "title": "Appearance",
+      "annotations": [
+        { "key": "widget", "label": "Widget", "type": "text", "primary": true },
+        { "key": "placeholder", "label": "Placeholder", "type": "text", "primary": true },
+        { "key": "groupLabel", "label": "Group label", "type": "text" }
+      ]
+    },
+    {
+      "title": "UI annotations",
+      "annotations": [
+        { "key": "hidden", "label": "Hidden", "type": "boolean" },
+        {
+          "key": "hiddenWhenSiblingPropertyEquals",
+          "label": "Hide when sibling equals",
+          "required": ["property", "value"],
+          "fields": [
+            { "key": "property", "label": "Sibling property", "type": "text" },
+            { "key": "value", "label": "Matching value (JSON)", "type": "json" }
+          ]
+        },
+        { "key": "optionalToggleLabel", "label": "Optional toggle label", "type": "text" },
+        { "key": "showDefault", "label": "Show declared default", "type": "boolean" },
+        { "key": "defaultWhenSiblingPropertyPresent", "label": "Show default when sibling is present", "type": "text" },
+        { "key": "createWithProperties", "label": "Create with properties", "type": "stringList" },
+        { "key": "clearWithProperties", "label": "Clear with properties", "type": "stringList" }
+      ]
+    },
+    {
+      "title": "Choices",
+      "annotations": [
+        { "key": "choiceLabels", "label": "Choice labels", "type": "stringMap" },
+        {
+          "key": "choiceSource",
+          "label": "Choice source",
+          "required": ["scope", "path"],
+          "fields": [
+            { "key": "scope", "label": "Source scope", "type": "text" },
+            { "key": "path", "label": "Source path", "type": "stringList" }
+          ]
+        },
+        { "key": "choiceLabelTemplate", "label": "Choice label template", "type": "text" },
+        { "key": "emptyChoiceLabel", "label": "Empty choice label", "type": "text" }
+      ]
+    },
+    {
+      "title": "Interaction labels",
+      "annotations": [
+        { "key": "labels", "label": "Action and accessibility labels", "type": "stringMap" }
+      ]
+    }
+  ],
+  "types": [
+    { "key": "x-fullmeta-ui-repeatableChoiceTable", "label": "Repeatable choice table", "widgets": ["repeatableChoiceTable"], "target": "field", "context": "projectEditing", "payloadPath": ["payload", "widget", "settings"] },
+    { "key": "x-fullmeta-ui-keyedChoiceMatrix", "label": "Keyed choice matrix", "widgets": ["keyedChoiceMatrix"], "target": "field", "context": "projectEditing", "payloadPath": ["payload", "widget", "settings"] },
+    { "key": "x-fullmeta-ui-quantityVector", "label": "Quantity vector", "widgets": ["quantityVector"], "target": "field", "context": "projectEditing", "payloadPath": ["payload", "widget", "settings"], "initial": { "kind": "fixedArrayLabels", "key": "componentLabels", "labelTemplate": "Component {index}", "maximumItems": 32 } },
+    { "key": "x-fullmeta-ui-scanTable", "label": "Scan table", "widgets": ["scanTable"], "target": "field", "context": "projectEditing", "payloadPath": ["payload", "widget", "settings"] },
+    { "key": "x-fullmeta-ui-scan", "label": "Scan", "widgets": ["scan"], "target": "field", "context": "projectEditing", "payloadPath": ["payload", "widget", "settings"] },
+    { "key": "x-fullmeta-ui-quantity", "label": "Quantity control", "widgets": ["quantity"], "target": "field", "context": "projectEditing", "payloadPath": ["payload", "widget", "settings"], "specializes": ["valueControl"] },
+    { "key": "x-fullmeta-ui-dynamicPropertySet", "label": "Dynamic property set", "widgets": ["dynamicPropertySet"], "target": "field", "context": "projectEditing", "payloadPath": ["payload", "widget", "settings"] },
+    { "key": "x-fullmeta-ui-referenceSelector", "label": "Reference selector", "widgets": ["referenceSelector"], "target": "field", "context": "projectEditing", "payloadPath": ["payload", "widget", "settings"] },
+    { "key": "x-fullmeta-ui-relatedFields", "label": "Related fields", "widgets": ["relatedFields"], "target": "field", "context": "projectEditing", "payloadPath": ["payload", "widget", "settings"] },
+    { "key": "x-fullmeta-ui-tabularSliceSelector", "label": "Tabular slice selector", "widgets": ["tabularSliceSelector"], "target": "field", "context": "projectEditing", "payloadPath": ["payload", "widget", "settings"] },
+    { "key": "x-fullmeta-ui-valueControl", "label": "Value control", "widgets": ["valueControl"], "target": "field", "context": "projectEditing", "payloadPath": ["payload", "widget", "settings"] },
+    { "key": "x-fullmeta-ui-tree", "label": "Tree composition", "widgets": [], "widget": "tree", "target": "field", "context": "projectEditing", "payloadPath": ["payload", "widget", "settings"], "initial": { "kind": "byLocation", "root": { "children": [] }, "local": { "role": "collection", "path": [] } } }
+  ]
+}

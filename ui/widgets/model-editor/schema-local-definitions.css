@@ -1,0 +1,158 @@
+.schema-local-dialog {
+  width: min(1100px, calc(100vw - 32px));
+  max-width: none;
+  max-height: calc(100vh - 32px);
+}
+
+.schema-local-dialog .schema-bulk-content {
+  width: 100%;
+  max-height: calc(100vh - 48px);
+  overflow: auto;
+}
+
+.schema-local-heading,
+.schema-local-card-head,
+.schema-local-toolbar,
+.schema-local-actions,
+.schema-local-footer {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.schema-local-heading,
+.schema-local-card-head {
+  justify-content: space-between;
+}
+
+.schema-local-heading p {
+  margin: 0;
+}
+
+.schema-local-toolbar,
+.schema-local-controls {
+  margin: 12px 0;
+}
+
+.schema-local-controls {
+  display: grid;
+  grid-template-columns: minmax(260px, 2fr) minmax(150px, 1fr) minmax(170px, 1fr);
+  gap: 10px;
+}
+
+.schema-local-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.schema-local-field input,
+.schema-local-field select,
+.schema-local-table input,
+.schema-local-table select {
+  width: 100%;
+  min-width: 0;
+}
+
+.schema-local-list {
+  display: grid;
+  gap: 12px;
+}
+
+.schema-local-card {
+  border: 1px solid var(--border, #46515e);
+  border-radius: 8px;
+  padding: 12px;
+  min-width: 0;
+}
+
+.schema-local-card-head {
+  margin-bottom: 8px;
+}
+
+.schema-local-rows > summary {
+  cursor: pointer;
+  margin: 8px 0;
+  font-weight: 600;
+}
+
+.schema-local-table {
+  width: 100%;
+  table-layout: fixed;
+}
+
+.schema-local-table th:first-child { width: 42%; }
+.schema-local-table th:nth-child(2) { width: 18%; }
+.schema-local-table th:nth-child(3) { width: 32%; }
+.schema-local-table th:last-child { width: 8%; }
+
+.schema-local-paste textarea {
+  display: block;
+  width: 100%;
+  min-height: 56px;
+  font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+  white-space: pre;
+  overflow: auto;
+}
+
+.schema-local-worksheet {
+  margin: 12px 0;
+  border: 1px solid var(--border, #46515e);
+  border-radius: 8px;
+  padding: 10px;
+}
+
+.schema-local-worksheet textarea {
+  display: block;
+  width: 100%;
+  min-height: 56px;
+  margin: 8px 0;
+  font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+  white-space: pre;
+  overflow: auto;
+}
+
+.schema-local-inspect pre,
+.schema-local-dialog .schema-bulk-preview pre {
+  max-height: 280px;
+  overflow: auto;
+}
+
+.schema-local-footer { justify-content: flex-end; }
+
+/* Local definitions uses a compact six-column table inside the shared candidate dialog. */
+.schema-bulk-dialog:has(.schema-bulk-table thead th:nth-child(6)):not(:has(.schema-bulk-table thead th:nth-child(7))) {
+  width: min(960px, calc(100vw - 24px));
+}
+.schema-bulk-dialog:has(.schema-bulk-table thead th:nth-child(6)):not(:has(.schema-bulk-table thead th:nth-child(7))) .schema-bulk-body {
+  gap: 8px;
+  padding: 10px 12px;
+}
+.schema-bulk-dialog:has(.schema-bulk-table thead th:nth-child(6)):not(:has(.schema-bulk-table thead th:nth-child(7))) .schema-bulk-table {
+  width: 100%;
+  min-width: 0;
+  table-layout: fixed;
+}
+.schema-bulk-dialog:has(.schema-bulk-table thead th:nth-child(6)):not(:has(.schema-bulk-table thead th:nth-child(7))) .schema-bulk-table th,
+.schema-bulk-dialog:has(.schema-bulk-table thead th:nth-child(6)):not(:has(.schema-bulk-table thead th:nth-child(7))) .schema-bulk-table td {
+  min-width: 0;
+  padding: 4px;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+.schema-bulk-dialog:has(.schema-bulk-table thead th:nth-child(6)):not(:has(.schema-bulk-table thead th:nth-child(7))) .schema-bulk-table th:nth-child(1) { width: 12%; }
+.schema-bulk-dialog:has(.schema-bulk-table thead th:nth-child(6)):not(:has(.schema-bulk-table thead th:nth-child(7))) .schema-bulk-table th:nth-child(2) { width: 16%; }
+.schema-bulk-dialog:has(.schema-bulk-table thead th:nth-child(6)):not(:has(.schema-bulk-table thead th:nth-child(7))) .schema-bulk-table th:nth-child(3) { width: 10%; }
+.schema-bulk-dialog:has(.schema-bulk-table thead th:nth-child(6)):not(:has(.schema-bulk-table thead th:nth-child(7))) .schema-bulk-table th:nth-child(4) { width: 11%; }
+.schema-bulk-dialog:has(.schema-bulk-table thead th:nth-child(6)):not(:has(.schema-bulk-table thead th:nth-child(7))) .schema-bulk-table th:nth-child(5) { width: 39%; }
+.schema-bulk-dialog:has(.schema-bulk-table thead th:nth-child(6)):not(:has(.schema-bulk-table thead th:nth-child(7))) .schema-bulk-table th:nth-child(6) { width: 12%; }
+.schema-bulk-dialog:has(.schema-bulk-table thead th:nth-child(6)):not(:has(.schema-bulk-table thead th:nth-child(7))) .schema-bulk-table td:first-child { position: static; min-width: 0; }
+.schema-bulk-dialog:has(.schema-bulk-table thead th:nth-child(6)):not(:has(.schema-bulk-table thead th:nth-child(7))) .schema-bulk-table input:not([type=checkbox]),
+.schema-bulk-dialog:has(.schema-bulk-table thead th:nth-child(6)):not(:has(.schema-bulk-table thead th:nth-child(7))) .schema-bulk-table select,
+.schema-bulk-dialog:has(.schema-bulk-table thead th:nth-child(6)):not(:has(.schema-bulk-table thead th:nth-child(7))) .schema-bulk-table textarea { width: 100%; min-width: 0; padding: 4px; font-size: 10px; }
+
+@media (max-width: 760px) {
+  .schema-local-controls { grid-template-columns: 1fr; }
+}

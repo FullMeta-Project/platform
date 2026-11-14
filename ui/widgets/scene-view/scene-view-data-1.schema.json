@@ -1,0 +1,55 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "x-fullmeta-schema": "../../../schema-editor/schema-editor.schema.json",
+  "$id": "https://fullmeta.local/ui/scene-view-data-1.schema.json",
+  "title": "FullMeta Scene View Data 1",
+  "description": "Application-neutral normalized geometry and mesh primitives for the shared scene-view renderer.",
+  "type": "object",
+  "required": ["dimension", "primitives"],
+  "properties": {
+    "dimension": { "enum": [2, 3] },
+    "primitives": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/primitive" }
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "position": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 3,
+      "items": { "type": "number" }
+    },
+    "primitive": {
+      "type": "object",
+      "required": ["type", "points"],
+      "properties": {
+        "type": { "enum": ["point", "polyline", "triangle"] },
+        "id": { "type": ["string", "number"] },
+        "ownerId": { "type": ["string", "number"] },
+        "points": { "type": "array", "items": { "$ref": "#/$defs/position" } },
+        "closed": { "type": "boolean" },
+        "stroke": { "type": "string" },
+        "fill": { "type": "string" },
+        "lineWidth": { "type": "number", "minimum": 0 },
+        "opacity": { "type": "number", "minimum": 0, "maximum": 1 }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "type": { "const": "point" } }, "required": ["type"] },
+          "then": { "properties": { "points": { "minItems": 1, "maxItems": 1 } } }
+        },
+        {
+          "if": { "properties": { "type": { "const": "polyline" } }, "required": ["type"] },
+          "then": { "properties": { "points": { "minItems": 2 } } }
+        },
+        {
+          "if": { "properties": { "type": { "const": "triangle" } }, "required": ["type"] },
+          "then": { "properties": { "points": { "minItems": 3, "maxItems": 3 } } }
+        }
+      ],
+      "additionalProperties": false
+    }
+  }
+}

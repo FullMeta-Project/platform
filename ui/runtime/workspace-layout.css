@@ -1,0 +1,13 @@
+/* Both arrangements use the original pane and separator presentation. */
+.fullmeta-workspace button[data-workspace-layout]::after{content:"";display:inline-block;width:16px;height:16px;flex:0 0 16px;margin-left:auto;align-self:center}
+/* Shared declarative SVG image; no Unicode glyph or document-specific icon dependency. */
+.fullmeta-workspace button[data-workspace-layout][aria-checked="true"]::after{--selection-svg:url("data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2016%2016%22%3E%3Cpath%20d%3D%22m3%208%203%203%207-7%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3C%2Fsvg%3E");background-color:var(--accent);-webkit-mask:var(--selection-svg) center/16px 16px no-repeat;mask:var(--selection-svg) center/16px 16px no-repeat}
+.fullmeta-workspace[data-workspace-layout="columns"]>.wrap>.workspace{display:grid;grid-template-columns:minmax(150px,var(--tree-width,260px)) 12px minmax(160px,var(--settings-width,330px)) 14px minmax(160px,1fr);grid-template-rows:minmax(0,1fr);align-items:stretch;flex:1;min-height:0;height:auto;overflow:auto}
+.fullmeta-workspace[data-workspace-layout="columns"]>.wrap>.workspace>.tree{grid-column:1;grid-row:1;min-width:0;width:auto}
+.fullmeta-workspace[data-workspace-layout="columns"]>.wrap>.workspace>.tree-splitter{grid-column:2;grid-row:1;display:block}
+.fullmeta-workspace[data-workspace-layout="columns"]>.wrap>.workspace>.right-workspace{display:contents}
+.fullmeta-workspace[data-workspace-layout="columns"] .right-workspace>.editor{grid-column:3;grid-row:1;min-width:0;min-height:0;width:auto;height:auto}
+.fullmeta-workspace[data-workspace-layout="columns"] .right-workspace>.right-splitter{grid-column:4;grid-row:1;display:block;width:14px;height:auto;cursor:col-resize;border-radius:0;background:transparent}
+.fullmeta-workspace[data-workspace-layout="columns"] .right-workspace>.right-splitter::before{left:50%;top:50%;width:5px;height:42px;transform:translate(-50%,-50%)}
+.fullmeta-workspace[data-workspace-layout="columns"] .right-workspace>.right-splitter::after{top:0;left:6px;right:auto;bottom:0;width:2px;height:auto;transform:none}
+.fullmeta-workspace[data-workspace-layout="columns"] .right-workspace>.graphics-panel{grid-column:5;grid-row:1;min-width:0;min-height:0;width:auto;height:auto}

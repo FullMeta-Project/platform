@@ -1,0 +1,76 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://fullmeta.local/platform/workspace/workspace.schema.json",
+  "x-fullmeta-schema": "../schema-editor/schema-editor.schema.json",
+  "title": "FullMeta workspace",
+  "author": "Jensen Li",
+  "description": "Read-only workspace configuration. Application registrations and file listings remain in their existing authoritative sources.",
+  "type": "object",
+  "required": [
+    "format",
+    "x-fullmeta-schema"
+  ],
+  "properties": {
+    "format": {
+      "const": "fullmeta-workspace/1"
+    },
+    "x-fullmeta-schema": {
+      "type": "string",
+      "minLength": 1
+    },
+    "title": {
+      "type": "string",
+      "default": "Workspace"
+    },
+    "explorer": {
+      "type": "object",
+      "properties": {
+        "root": {
+          "type": "string",
+          "minLength": 1,
+          "default": ".",
+          "description": "Visible Explorer root inside FullMeta. File > Open keeps access to the complete workspace."
+        },
+        "initialExpanded": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true,
+          "default": [
+            "projects"
+          ]
+        },
+        "initialSelection": {
+          "type": "string",
+          "minLength": 1,
+          "default": "projects"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": true,
+  "x-fullmeta-ui-editor": {
+    "widget": "workspaceEditor",
+    "options": {
+      "markdownPreview": true,
+      "explorerIcons": {
+        "folder": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 16 16\"><path d=\"M1.5 4V2.5h5L8 4h6.5v9h-13Z\" fill=\"#b98a39\" stroke=\"#edc770\" stroke-linejoin=\"round\"/><path d=\"M1.5 5h13\" stroke=\"#edc770\"/></svg>",
+        "folderOpen": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 16 16\"><path d=\"M1.5 4V2.5h5L8 4h6v3H2Z\" fill=\"#9b722b\" stroke=\"#edc770\" stroke-linejoin=\"round\"/><path d=\"m1.5 6 1.2 7h10.5l1.3-7Z\" fill=\"#d7ab50\" stroke=\"#f3d18a\" stroke-linejoin=\"round\"/></svg>",
+        "file": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 16 16\"><path d=\"M3 1.5h6l4 4v9H3Z\" fill=\"#233446\" stroke=\"#a9bed0\" stroke-linejoin=\"round\"/><path d=\"M9 1.5v4h4M5 8h6M5 10.5h6\" fill=\"none\" stroke=\"#a9bed0\"/></svg>",
+        "json": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 16 16\"><path d=\"M3 1.5h6l4 4v9H3Z\" fill=\"#163b3c\" stroke=\"#78cbc3\" stroke-linejoin=\"round\"/><path d=\"M9 1.5v4h4M6.5 7H6v2l-1 1 1 1v2h.5M9.5 7h.5v2l1 1-1 1v2h-.5\" fill=\"none\" stroke=\"#9de1d7\" stroke-linejoin=\"round\"/></svg>",
+        "schema": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 16 16\"><path d=\"M3 1.5h6l4 4v9H3Z\" fill=\"#352845\" stroke=\"#c8a4e6\" stroke-linejoin=\"round\"/><path d=\"M9 1.5v4h4M8 7v2M5.5 9h5M5.5 9v2M10.5 9v2\" fill=\"none\" stroke=\"#d8b8ef\"/><path d=\"M7 6.5h2v2H7ZM4.5 11h2v2h-2ZM9.5 11h2v2h-2Z\" fill=\"#d8b8ef\"/></svg>"
+      }
+    }
+  },
+  "x-fullmeta-ui-modelEditor": {
+    "schema": "fullmeta-model-editor-ui/1",
+    "roles": {},
+    "panels": [],
+    "layout": {
+      "defaultLayout": "stacked"
+    }
+  }
+}

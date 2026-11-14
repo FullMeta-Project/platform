@@ -1,0 +1,42 @@
+.schema-definition-worksheet-dialog{width:min(1180px,calc(100vw - 28px));max-width:calc(100vw - 28px);max-height:calc(100dvh - 28px);padding:0;border:1px solid var(--border);border-radius:10px;background:var(--panel);color:var(--text);overflow:hidden}
+.schema-definition-worksheet-dialog::backdrop{background:#02070dcc}
+.schema-definition-worksheet-dialog .schema-bulk-content{display:flex;flex-direction:column;max-height:calc(100dvh - 30px)}
+.schema-definition-worksheet-dialog .schema-bulk-body{display:flex;flex-direction:column;min-height:0;overflow:auto;gap:8px;padding:12px}
+.schema-definition-worksheet-controls{display:flex;align-items:center;flex-wrap:wrap;gap:8px}
+.schema-definition-worksheet-controls label{color:var(--muted);font-size:11px}
+.schema-definition-worksheet-controls select,.schema-definition-worksheet-table input,.schema-definition-worksheet-paste textarea{box-sizing:border-box;min-width:0;padding:6px 8px;border:1px solid var(--border);border-radius:5px;background:var(--page);color:var(--text);font:inherit}
+.schema-definition-worksheet-controls select{min-width:220px;max-width:360px}
+.schema-definition-worksheet-paste{border:1px solid var(--border);border-radius:7px;padding:8px 10px}
+.schema-definition-worksheet-paste summary{cursor:pointer;font-weight:650}
+.schema-definition-worksheet-import{display:flex;align-items:center;gap:8px;margin-top:8px;color:var(--muted);font-size:11px}
+.schema-definition-worksheet-import input{max-width:100%;color:var(--text);font:inherit}
+.schema-definition-worksheet-paste textarea{display:block;width:100%;min-height:56px;margin:8px 0;font:11px/1.5 ui-monospace,Consolas,monospace;resize:vertical}
+.schema-definition-worksheet-table{width:100%;table-layout:fixed}
+.schema-definition-worksheet-table th:nth-child(1){width:20%}
+.schema-definition-worksheet-table th:nth-child(2){width:38%}
+.schema-definition-worksheet-table th:nth-child(3){width:20%}
+.schema-definition-worksheet-table th:nth-child(4){width:17%}
+.schema-definition-worksheet-table th:nth-child(5){width:5%}
+.schema-definition-worksheet-table input,.schema-definition-worksheet-table select{box-sizing:border-box;width:100%;min-width:0}
+.schema-definition-worksheet-table td{vertical-align:top}
+.schema-definition-worksheet-table td:last-child .button{padding:5px 7px}
+.schema-definition-worksheet-dialog .schema-bulk-preview{max-height:190px;overflow:auto;margin:0 12px 8px}
+.schema-definition-worksheet-dialog .schema-validation-dialog-status{padding:3px 12px}
+.schema-definition-worksheet-dialog .schema-validation-dialog-actions{display:flex;justify-content:flex-end;gap:8px;padding:10px 12px;border-top:1px solid var(--border)}
+.schema-bulk-dialog:has(.schema-bulk-table thead th:nth-child(3)):not(:has(.schema-bulk-table thead th:nth-child(4))){width:min(980px,calc(100vw - 24px))}
+.schema-bulk-dialog:has(.schema-bulk-table thead th:nth-child(3)):not(:has(.schema-bulk-table thead th:nth-child(4))) .schema-bulk-body{gap:8px;padding:10px 12px}
+.schema-bulk-dialog:has(.schema-bulk-table thead th:nth-child(3)):not(:has(.schema-bulk-table thead th:nth-child(4))) .schema-bulk-table{width:100%;min-width:0;table-layout:fixed}
+.schema-bulk-dialog:has(.schema-bulk-table thead th:nth-child(3)):not(:has(.schema-bulk-table thead th:nth-child(4))) .schema-bulk-table th,.schema-bulk-dialog:has(.schema-bulk-table thead th:nth-child(3)):not(:has(.schema-bulk-table thead th:nth-child(4))) .schema-bulk-table td{min-width:0;padding:4px;white-space:normal;overflow-wrap:anywhere}
+.schema-bulk-dialog:has(.schema-bulk-table thead th:nth-child(3)):not(:has(.schema-bulk-table thead th:nth-child(4))) .schema-bulk-table td:first-child{position:static;min-width:0}
+.schema-bulk-dialog:has(.schema-bulk-table thead th:nth-child(3)):not(:has(.schema-bulk-table thead th:nth-child(4))) .schema-bulk-table input:not([type=checkbox]),.schema-bulk-dialog:has(.schema-bulk-table thead th:nth-child(3)):not(:has(.schema-bulk-table thead th:nth-child(4))) .schema-bulk-table select,.schema-bulk-dialog:has(.schema-bulk-table thead th:nth-child(3)):not(:has(.schema-bulk-table thead th:nth-child(4))) .schema-bulk-table textarea{width:100%;min-width:0}
+.schema-bulk-dialog:has(.schema-bulk-table thead th:nth-child(5)):not(:has(.schema-bulk-table thead th:nth-child(6))){width:min(980px,calc(100vw - 24px))}
+.schema-bulk-dialog:has(.schema-bulk-table thead th:nth-child(5)):not(:has(.schema-bulk-table thead th:nth-child(6))) .schema-bulk-body{gap:8px;padding:10px 12px}
+.schema-bulk-dialog:has(.schema-bulk-table thead th:nth-child(5)):not(:has(.schema-bulk-table thead th:nth-child(6))) .schema-bulk-table{width:100%;min-width:0;table-layout:fixed}
+.schema-bulk-dialog:has(.schema-bulk-table thead th:nth-child(5)):not(:has(.schema-bulk-table thead th:nth-child(6))) .schema-bulk-table th,.schema-bulk-dialog:has(.schema-bulk-table thead th:nth-child(5)):not(:has(.schema-bulk-table thead th:nth-child(6))) .schema-bulk-table td{min-width:0;padding:4px;white-space:normal;overflow-wrap:anywhere}
+.schema-bulk-dialog:has(.schema-bulk-table thead th:nth-child(5)):not(:has(.schema-bulk-table thead th:nth-child(6))) .schema-bulk-table th:nth-child(1){width:18%}
+.schema-bulk-dialog:has(.schema-bulk-table thead th:nth-child(5)):not(:has(.schema-bulk-table thead th:nth-child(6))) .schema-bulk-table th:nth-child(2){width:24%}
+.schema-bulk-dialog:has(.schema-bulk-table thead th:nth-child(5)):not(:has(.schema-bulk-table thead th:nth-child(6))) .schema-bulk-table th:nth-child(3){width:17%}
+.schema-bulk-dialog:has(.schema-bulk-table thead th:nth-child(5)):not(:has(.schema-bulk-table thead th:nth-child(6))) .schema-bulk-table th:nth-child(4){width:29%}
+.schema-bulk-dialog:has(.schema-bulk-table thead th:nth-child(5)):not(:has(.schema-bulk-table thead th:nth-child(6))) .schema-bulk-table th:nth-child(5){width:12%}
+.schema-bulk-dialog:has(.schema-bulk-table thead th:nth-child(5)):not(:has(.schema-bulk-table thead th:nth-child(6))) .schema-bulk-table td:first-child{position:static;min-width:0}
+.schema-bulk-dialog:has(.schema-bulk-table thead th:nth-child(5)):not(:has(.schema-bulk-table thead th:nth-child(6))) .schema-bulk-table input:not([type=checkbox]),.schema-bulk-dialog:has(.schema-bulk-table thead th:nth-child(5)):not(:has(.schema-bulk-table thead th:nth-child(6))) .schema-bulk-table select,.schema-bulk-dialog:has(.schema-bulk-table thead th:nth-child(5)):not(:has(.schema-bulk-table thead th:nth-child(6))) .schema-bulk-table textarea{width:100%;min-width:0}

@@ -1,0 +1,530 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "x-fullmeta-schema": "../schema-editor/schema-editor.schema.json",
+  "$id": "https://fullmeta.local/schemas/fullmeta-model-runtime-1.schema.json",
+  "title": "FullMeta model runtime locations",
+  "type": "object",
+  "required": [
+    "schema",
+    "storage"
+  ],
+  "properties": {
+    "schema": {
+      "const": "fullmeta-model-runtime/1"
+    },
+    "capabilityAnnotation": {
+      "type": "string",
+      "pattern": "^x-[A-Za-z0-9-]+$"
+    },
+    "externalPrograms": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "required": [
+          "executable",
+          "allowedEntries",
+          "pathType"
+        ],
+        "properties": {
+          "executable": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "[.]exe$"
+          },
+          "allowedEntries": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "pathType": {
+            "enum": [
+              "absolute",
+              "relative"
+            ]
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "tools": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "required": [
+          "executable",
+          "pathType"
+        ],
+        "properties": {
+          "executable": {
+            "type": "string",
+            "minLength": 1
+          },
+          "pathType": {
+            "enum": [
+              "absolute",
+              "relative"
+            ]
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "editorApi": {
+      "type": "object",
+      "additionalProperties": {
+        "oneOf": [
+          {
+            "type": "string",
+            "pattern": "^/api/[A-Za-z0-9/_-]+$"
+          },
+          {
+            "type": "object",
+            "required": [
+              "route"
+            ],
+            "properties": {
+              "route": {
+                "type": "string",
+                "pattern": "^/api/[A-Za-z0-9/_-]+$"
+              },
+              "method": {
+                "oneOf": [
+                  {
+                    "enum": [
+                      "GET",
+                      "POST",
+                      "PUT",
+                      "PATCH",
+                      "DELETE"
+                    ]
+                  },
+                  {
+                    "type": "array",
+                    "minItems": 2,
+                    "uniqueItems": true,
+                    "items": {
+                      "enum": [
+                        "GET",
+                        "POST",
+                        "PUT",
+                        "PATCH",
+                        "DELETE"
+                      ]
+                    }
+                  }
+                ]
+              },
+              "handler": {
+                "type": "string",
+                "pattern": "^[A-Za-z][A-Za-z0-9.-]*$"
+              },
+              "readOnlyDuringOperation": {
+                "oneOf": [
+                  {"type": "boolean"},
+                  {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": ["bodyPointer", "equals"],
+                    "properties": {
+                      "bodyPointer": {"type": "string", "pattern": "^/(?:[^~]|~[01])*$"},
+                      "equals": {}
+                    }
+                  }
+                ]
+              },
+              "input": {
+                "$ref": "#/$defs/apiShape"
+              },
+              "output": {
+                "$ref": "#/$defs/apiShape"
+              },
+              "schemaOperation": {
+                "type": "string",
+                "minLength": 1
+              },
+              "recordProjection": {
+                "type": "object",
+                "minProperties": 1,
+                "additionalProperties": {
+                  "oneOf": [
+                    {
+                      "const": "$directoryName"
+                    },
+                    {
+                      "type": "string",
+                      "pattern": "^/"
+                    }
+                  ]
+                }
+              },
+              "sortBy": {
+                "type": "string",
+                "pattern": "^/"
+              },
+              "sortDescending": {
+                "type": "boolean"
+              },
+              "completionValidation": {
+                "type": "object",
+                "required": [
+                  "eventType",
+                  "outputFilesPointer"
+                ],
+                "properties": {
+                  "eventType": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "outputFilesPointer": {
+                    "type": "string",
+                    "pattern": "^/"
+                  },
+                  "minimumBytes": {
+                    "type": "integer",
+                    "minimum": 0
+                  }
+                },
+                "additionalProperties": false
+              },
+              "externalProgram": {
+                "type": "object",
+                "required": [
+                  "registryId"
+                ],
+                "properties": {
+                  "registryId": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "protocol": {
+                    "enum": [
+                      "json-stdio",
+                      "ndjson-stdio"
+                    ]
+                  },
+                  "requestEnvironment": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "required": [
+                        "name",
+                        "source"
+                      ],
+                      "properties": {
+                        "name": {
+                          "type": "string",
+                          "pattern": "^[A-Z_][A-Z0-9_]*$"
+                        },
+                        "source": {
+                          "enum": [
+                            "header",
+                            "storage"
+                          ]
+                        },
+                        "header": {
+                          "type": "string",
+                          "pattern": "^[a-z0-9-]+$"
+                        },
+                        "storage": {
+                          "enum": [
+                            "modelFile",
+                            "runsDirectory",
+                            "resultsDirectory"
+                          ]
+                        },
+                        "decode": {
+                          "enum": [
+                            "none",
+                            "percent"
+                          ]
+                        },
+                        "required": {
+                          "type": "boolean"
+                        }
+                      },
+                      "allOf": [
+                        {
+                          "if": {
+                            "properties": {
+                              "source": {
+                                "const": "header"
+                              }
+                            }
+                          },
+                          "then": {
+                            "required": [
+                              "header"
+                            ],
+                            "properties": {
+                              "storage": false
+                            }
+                          }
+                        },
+                        {
+                          "if": {
+                            "properties": {
+                              "source": {
+                                "const": "storage"
+                              }
+                            }
+                          },
+                          "then": {
+                            "required": [
+                              "storage"
+                            ],
+                            "properties": {
+                              "header": false,
+                              "decode": false
+                            }
+                          }
+                        }
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
+                  "cancellation": {
+                    "type": "object",
+                    "required": [
+                      "entry",
+                      "runIdPointer"
+                    ],
+                    "properties": {
+                      "entry": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "runIdPointer": {
+                        "type": "string",
+                        "pattern": "^/"
+                      }
+                    },
+                    "additionalProperties": false
+                  },
+                  "entry": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "entries": {
+                    "type": "array",
+                    "minItems": 2,
+                    "uniqueItems": true,
+                    "items": {
+                      "type": "string",
+                      "minLength": 1
+                    }
+                  }
+                },
+                "additionalProperties": false
+              },
+              "operationContract": {
+                "$ref": "#/$defs/operationContract"
+              }
+            },
+            "additionalProperties": false,
+            "allOf": [
+              {
+                "if": {
+                  "required": [
+                    "operationContract"
+                  ]
+                },
+                "then": {
+                  "required": [
+                    "externalProgram"
+                  ],
+                  "properties": {
+                    "schemaOperation": false
+                  }
+                },
+                "else": {
+                  "required": [
+                    "method",
+                    "handler",
+                    "input",
+                    "output"
+                  ],
+                  "properties": {
+                    "externalProgram": {
+                      "oneOf": [
+                        {
+                          "required": [
+                            "entry"
+                          ]
+                        },
+                        {
+                          "required": [
+                            "entries"
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "compatibility": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "label": {
+            "type": "string",
+            "minLength": 1
+          },
+          "capabilityPath": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "value": {}
+        },
+        "oneOf": [
+          {
+            "required": [
+              "capabilityPath"
+            ]
+          },
+          {
+            "required": [
+              "value"
+            ]
+          }
+        ],
+        "additionalProperties": false
+      }
+    },
+    "storage": {
+      "type": "object",
+      "required": [
+        "modelFile",
+        "runsDirectory",
+        "resultsDirectory"
+      ],
+      "properties": {
+        "modelFile": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]*[.]json$"
+        },
+        "runsDirectory": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]*$"
+        },
+        "resultsDirectory": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]*$"
+        },
+        "reservedDirectories": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]*$"
+          }
+        },
+        "projectRootFolder": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]*$"
+        }
+      },
+      "additionalProperties": false
+    },
+    "resources": {
+      "type": "object",
+      "required": [
+        "uiProfileSchema",
+        "resourcesRoot",
+        "resultAdapters"
+      ],
+      "properties": {
+        "uiProfileSchema": {
+          "type": "string",
+          "minLength": 1
+        },
+        "uiProfileExtensionSchema": {
+          "type": "string",
+          "minLength": 1
+        },
+        "resourcesRoot": {
+          "type": "string",
+          "minLength": 1
+        },
+        "resultAdapters": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "apiShape": {
+      "type": "object",
+      "required": [
+        "contentType",
+        "fields"
+      ],
+      "properties": {
+        "contentType": {
+          "type": "string",
+          "minLength": 1
+        },
+        "fields": {
+          "type": "array",
+          "items": {
+            "type": "array",
+            "prefixItems": [
+              {
+                "type": "string",
+                "minLength": 1
+              },
+              {
+                "type": "string",
+                "minLength": 1
+              }
+            ],
+            "minItems": 2,
+            "maxItems": 2
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "operationContract": {
+      "type": "object",
+      "required": [
+        "id",
+        "version"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[A-Za-z][A-Za-z0-9.]*$"
+        },
+        "version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "digest": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}

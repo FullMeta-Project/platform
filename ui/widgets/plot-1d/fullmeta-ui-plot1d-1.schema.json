@@ -1,0 +1,56 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "x-fullmeta-schema": "../../../schema-editor/schema-editor.schema.json",
+  "$id": "https://fullmeta.local/ui/fullmeta-ui-plot1d-1.schema.json",
+  "title": "FullMeta UI Plot 1D Data 1",
+  "description": "Application-neutral line-series data accepted by the shared plot1d renderer. Canvas and event handling belong to the host UI.",
+  "type": "object",
+  "required": ["series"],
+  "properties": {
+    "background": { "type": "string", "description": "Optional CSS color used to clear the plot canvas." },
+    "xAxis": { "$ref": "#/$defs/axis" },
+    "yAxes": {
+      "type": "object",
+      "properties": {
+        "left": { "$ref": "#/$defs/axis" },
+        "right": { "$ref": "#/$defs/axis" }
+      },
+      "additionalProperties": false
+    },
+    "series": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/series" }
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "axis": {
+      "type": "object",
+      "properties": {
+        "label": { "type": "string" },
+        "minimum": { "type": "number" },
+        "maximum": { "type": "number" }
+      },
+      "additionalProperties": false
+    },
+    "point": {
+      "type": "array",
+      "prefixItems": [{ "type": "number" }, { "type": "number" }],
+      "minItems": 2,
+      "maxItems": 2,
+      "items": false
+    },
+    "series": {
+      "type": "object",
+      "required": ["points"],
+      "properties": {
+        "label": { "type": "string" },
+        "points": { "type": "array", "items": { "$ref": "#/$defs/point" } },
+        "axis": { "enum": ["left", "right"] },
+        "style": { "enum": ["solid", "dashed", "dotted"] },
+        "color": { "type": "string" }
+      },
+      "additionalProperties": false
+    }
+  }
+}

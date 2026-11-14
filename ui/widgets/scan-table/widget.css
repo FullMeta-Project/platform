@@ -1,0 +1,6 @@
+.scan-table-wrap{max-width:100%;overflow-x:auto;margin:8px 0}
+.scan-table{width:100%;min-width:640px;table-layout:fixed;border-collapse:collapse;font-size:11px}
+.scan-table th,.scan-table td{padding:8px;border-bottom:1px solid var(--border);text-align:left;vertical-align:top}
+.scan-table thead th{color:var(--muted);font-weight:600;background:var(--panel)}
+.scan-table th:first-child,.scan-table td:first-child{width:195px}
+.scan-table th:last-child,.scan-table td:last-child{width:156px}

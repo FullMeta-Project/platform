@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "x-fullmeta-schema": "../../../schema-editor/schema-editor.schema.json",
+  "$id": "https://fullmeta.local/ui/schemas/fullmeta-ui-table-1.schema.json",
+  "title": "FullMeta UI table data",
+  "description": "Selected rows and columns accepted by the application-neutral table renderer. The host chooses result data and optional column overrides.",
+  "type": "object",
+  "required": ["view"],
+  "properties": {
+    "view": { "type": "object", "required": ["columns", "rows"], "properties": {
+      "columns": { "type": "array", "items": { "$ref": "#/$defs/column" } },
+      "rows": { "type": "array", "items": { "type": "object" } }
+    } },
+    "columns": { "type": "array", "items": { "$ref": "#/$defs/column" } },
+    "resizeKey": { "type": "string" }
+  },
+  "$defs": { "column": { "type": "object", "required": ["key"], "properties": { "key": { "type": "string" }, "label": { "type": "string" }, "unit": { "type": "string" } } } }
+}

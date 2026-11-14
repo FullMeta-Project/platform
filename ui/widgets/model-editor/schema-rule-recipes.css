@@ -1,0 +1,22 @@
+.schema-rule-recipes-dialog .schema-bulk-content{width:min(1320px,calc(100vw - 24px))}
+.schema-rule-recipes-dialog .schema-bulk-toolbar{display:flex;align-items:end;gap:12px}
+.schema-rule-recipes-dialog .schema-bulk-toolbar>label{min-width:280px}
+.schema-rule-recipes-table{min-width:1000px}
+.schema-rule-recipes-table td:nth-child(1){width:55px;color:#a9e9dc}
+.schema-rule-recipes-table td:nth-child(2){min-width:180px}
+.schema-rule-recipes-table td:nth-child(3){min-width:220px}
+.schema-rule-recipes-table td:nth-child(4){min-width:220px}
+.schema-rule-recipes-table td:nth-child(5){min-width:180px}
+.schema-rule-recipes-table td:nth-child(6){min-width:210px}
+.schema-rule-recipes-table td span{overflow-wrap:anywhere}
+.schema-rule-recipes-table select{width:100%;min-width:0}
+.schema-rule-recipe-actions{display:flex;flex-wrap:wrap;gap:4px}
+.schema-rule-recipe-actions .button{min-height:24px!important;padding:2px 6px!important;font-size:10px!important}
+.schema-rule-recipe-detail-row td{padding:10px!important;background:#142330!important}
+.schema-rule-recipe-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:9px}
+.schema-rule-recipe-field{display:grid;gap:4px;min-width:0;color:var(--muted);font-size:11px}
+.schema-rule-recipe-field input,.schema-rule-recipe-field select,.schema-rule-recipe-field textarea{box-sizing:border-box;width:100%;min-width:0;padding:6px 7px;border:1px solid var(--border);border-radius:4px;background:var(--page);color:var(--text);font:11px 'Segoe UI',sans-serif}
+.schema-rule-recipe-field input[type=checkbox]{width:auto;justify-self:start}
+.schema-rule-recipe-advanced{grid-column:1/-1;border:1px solid #30485b;border-radius:5px;padding:7px}
+.schema-rule-recipe-advanced summary{cursor:pointer;color:#9acde6;font-size:11px}
+.schema-rule-recipe-advanced .schema-rule-recipe-grid{padding-top:8px}

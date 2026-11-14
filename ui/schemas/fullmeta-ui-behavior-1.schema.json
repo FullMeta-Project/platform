@@ -1,0 +1,72 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "x-fullmeta-schema": "../../schema-editor/schema-editor.schema.json",
+  "$id": "https://fullmeta.local/ui/schemas/fullmeta-ui-behavior-1.schema.json",
+  "title": "FullMeta UI behavior language version 1",
+  "description": "Versioned field settings and schema-authoring widget profiles. Widget settings are additionally checked against the contract named by their registered profile.",
+  "oneOf": [
+    { "$ref": "#/$defs/fieldBehavior" },
+    { "$ref": "#/$defs/widgetProfile" }
+  ],
+  "$defs": {
+    "fieldBehavior": {
+      "type": "object",
+      "required": ["format", "target", "context", "payload"],
+      "properties": {
+        "format": { "const": "fullmeta-ui-behavior/1" },
+        "target": {
+          "type": "object",
+          "required": ["kind"],
+          "properties": { "kind": { "const": "field" } },
+          "additionalProperties": true
+        },
+        "context": { "const": "projectEditing" },
+        "payload": {
+          "type": "object",
+          "properties": {
+            "presentation": { "type": "object", "not": { "required": ["label"] } },
+            "widget": {
+              "type": "object",
+              "required": ["type", "settings"],
+              "properties": {
+                "type": { "type": "string", "minLength": 1 },
+                "settings": { "type": "object" }
+              },
+              "additionalProperties": true
+            }
+          },
+          "additionalProperties": true
+        }
+      },
+      "additionalProperties": true
+    },
+    "widgetProfile": {
+      "type": "object",
+      "required": ["format", "target", "context", "payload"],
+      "properties": {
+        "format": { "const": "fullmeta-ui-behavior/1" },
+        "target": {
+          "type": "object",
+          "required": ["kind", "name"],
+          "properties": {
+            "kind": { "const": "widget" },
+            "name": { "type": "string", "minLength": 1 }
+          },
+          "additionalProperties": true
+        },
+        "context": { "const": "schemaAuthoring" },
+        "payload": {
+          "type": "object",
+          "required": ["annotationKey", "authoring"],
+          "properties": {
+            "annotationKey": { "type": "string", "minLength": 1 },
+            "authoring": { "type": "object" },
+            "settingsContract": { "type": "string", "format": "uri-reference" }
+          },
+          "additionalProperties": true
+        }
+      },
+      "additionalProperties": true
+    }
+  }
+}

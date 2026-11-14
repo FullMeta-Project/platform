@@ -1,0 +1,20 @@
+.tree-react-content{display:contents}
+.jsx-settings-fields{display:grid;gap:10px}
+.jsx-setting-field{display:grid;gap:5px;min-width:0;font-size:11px;color:var(--muted)}
+.jsx-setting-field input,.jsx-setting-field select,.jsx-setting-field textarea{box-sizing:border-box;min-width:0;max-width:100%;padding:6px 8px;border:1px solid var(--border);border-radius:4px;background:var(--page);color:var(--text);font:inherit;font-size:12px}
+.jsx-setting-field input[type="checkbox"]{justify-self:start}
+.jsx-setting-field small{white-space:pre-wrap;font-size:10px}
+.jsx-setting-field.has-error small{color:#ffaaa3}
+.jsx-setting-field [aria-invalid="true"]{border-color:#bd706b}
+.jsx-surface-actions,.jsx-graphics-controls{display:flex;align-items:center;flex-wrap:wrap;gap:7px}
+.jsx-graphics-controls .jsx-setting-field{display:flex;align-items:center;gap:6px}
+.jsx-surface-state{margin:6px 0;font-size:11px;color:var(--muted)}
+.jsx-settings-panel header h2{margin:0;font-size:14px}
+.jsx-settings-panel header p{margin:4px 0;color:var(--muted);font-size:11px}
+.jsx-dialog-frame>.schema-validation-dialog-actions>.jsx-surface-actions{margin-left:auto}
+.fullmeta-model-editor .panel.editor>.jsx-settings-panel{display:flex;flex:1;flex-direction:column;min-width:0;min-height:0;overflow:hidden}
+.fullmeta-model-editor .jsx-settings-panel>.editor-head{flex:0 0 auto}
+.fullmeta-model-editor .jsx-settings-legacy,.fullmeta-model-editor .jsx-settings-content{display:flex;flex:1;flex-direction:column;min-width:0;min-height:0;overflow:hidden}
+.fullmeta-model-editor .jsx-settings-content>.settings-table-wrap{flex:1;min-width:0;min-height:0}
+.fullmeta-model-editor .jsx-settings-content>.editor-area{flex:1;min-height:0}
+.fullmeta-model-editor .jsx-settings-content>.resolved{flex:0 0 auto;overflow:auto}

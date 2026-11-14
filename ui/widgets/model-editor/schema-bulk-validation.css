@@ -1,0 +1,14 @@
+.schema-validation-batch-program{display:flex;align-items:end;gap:8px;max-width:520px}
+.schema-validation-batch-program .schema-bulk-rule-setting{flex:1}
+.schema-validation-batch-program input{box-sizing:border-box;width:100%;min-height:30px;padding:5px 7px;border:1px solid var(--border);border-radius:4px;background:var(--page);color:var(--text);font:11px 'Segoe UI',sans-serif}
+.schema-validation-batch-worksheet{min-width:0;border:1px solid var(--border);border-radius:5px;background:#142330}
+.schema-validation-batch-worksheet>summary{padding:8px 10px;cursor:pointer;color:#abd9d0;font-size:11px;font-weight:600}
+.schema-validation-batch-worksheet-content{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;padding:0 10px 10px}
+.schema-validation-batch-panel{display:grid;grid-template-rows:auto auto minmax(120px,1fr) auto;gap:7px;min-width:0;padding:8px;border:1px solid #30485b;border-radius:5px;background:#101d29}
+.schema-validation-batch-panel h3{margin:0;color:#a9e9dc;font-size:11px}
+.schema-validation-batch-panel textarea{box-sizing:border-box;width:100%;min-width:0;min-height:56px;padding:7px;border:1px solid #30485b;border-radius:4px;background:#0c141e;color:#dce8f4;resize:vertical;font:11px/1.45 ui-monospace,Consolas,monospace;white-space:pre;overflow:auto}
+.schema-validation-batch-actions{display:flex;flex-wrap:wrap;gap:6px}
+.schema-validation-batch-actions .button{min-height:27px;padding:4px 7px;font-size:10px}
+.schema-validation-json-panel{margin:0 10px 10px;grid-template-rows:auto auto auto auto minmax(120px,1fr) auto}
+.schema-validation-batch-actions select{max-width:100%;min-height:28px;background:var(--page);color:var(--text);border:1px solid var(--border);border-radius:4px}
+@media(max-width:900px){.schema-validation-batch-worksheet-content{grid-template-columns:minmax(0,1fr)}}

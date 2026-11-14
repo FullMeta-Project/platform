@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://fullmeta.local/platform/schemas/empty.schema.json",
+  "title": "Empty schema",
+  "description": "Starting point for a new schema document. Add its document structure, UI declarations, and runtime contracts through the schema editor.",
+  "type": "object",
+  "properties": {},
+  "x-fullmeta-schema": "../schema-editor.schema.json",
+  "x-fullmeta-ui-editor": {
+    "widget": "modelEditor"
+  },
+  "x-fullmeta-ui-tree": {
+    "children": [
+      { "title": "Project", "path": [], "children": [] }
+    ]
+  }
+}

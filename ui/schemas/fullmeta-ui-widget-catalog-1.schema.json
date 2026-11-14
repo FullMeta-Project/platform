@@ -1,0 +1,373 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "x-fullmeta-schema": "../../schema-editor/schema-editor.schema.json",
+  "$id": "https://fullmeta.local/ui/fullmeta-ui-widget-catalog-1.schema.json",
+  "title": "FullMeta widget catalog 1",
+  "description": "Public widget modules and their supported interfaces. Module paths are always explicit and relative to this catalog. Presentation true or a partial object uses the shared React format, Widget and mountWidget defaults. Capability export names are inferred; exports adds other public ABI names. A field widget's schema-authoring validation contract path is relative to that widget module. Uses IDs resolve across the catalogs selected by a schema.",
+  "type": "object",
+  "required": [
+    "format",
+    "id",
+    "label",
+    "widgets"
+  ],
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "minLength": 1
+    },
+    "format": {
+      "const": "fullmeta-widget-catalog/1"
+    },
+    "id": {
+      "$ref": "#/$defs/id"
+    },
+    "label": {
+      "$ref": "#/$defs/text"
+    },
+    "widgets": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/widget"
+      }
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "text": {
+      "type": "string",
+      "minLength": 1
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^[A-Za-z][A-Za-z0-9_-]*$"
+    },
+    "symbol": {
+      "type": "string",
+      "pattern": "^[A-Za-z_$][A-Za-z0-9_$]*$"
+    },
+    "renderer": {
+      "type": "object",
+      "required": [
+        "render"
+      ],
+      "properties": {
+        "render": {
+          "$ref": "#/$defs/symbol"
+        }
+      },
+      "additionalProperties": false
+    },
+    "authoringTool": {
+      "type": "object",
+      "required": [
+        "id",
+        "label",
+        "entry"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "label": {
+          "$ref": "#/$defs/text"
+        },
+        "entry": {
+          "$ref": "#/$defs/symbol"
+        }
+      },
+      "additionalProperties": false
+    },
+    "authoring": {
+      "type": "object",
+      "anyOf": [
+        {
+          "required": [
+            "render"
+          ]
+        },
+        {
+          "required": [
+            "tools"
+          ]
+        }
+      ],
+      "properties": {
+        "render": {
+          "$ref": "#/$defs/symbol"
+        },
+        "schemaAuthoringProfile": {
+          "$ref": "#/$defs/schemaAuthoringProfile"
+        },
+        "schemaAuthoring": {
+          "$ref": "#/$defs/schemaAuthoring"
+        },
+        "tools": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/authoringTool"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "schemaAuthoringProfile": {
+      "type": "object",
+      "required": [
+        "format",
+        "context",
+        "target",
+        "payload"
+      ],
+      "properties": {
+        "format": {
+          "const": "fullmeta-ui-behavior/1"
+        },
+        "context": {
+          "const": "schemaAuthoring"
+        },
+        "target": {
+          "type": "object",
+          "required": [
+            "kind",
+            "name"
+          ],
+          "properties": {
+            "kind": {
+              "const": "widget"
+            },
+            "name": {
+              "$ref": "#/$defs/id"
+            }
+          },
+          "additionalProperties": false
+        },
+        "payload": {
+          "type": "object",
+          "required": [
+            "annotationKey",
+            "authoring"
+          ],
+          "properties": {
+            "annotationKey": {
+              "$ref": "#/$defs/text"
+            },
+            "authoring": {
+              "type": "object"
+            }
+          },
+          "additionalProperties": true
+        }
+      },
+      "additionalProperties": false
+    },
+    "schemaAuthoring": {
+      "type": "object",
+      "properties": {
+        "presentation": {
+          "type": "object"
+        },
+        "tree": {
+          "type": "object"
+        },
+        "documentWidgets": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        },
+        "tools": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "id",
+              "label",
+              "group"
+            ],
+            "properties": {
+              "id": {
+                "$ref": "#/$defs/id"
+              },
+              "label": {
+                "$ref": "#/$defs/text"
+              },
+              "group": {
+                "$ref": "#/$defs/text"
+              },
+              "widget": {
+                "$ref": "#/$defs/id"
+              },
+              "entry": {
+                "$ref": "#/$defs/symbol"
+              }
+            },
+            "additionalProperties": false
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "graphics": {
+      "type": "object",
+      "required": [
+        "kind",
+        "dimensions"
+      ],
+      "anyOf": [
+        {
+          "required": [
+            "render"
+          ]
+        },
+        {
+          "required": [
+            "descriptor"
+          ]
+        }
+      ],
+      "properties": {
+        "kind": {
+          "$ref": "#/$defs/text"
+        },
+        "dimensions": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "integer",
+            "minimum": 1
+          }
+        },
+        "render": {
+          "$ref": "#/$defs/symbol"
+        },
+        "descriptor": {
+          "$ref": "#/$defs/symbol"
+        },
+        "dataSchema": {
+          "$ref": "#/$defs/text"
+        }
+      },
+      "additionalProperties": false
+    },
+    "presentation": {
+      "oneOf": [
+        { "const": true },
+        {
+          "type": "object",
+          "properties": {
+            "format": {"const": "fullmeta-react-widget/1", "default": "fullmeta-react-widget/1"},
+            "component": {"$ref": "#/$defs/symbol", "default": "Widget"},
+            "mount": {"$ref": "#/$defs/symbol", "default": "mountWidget"}
+          },
+          "additionalProperties": false
+        }
+      ]
+    },
+    "provider": {
+      "type": "object",
+      "required": ["kind"],
+      "properties": {"kind": {"enum": ["behavior", "overlayData"]}},
+      "additionalProperties": false
+    },
+    "widget": {
+      "type": "object",
+      "required": [
+        "id",
+        "label",
+        "category",
+        "module"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "label": {
+          "$ref": "#/$defs/text"
+        },
+        "description": {
+          "$ref": "#/$defs/text"
+        },
+        "category": {
+          "enum": [
+            "field",
+            "graphics",
+            "component"
+          ]
+        },
+        "module": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9_-]*/widget\\.js$"
+        },
+        "exports": {
+          "description": "Additional public export names beyond capability entries inferred during catalog normalization. Existing complete explicit export lists remain valid.",
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/symbol"
+          }
+        },
+        "field": {
+          "$ref": "#/$defs/renderer"
+        },
+        "authoring": {
+          "$ref": "#/$defs/authoring"
+        },
+        "graphics": {
+          "$ref": "#/$defs/graphics"
+        },
+        "uses": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/id"
+          }
+        },
+        "editor": {
+          "$ref": "#/$defs/editor"
+        },
+        "presentation": {
+          "$ref": "#/$defs/presentation"
+        },
+        "provider": {
+          "$ref": "#/$defs/provider"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "category": {
+                "const": "graphics"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "graphics"
+            ]
+          }
+        }
+      ],
+      "additionalProperties": false
+    },
+    "editor": {
+      "type": "object",
+      "required": [
+        "mount"
+      ],
+      "properties": {
+        "mount": {
+          "$ref": "#/$defs/symbol"
+        },
+        "options": {
+          "type": "object"
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}

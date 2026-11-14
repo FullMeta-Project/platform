@@ -1,0 +1,87 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "x-fullmeta-schema": "../../../schema-editor/schema-editor.schema.json",
+  "$id": "https://fullmeta.local/ui/fullmeta-ui-profile-1.schema.json",
+  "title": "FullMeta UI Profile 1",
+  "description": "Application-neutral editor presentation settings. Application packages may add and validate their own behavior fields.",
+  "type": "object",
+  "required": ["schema", "layout", "behavior", "copy", "ui"],
+  "$defs": {
+    "graphicsWidget": {
+      "type": "object",
+      "required": ["label", "showSceneControls"],
+      "properties": {
+        "label": { "type": "string", "minLength": 1 },
+        "showSceneControls": { "type": "boolean" },
+        "resetViewLabel": { "type": "string", "minLength": 1 }
+      },
+      "additionalProperties": true
+    }
+  },
+  "properties": {
+    "$schema": { "type": "string" },
+    "schema": { "const": "fullmeta-ui-profile/1" },
+    "layout": {
+      "type": "object",
+      "required": ["treeWidthPx", "graphicsHeightPercent"],
+      "properties": {
+        "treeWidthPx": { "type": "integer", "minimum": 180, "maximum": 420 },
+        "graphicsHeightPercent": { "type": "integer", "minimum": 30, "maximum": 80 }
+      },
+      "additionalProperties": true
+    },
+    "behavior": {
+      "type": "object",
+      "properties": {
+        "visibility": { "type": "object", "additionalProperties": { "type": "boolean" } },
+        "tree": {
+          "type": "object",
+          "properties": {
+            "rootCollapsedByDefault": { "type": "boolean", "default": false },
+            "collapsedByDefault": { "type": "boolean", "default": true },
+            "collapsedHandle": { "type": "string", "minLength": 1, "default": "▸" },
+            "expandedHandle": { "type": "string", "minLength": 1, "default": "▾" }
+          },
+          "additionalProperties": true
+        },
+        "graphics": {
+          "type": "object",
+          "properties": {
+            "axes": {
+              "type": "array",
+              "minItems": 2,
+              "maxItems": 3,
+              "items": {
+                "type": "array",
+                "prefixItems": [
+                  { "type": "string", "minLength": 1 },
+                  { "type": "array", "minItems": 3, "maxItems": 3, "items": { "type": "number" } },
+                  { "type": "string", "pattern": "^#[0-9a-fA-F]{6}$" }
+                ],
+                "minItems": 3,
+                "maxItems": 3,
+                "items": false
+              }
+            },
+            "widgets": { "type": "object", "additionalProperties": { "$ref": "#/$defs/graphicsWidget" } }
+          },
+          "additionalProperties": true
+        }
+      },
+      "additionalProperties": true
+    },
+    "copy": { "type": "object", "default": { "chooseReferenceLabel": "Choose {targetLabel}…", "unknownReferenceLabel": "Unknown reference · {value}", "unnamedReferenceLabel": "Unnamed item", "duplicateReferenceLabel": "{label} · {id}" }, "additionalProperties": { "type": "string" } },
+    "ui": {
+      "type": "object",
+      "required": ["documentTitle", "text", "attributes", "dataLabels"],
+      "properties": {
+        "documentTitle": { "type": "string", "minLength": 1 },
+        "text": { "type": "object", "additionalProperties": { "type": "string" } },
+        "attributes": { "type": "object", "additionalProperties": { "type": "object", "additionalProperties": { "type": "string" } } },
+        "dataLabels": { "type": "object", "additionalProperties": { "type": "string" } }
+      },
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": true
+}

@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "x-fullmeta-schema": "../../../schema-editor/schema-editor.schema.json",
+  "$id": "https://fullmeta.local/ui/fullmeta-ui-scanTable-1.schema.json",
+  "title": "FullMeta Scan Table UI 1",
+  "description": "Application-neutral presentation contract for an array of independent scans. The application model schema declares each row and the value modes.",
+  "type": "object",
+  "properties": {
+    "x-fullmeta-ui-scanTable": { "$ref": "#/$defs/scanTable" }
+  },
+  "$defs": {
+    "scanTable": {
+      "type": "object",
+      "properties": {
+        "labels": { "type": "object", "additionalProperties": { "type": "string", "minLength": 1 } }
+      },
+      "additionalProperties": false
+    }
+  }
+}

@@ -1,0 +1,19 @@
+.setting-inline {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(76px, auto);
+  gap: 6px;
+  align-items: center;
+}
+
+.setting-inline > input,
+.setting-inline > select {
+  min-width: 0;
+}
+
+.setting-unit-value {
+  color: var(--muted, #9eb0c2);
+}
+
+.schema-design-quantity {
+  align-items: center;
+}

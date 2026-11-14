@@ -1,0 +1,4 @@
+{
+  "defaultSchema": "schema-editor/schema-editor.schema.json",
+  "defaultEditor": "modelEditor"
+}

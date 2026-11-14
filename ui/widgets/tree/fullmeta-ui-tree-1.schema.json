@@ -1,0 +1,74 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "x-fullmeta-schema": "../../../schema-editor/schema-editor.schema.json",
+  "$id": "https://fullmeta.local/ui/fullmeta-ui-tree-1.schema.json",
+  "title": "FullMeta UI Tree Annotation 1",
+  "description": "Application-neutral contract for the x-fullmeta-ui-tree schema annotation.",
+  "type": "object",
+  "properties": {
+    "x-fullmeta-ui-tree": {
+      "oneOf": [
+        { "$ref": "#/$defs/modelTreeUi" },
+        { "$ref": "#/$defs/treeNodeUi" }
+      ]
+    }
+  },
+  "$defs": {
+    "treeNodeUi": {
+      "type": "object",
+      "description": "One recursive tree node. A node with children and no role is a titled group; bound nodes read their title from the schema declaration.",
+      "anyOf": [
+        { "required": ["role"] },
+        { "required": ["title", "children"] }
+      ],
+      "properties": {
+        "role": {
+          "enum": ["collectionLink", "componentCollections", "objectRoot", "objectEntries", "rootItems", "componentRoot", "optionalItem", "collection", "transparent", "children", "objectProperties", "schemaDeclarations"]
+        },
+        "scope": { "enum": ["model"] },
+        "path": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+        "title": { "type": "string", "minLength": 1 },
+        "x-fullmeta-ui-behavior": { "type": "object" },
+        "collection": { "type": "string", "minLength": 1 },
+        "ownerNameProperty": { "type": "string", "minLength": 1 },
+        "itemLabelProperty": { "type": "string", "minLength": 1 },
+        "labelProperty": { "type": "string", "minLength": 1 },
+        "itemClass": { "type": "string", "minLength": 1 },
+        "disabledClass": { "type": "string", "minLength": 1 },
+        "selectDisabledItems": { "type": "boolean" },
+        "sectionClass": { "type": "string", "minLength": 1 },
+        "heading": { "type": "boolean" },
+        "maxDepth": { "type": "integer", "minimum": 1 },
+        "childrenPath": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+        "schemaAnnotatedOnly": { "type": "boolean" },
+        "annotationPrefix": { "type": "string" },
+        "includeArrays": { "type": "boolean" },
+        "humanizeKeys": { "type": "boolean" },
+        "visibleWhen": { "type": "object" },
+        "children": { "type": "array", "items": { "$ref": "#/$defs/treeNodeUi" } }
+      },
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": { "properties": { "role": { "not": { "const": "children" } } }, "required": ["role"] },
+          "then": { "required": ["path"] }
+        }
+      ]
+    },
+    "modelTreeUi": {
+      "type": "object",
+      "required": ["children"],
+      "properties": {
+        "children": { "type": "array", "items": { "$ref": "#/$defs/treeNodeUi" } },
+        "actionMenus": { "type": "array", "items": { "type": "object" } },
+        "insertions": { "type": "array", "items": { "type": "object" } },
+        "menuTargets": { "type": "array", "items": { "type": "object" } },
+        "allowMissingArrays": { "type": "array", "items": { "type": "array" } },
+        "optionalObjects": { "type": "array", "items": { "type": "object" } },
+        "itemLabels": { "type": "array", "items": { "type": "object" } },
+        "itemTitles": { "type": "array", "items": { "type": "object" } }
+      },
+      "additionalProperties": false
+    }
+  }
+}

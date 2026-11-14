@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "x-fullmeta-schema": "../../../schema-editor/schema-editor.schema.json",
+  "$id": "https://fullmeta.local/ui/schemas/fullmeta-ui-selection-highlight-1.schema.json",
+  "title": "FullMeta selection highlight",
+  "description": "A reusable focus mode that binds a selected item to scene targets, optionally following references through collections.",
+  "type": "object",
+  "required": ["label", "target", "source"],
+  "properties": {
+    "label": { "type": "string", "minLength": 1 },
+    "target": { "type": "string", "minLength": 1 },
+    "source": { "$ref": "#/$defs/binding" },
+    "steps": { "type": "array", "items": { "$ref": "#/$defs/step" } }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "binding": {
+      "type": "object",
+      "required": ["scope"],
+      "properties": {
+        "scope": { "enum": ["model", "selected", "runtime", "view", "layer"] },
+        "path": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "step": {
+      "type": "object",
+      "required": ["properties", "collection"],
+      "properties": {
+        "properties": { "type": "array", "items": { "type": "string" }, "minItems": 1 },
+        "collection": { "$ref": "#/$defs/binding" },
+        "key": { "type": "string" },
+        "where": { "type": "object", "additionalProperties": { "type": "string" } }
+      },
+      "additionalProperties": false
+    }
+  }
+}

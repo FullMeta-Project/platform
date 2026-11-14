@@ -1,0 +1,4 @@
+// Generated from owned-view.jsx by scripts/build-frontend.mjs.
+import r from"../widgets/shared/react/react-runtime.js";import{mountReactComponent as a,disposeReactChildren as i}from"../widgets/shared/react/mount.js";const f=new WeakMap,u=new WeakMap;function w(t,n){u.set(t,n.filter(Boolean))}function y(t,n=""){return(Array.isArray(t)?t.flat(1/0):[t]).filter(e=>e!=null&&typeof e!="boolean").map((e,o)=>r.createElement(r.Fragment,{key:r.isValidElement(e)&&e.key!==null?e.key:o},o?n:null,e))}function m({children:t}){return r.createElement(r.Fragment,null,t)}function d(t,n){const s=u.get(t)||[];i(t,{retain:s});for(const o of s)t.contains(o)&&o.remove();let e=f.get(t);return e&&e.inspect().mounted?e.update({children:n}):(e=a(t,m,{children:n}),f.set(t,e)),e}export{y as joinView,d as renderOwnedView,w as retainOwnedNodes};
+
+//# sourceMappingURL=owned-view.js.map

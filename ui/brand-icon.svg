@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" fill="none">
+  <defs>
+    <linearGradient id="fieldline" x1="5" y1="15" x2="43" y2="34" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#79ead2"/>
+      <stop offset="1" stop-color="#70adff"/>
+    </linearGradient>
+  </defs>
+  <path d="M15 7H9a2 2 0 0 0-2 2v6m26-8h6a2 2 0 0 1 2 2v6M7 33v6a2 2 0 0 0 2 2h6m18 0h6a2 2 0 0 0 2-2v-6" stroke="url(#fieldline)" stroke-width="3" stroke-linecap="round"/>
+  <path d="M5 24h5c6 0 5-12 11-12s6 24 12 24 5-12 10-12" stroke="url(#fieldline)" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="5" cy="24" r="2.3" fill="#91f6df"/>
+  <circle cx="43" cy="24" r="2.3" fill="#87bdff"/>
+</svg>

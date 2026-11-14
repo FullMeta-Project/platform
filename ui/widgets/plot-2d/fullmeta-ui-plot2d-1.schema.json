@@ -1,0 +1,81 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "x-fullmeta-schema": "../../../schema-editor/schema-editor.schema.json",
+  "$id": "https://fullmeta.local/ui/fullmeta-ui-plot2d-1.schema.json",
+  "title": "FullMeta UI Plot 2D Data 1",
+  "description": "Application-neutral scalar plots in a 2D coordinate domain: triangle or polygon surfaces, or a regular row-major raster grid with coordinate axes. Raster-grid plots use independent wheel zoom, drag pan, and double-click reset; the shared widget repaints only the affected plot viewport, while callers may supply annotations that follow the view.",
+  "type": "object",
+  "anyOf": [{ "required": ["surfaces"] }, { "required": ["grid", "xAxis", "yAxis"] }],
+  "properties": {
+    "background": { "type": "string", "description": "Optional CSS color used to clear the plot canvas." },
+    "surfaces": { "type": "array", "items": { "$ref": "#/$defs/surface" } },
+    "grid": { "$ref": "#/$defs/grid" },
+    "xAxis": { "$ref": "#/$defs/axis" },
+    "yAxis": { "$ref": "#/$defs/axis" },
+    "range": { "$ref": "#/$defs/range" },
+    "opacity": { "type": "number", "minimum": 0, "maximum": 1 }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "axis": {
+      "type": "object",
+      "required": ["minimum", "maximum", "label"],
+      "properties": {
+        "minimum": { "type": "number" },
+        "maximum": { "type": "number" },
+        "label": { "type": "string", "minLength": 1 },
+        "direction": { "enum": ["up", "down"], "default": "up", "description": "Direction in which coordinate values increase on screen; use down for image-row coordinates." }
+      },
+      "additionalProperties": false
+    },
+    "grid": {
+      "type": "object",
+      "required": ["width", "height", "values"],
+      "properties": {
+        "width": { "type": "integer", "minimum": 2 },
+        "height": { "type": "integer", "minimum": 2 },
+        "values": { "type": "array", "items": { "type": "number" }, "minItems": 4, "description": "Row-major scalar values. Screen placement of rows follows yAxis.direction; row zero is at the top when direction is down." }
+      },
+      "additionalProperties": false
+    },
+    "position": {
+      "type": "array",
+      "items": { "type": "number" },
+      "minItems": 2,
+      "maxItems": 3,
+      "description": "Two coordinates for a flat plot; an optional third coordinate lets a host reuse a 3D world-space projection."
+    },
+    "vertex": {
+      "type": "object",
+      "required": ["position", "value"],
+      "properties": {
+        "position": { "$ref": "#/$defs/position" },
+        "value": { "type": "number" }
+      },
+      "additionalProperties": false
+    },
+    "face": {
+      "type": "array",
+      "items": { "type": "integer", "minimum": 0 },
+      "minItems": 3,
+      "description": "Vertex indexes describing a polygon face; the renderer triangulates faces with more than three vertices."
+    },
+    "surface": {
+      "type": "object",
+      "required": ["vertices", "faces"],
+      "properties": {
+        "vertices": { "type": "array", "minItems": 3, "items": { "$ref": "#/$defs/vertex" } },
+        "faces": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/face" } }
+      },
+      "additionalProperties": false
+    },
+    "range": {
+      "type": "array",
+      "prefixItems": [{ "type": "number" }, { "type": "number" }],
+      "minItems": 2,
+      "maxItems": 2,
+      "items": false,
+      "description": "Optional minimum and maximum for the scalar color range."
+    }
+  }
+}

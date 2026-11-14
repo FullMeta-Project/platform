@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "x-fullmeta-schema": "../../../schema-editor/schema-editor.schema.json",
+  "$id": "https://fullmeta.local/ui/fullmeta-ui-quantityVector-1.schema.json",
+  "title": "FullMeta Quantity Vector UI 1",
+  "description": "Application-neutral quantity-vector presentation contract. The model schema declares the array value rules.",
+  "type": "object",
+  "properties": {
+    "x-fullmeta-ui-quantityVector": {
+      "$ref": "#/$defs/quantityVector"
+    }
+  },
+  "$defs": {
+    "componentLabels": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "quantityVector": {
+      "oneOf": [
+        {
+          "type": "object",
+          "required": ["componentLabels"],
+          "properties": {
+            "componentLabels": { "$ref": "#/$defs/componentLabels" },
+            "unitReadOnly": { "type": "boolean" }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": ["componentSource"],
+          "properties": {
+            "componentSource": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Application provider for component labels and units. Initial values come from the effective field's JSON Schema default."
+            },
+            "unitReadOnly": { "type": "boolean" }
+          },
+          "additionalProperties": false
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "x-fullmeta-schema": "../../../schema-editor/schema-editor.schema.json",
+  "$id": "https://fullmeta.local/ui/fullmeta-ui-dynamicPropertySet-1.schema.json",
+  "title": "FullMeta Dynamic Property Set UI 1",
+  "description": "Application-neutral rendering for object fields supplied by a host data provider.",
+  "type": "object",
+  "properties": {
+    "x-fullmeta-ui-dynamicPropertySet": {
+      "$ref": "#/$defs/dynamicPropertySet"
+    }
+  },
+  "$defs": {
+    "dynamicPropertySet": {
+      "type": "object",
+      "required": ["source"],
+      "properties": {
+        "source": { "type": "string", "minLength": 1 },
+        "groupLabel": { "type": "string", "minLength": 1 },
+        "emptyMessage": { "type": "string", "minLength": 1 }
+      },
+      "additionalProperties": false
+    }
+  }
+}

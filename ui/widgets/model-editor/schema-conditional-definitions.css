@@ -1,0 +1,51 @@
+.schema-conditional-heading{display:flex;align-items:baseline;gap:16px;padding:13px 16px 10px;border-bottom:1px solid var(--border)}
+.schema-conditional-heading h2{margin:0;font-size:17px;white-space:nowrap}
+.schema-conditional-heading p{margin:0;color:var(--muted);font-size:11px;line-height:1.4}
+.schema-conditional-toolbar{display:flex;justify-content:flex-end}
+.schema-conditional-list{display:grid;gap:10px}
+.schema-conditional-card{display:grid;gap:9px;padding:11px;border:1px solid var(--border);border-radius:7px;background:#101d29}
+.schema-conditional-card-head{display:flex;align-items:center;justify-content:space-between;gap:9px;color:#b8e5dc;font-size:11px}
+.schema-conditional-card-actions{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:5px}
+.schema-conditional-copy-panel{display:grid;gap:7px;padding:8px;border:1px solid #3a5569;border-radius:5px;background:#142330}
+.schema-conditional-copy-panel[hidden]{display:none}
+.schema-conditional-paste-panel{display:grid;gap:7px;padding:8px;border:1px solid #3a5569;border-radius:5px;background:#142330}
+.schema-conditional-paste-panel[hidden]{display:none}
+.schema-conditional-paste-panel textarea{box-sizing:border-box;width:100%;min-height:56px;resize:vertical;padding:7px;border:1px solid var(--border);border-radius:4px;background:var(--page);color:var(--text);font:11px/1.45 ui-monospace,Consolas,monospace;tab-size:4}
+.schema-conditional-paste-panel>.button{justify-self:start}
+.schema-conditional-copy-panel>.button{justify-self:start}
+.schema-conditional-copy-choices{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:4px;max-height:155px;overflow:auto}
+.schema-conditional-copy-option{display:flex;align-items:start;gap:5px;min-width:0;color:#d2e1eb;font-size:10px;overflow-wrap:anywhere}
+.schema-conditional-copy-option input{margin:1px 0 0}
+.schema-conditional-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.schema-conditional-field{display:grid;gap:4px;min-width:0;color:var(--muted);font-size:10px}
+.schema-conditional-field input,.schema-conditional-field select{box-sizing:border-box;width:100%;min-width:0;padding:5px 6px;border:1px solid var(--border);border-radius:4px;background:var(--page);color:var(--text);font:11px 'Segoe UI',sans-serif}
+.schema-conditional-field input[type=checkbox]{width:auto;justify-self:start}
+.schema-conditional-table{width:100%;min-width:740px}
+.schema-conditional-table th:nth-child(1){width:23%}
+.schema-conditional-table th:nth-child(2){width:20%}
+.schema-conditional-table th:nth-child(3){width:48%}
+.schema-conditional-table th:nth-child(4){width:9%}
+.schema-conditional-table td:nth-child(3) input,.schema-conditional-table td:nth-child(3) select{margin-bottom:4px}
+.schema-conditional-row-extra{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:5px;margin-top:5px}
+.schema-conditional-row-extra[hidden]{display:none}
+.schema-conditional-inspect{color:#a9cfdd;font-size:10px}
+.schema-conditional-inspect summary{cursor:pointer}
+.schema-conditional-inspect pre{max-height:150px;overflow:auto;white-space:pre-wrap;overflow-wrap:anywhere;color:var(--muted);font:10px/1.4 ui-monospace,Consolas,monospace}
+.schema-conditional-footer{display:flex;justify-content:flex-end;gap:8px;padding:8px 15px 13px;border-top:1px solid var(--border)}
+.schema-bulk-dialog:has(.schema-bulk-table thead th:nth-child(9)){width:min(960px,calc(100vw - 24px))}
+.schema-bulk-dialog:has(.schema-bulk-table thead th:nth-child(9)) .schema-bulk-body{gap:8px;padding:10px 12px}
+.schema-bulk-dialog:has(.schema-bulk-table thead th:nth-child(9)) .schema-bulk-table{width:100%;min-width:0;table-layout:fixed}
+.schema-bulk-dialog:has(.schema-bulk-table thead th:nth-child(9)) .schema-bulk-table th,.schema-bulk-dialog:has(.schema-bulk-table thead th:nth-child(9)) .schema-bulk-table td{min-width:0;white-space:normal;overflow-wrap:anywhere;padding:4px}
+.schema-bulk-dialog:has(.schema-bulk-table thead th:nth-child(9)) .schema-bulk-table th:nth-child(1){width:6%}
+.schema-bulk-dialog:has(.schema-bulk-table thead th:nth-child(9)) .schema-bulk-table th:nth-child(2){width:14%}
+.schema-bulk-dialog:has(.schema-bulk-table thead th:nth-child(9)) .schema-bulk-table th:nth-child(3){width:10%}
+.schema-bulk-dialog:has(.schema-bulk-table thead th:nth-child(9)) .schema-bulk-table th:nth-child(4){width:14%}
+.schema-bulk-dialog:has(.schema-bulk-table thead th:nth-child(9)) .schema-bulk-table th:nth-child(5){width:8%}
+.schema-bulk-dialog:has(.schema-bulk-table thead th:nth-child(9)) .schema-bulk-table th:nth-child(6){width:10%}
+.schema-bulk-dialog:has(.schema-bulk-table thead th:nth-child(9)) .schema-bulk-table th:nth-child(7){width:8%}
+.schema-bulk-dialog:has(.schema-bulk-table thead th:nth-child(9)) .schema-bulk-table th:nth-child(8){width:20%}
+.schema-bulk-dialog:has(.schema-bulk-table thead th:nth-child(9)) .schema-bulk-table th:nth-child(9){width:10%}
+.schema-bulk-dialog:has(.schema-bulk-table thead th:nth-child(9)) .schema-bulk-table td:first-child{position:static;min-width:0}
+.schema-bulk-dialog:has(.schema-bulk-table thead th:nth-child(9)) .schema-bulk-table input:not([type=checkbox]),.schema-bulk-dialog:has(.schema-bulk-table thead th:nth-child(9)) .schema-bulk-table select,.schema-bulk-dialog:has(.schema-bulk-table thead th:nth-child(9)) .schema-bulk-table textarea{min-width:0;width:100%;padding:4px;font-size:10px}
+.schema-bulk-dialog:has(.schema-bulk-table thead th:nth-child(9)) .schema-bulk-table td:last-child button{margin:1px;padding:3px 4px;font-size:10px}
+@media(max-width:850px){.schema-conditional-heading{display:block}.schema-conditional-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}

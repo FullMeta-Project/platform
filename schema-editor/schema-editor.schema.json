@@ -1,0 +1,3240 @@
+{
+  "$defs": {
+    "declarationOverview": {
+      "description": "How immediate properties, array items, and clear alternatives are summarized while editing a schema.",
+      "properties": {
+        "arrayHeading": {
+          "title": "Array item heading"
+        },
+        "arrayItemFields": {
+          "title": "Show array item fields"
+        },
+        "maxPreviewFields": {
+          "title": "Preview field limit"
+        },
+        "nestedHeading": {
+          "title": "Object field heading"
+        },
+        "nestedObjectFields": {
+          "title": "Show object fields"
+        },
+        "propertyDescriptions": {
+          "title": "Show property descriptions"
+        },
+        "propertyLabels": {
+          "title": "Show property labels"
+        },
+        "variantHeading": {
+          "title": "Alternative heading"
+        },
+        "variantOptions": {
+          "title": "Show clear alternatives"
+        }
+      },
+      "title": "Declaration overview"
+    },
+    "declarativeValidationCondition": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/declarativeValidationConstraint"
+        },
+        {
+          "additionalProperties": true,
+          "properties": {
+            "all": {
+              "items": {
+                "$ref": "#/$defs/declarativeValidationCondition"
+              },
+              "minItems": 1,
+              "type": "array"
+            }
+          },
+          "required": [
+            "all"
+          ],
+          "type": "object"
+        },
+        {
+          "additionalProperties": true,
+          "properties": {
+            "any": {
+              "items": {
+                "$ref": "#/$defs/declarativeValidationCondition"
+              },
+              "minItems": 1,
+              "type": "array"
+            }
+          },
+          "required": [
+            "any"
+          ],
+          "type": "object"
+        },
+        {
+          "additionalProperties": true,
+          "properties": {
+            "not": {
+              "$ref": "#/$defs/declarativeValidationCondition"
+            }
+          },
+          "required": [
+            "not"
+          ],
+          "type": "object"
+        }
+      ]
+    },
+    "declarativeValidationConstraint": {
+      "additionalProperties": true,
+      "oneOf": [
+        {
+          "properties": {
+            "type": {
+              "const": "required"
+            }
+          },
+          "required": [
+            "type",
+            "subject"
+          ]
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "forbidden"
+            }
+          },
+          "required": [
+            "type",
+            "subject"
+          ]
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "nonblank"
+            }
+          },
+          "required": [
+            "type",
+            "subject"
+          ]
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "equals"
+            }
+          },
+          "required": [
+            "type",
+            "subject",
+            "other"
+          ]
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "notEquals"
+            }
+          },
+          "required": [
+            "type",
+            "subject",
+            "other"
+          ]
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "unique"
+            }
+          },
+          "required": [
+            "type",
+            "subject"
+          ]
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "memberOf"
+            }
+          },
+          "required": [
+            "type",
+            "subject",
+            "other"
+          ]
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "memberOfDifference"
+            }
+          },
+          "required": [
+            "type",
+            "subject",
+            "other",
+            "excluded"
+          ]
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "subset"
+            }
+          },
+          "required": [
+            "type",
+            "subject",
+            "other"
+          ]
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "setEqual"
+            }
+          },
+          "required": [
+            "type",
+            "subject",
+            "other"
+          ]
+        },
+        {
+          "properties": {
+            "minimum": {
+              "type": "number"
+            },
+            "type": {
+              "const": "minimum"
+            }
+          },
+          "required": [
+            "type",
+            "subject",
+            "minimum"
+          ]
+        },
+        {
+          "properties": {
+            "maximum": {
+              "type": "number"
+            },
+            "type": {
+              "const": "maximum"
+            }
+          },
+          "required": [
+            "type",
+            "subject",
+            "maximum"
+          ]
+        },
+        {
+          "properties": {
+            "maximum": {
+              "type": "number"
+            },
+            "minimum": {
+              "type": "number"
+            },
+            "type": {
+              "const": "range"
+            }
+          },
+          "required": [
+            "type",
+            "subject",
+            "minimum",
+            "maximum"
+          ]
+        },
+        {
+          "properties": {
+            "minimum": {
+              "minimum": 0,
+              "type": "integer"
+            },
+            "type": {
+              "const": "minCount"
+            }
+          },
+          "required": [
+            "type",
+            "subject",
+            "minimum"
+          ]
+        },
+        {
+          "properties": {
+            "maximum": {
+              "minimum": 0,
+              "type": "integer"
+            },
+            "type": {
+              "const": "maxCount"
+            }
+          },
+          "required": [
+            "type",
+            "subject",
+            "maximum"
+          ]
+        },
+        {
+          "properties": {
+            "maximum": {
+              "minimum": 0,
+              "type": "integer"
+            },
+            "minimum": {
+              "minimum": 0,
+              "type": "integer"
+            },
+            "type": {
+              "const": "countRange"
+            }
+          },
+          "required": [
+            "type",
+            "subject",
+            "minimum",
+            "maximum"
+          ]
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "uniqueBy"
+            }
+          },
+          "required": [
+            "type",
+            "subject",
+            "itemPath"
+          ]
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "semanticCheck"
+            }
+          },
+          "required": [
+            "type",
+            "subject",
+            "check",
+            "subjectInput",
+            "inputs"
+          ]
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "keyMatchesField"
+            }
+          },
+          "required": [
+            "type",
+            "subject",
+            "itemPath"
+          ]
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "lessThan"
+            }
+          },
+          "required": [
+            "type",
+            "subject",
+            "other"
+          ]
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "lessOrEqual"
+            }
+          },
+          "required": [
+            "type",
+            "subject",
+            "other"
+          ]
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "greaterThan"
+            }
+          },
+          "required": [
+            "type",
+            "subject",
+            "other"
+          ]
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "greaterOrEqual"
+            }
+          },
+          "required": [
+            "type",
+            "subject",
+            "other"
+          ]
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "notMemberOf"
+            }
+          },
+          "required": [
+            "type",
+            "subject",
+            "other"
+          ]
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "productAtMost"
+            }
+          },
+          "required": [
+            "type",
+            "subject",
+            "other",
+            "countPath",
+            "collectionPath"
+          ]
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "countAtMost"
+            }
+          },
+          "required": [
+            "type",
+            "subject",
+            "other"
+          ]
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "disjoint"
+            }
+          },
+          "required": [
+            "type",
+            "subject",
+            "other"
+          ]
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "uniqueCanonicalMapBy"
+            }
+          },
+          "required": [
+            "type",
+            "subject",
+            "itemPath",
+            "omitValue"
+          ]
+        }
+      ],
+      "properties": {
+        "check": {
+          "enum": [
+            "quantity",
+            "expression",
+            "uniqueIds",
+            "rules",
+            "collection"
+          ]
+        },
+        "collectionPath": {
+          "pattern": "^(?:/(?:[^~]|~[01])*)?$",
+          "type": "string"
+        },
+        "countPath": {
+          "pattern": "^(?:/(?:[^~]|~[01])*)?$",
+          "type": "string"
+        },
+        "entryWhen": {
+          "$ref": "#/$defs/declarativeValidationCondition"
+        },
+        "excluded": {
+          "$ref": "#/$defs/declarativeValidationOperand"
+        },
+        "expose": {
+          "pattern": "^[A-Za-z][A-Za-z0-9_]*$",
+          "type": "string"
+        },
+        "gate": {
+          "type": "boolean"
+        },
+        "inputs": {
+          "items": {
+            "additionalProperties": true,
+            "properties": {
+              "name": {
+                "pattern": "^[A-Za-z][A-Za-z0-9_]*$",
+                "type": "string"
+              },
+              "operand": {
+                "$ref": "#/$defs/declarativeValidationOperand"
+              }
+            },
+            "required": [
+              "name",
+              "operand"
+            ],
+            "type": "object"
+          },
+          "maxItems": 64,
+          "type": "array"
+        },
+        "itemPath": {
+          "pattern": "^(?:/(?:[^~]|~[01])*)?$",
+          "type": "string"
+        },
+        "maximum": {
+          "type": "number"
+        },
+        "minimum": {
+          "type": "number"
+        },
+        "omitValue": {
+          "type": "string"
+        },
+        "other": {
+          "$ref": "#/$defs/declarativeValidationOperand"
+        },
+        "subject": {
+          "$ref": "#/$defs/declarativeValidationOperand"
+        },
+        "subjectInput": {
+          "pattern": "^[A-Za-z][A-Za-z0-9_]*$",
+          "type": "string"
+        },
+        "type": {
+          "enum": [
+            "required",
+            "forbidden",
+            "nonblank",
+            "equals",
+            "notEquals",
+            "unique",
+            "memberOf",
+            "memberOfDifference",
+            "subset",
+            "setEqual",
+            "minimum",
+            "maximum",
+            "range",
+            "minCount",
+            "maxCount",
+            "countRange",
+            "uniqueBy",
+            "semanticCheck",
+            "keyMatchesField",
+            "lessThan",
+            "lessOrEqual",
+            "greaterThan",
+            "greaterOrEqual",
+            "notMemberOf",
+            "productAtMost",
+            "countAtMost",
+            "disjoint",
+            "uniqueCanonicalMapBy"
+          ]
+        }
+      },
+      "required": [
+        "type",
+        "subject"
+      ],
+      "type": "object"
+    },
+    "declarativeValidationDiagnostic": {
+      "additionalProperties": true,
+      "properties": {
+        "message": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "path": {
+          "pattern": "^(?:/(?:[^~]|~[01])*)?$",
+          "type": "string"
+        }
+      },
+      "required": [
+        "message"
+      ],
+      "type": "object"
+    },
+    "declarativeValidationObligation": {
+      "additionalProperties": true,
+      "properties": {
+        "constraint": {
+          "$ref": "#/$defs/declarativeValidationConstraint"
+        },
+        "diagnostic": {
+          "$ref": "#/$defs/declarativeValidationDiagnostic"
+        },
+        "id": {
+          "pattern": "^[A-Za-z][A-Za-z0-9_-]*$",
+          "type": "string"
+        },
+        "name": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "scope": {
+          "$ref": "#/$defs/declarativeValidationScope"
+        },
+        "stage": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "when": {
+          "$ref": "#/$defs/declarativeValidationCondition"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "stage",
+        "scope",
+        "constraint",
+        "diagnostic"
+      ],
+      "type": "object"
+    },
+    "declarativeValidationOperand": {
+      "additionalProperties": true,
+      "oneOf": [
+        {
+          "properties": {
+            "ancestor": false,
+            "array": false,
+            "binding": false,
+            "canonicalMap": false,
+            "literal": false,
+            "norm": false,
+            "object": false,
+            "select": false,
+            "source": false
+          },
+          "required": [
+            "field"
+          ]
+        },
+        {
+          "properties": {
+            "ancestor": false,
+            "array": false,
+            "binding": false,
+            "canonicalMap": false,
+            "field": false,
+            "literal": false,
+            "norm": false,
+            "object": false,
+            "select": false
+          },
+          "required": [
+            "source",
+            "path"
+          ]
+        },
+        {
+          "properties": {
+            "ancestor": false,
+            "array": false,
+            "binding": false,
+            "canonicalMap": false,
+            "field": false,
+            "norm": false,
+            "object": false,
+            "select": false,
+            "source": false
+          },
+          "required": [
+            "literal"
+          ]
+        },
+        {
+          "properties": {
+            "ancestor": false,
+            "array": false,
+            "canonicalMap": false,
+            "field": false,
+            "literal": false,
+            "norm": false,
+            "object": false,
+            "select": false,
+            "source": false
+          },
+          "required": [
+            "binding",
+            "path"
+          ]
+        },
+        {
+          "properties": {
+            "array": false,
+            "binding": false,
+            "canonicalMap": false,
+            "field": false,
+            "literal": false,
+            "norm": false,
+            "object": false,
+            "select": false,
+            "source": false
+          },
+          "required": [
+            "ancestor",
+            "path"
+          ]
+        },
+        {
+          "properties": {
+            "ancestor": false,
+            "array": false,
+            "binding": false,
+            "canonicalMap": false,
+            "field": false,
+            "literal": false,
+            "norm": false,
+            "select": false,
+            "source": false
+          },
+          "required": [
+            "object"
+          ]
+        },
+        {
+          "properties": {
+            "ancestor": false,
+            "binding": false,
+            "canonicalMap": false,
+            "field": false,
+            "literal": false,
+            "norm": false,
+            "object": false,
+            "select": false,
+            "source": false
+          },
+          "required": [
+            "array"
+          ]
+        },
+        {
+          "properties": {
+            "ancestor": false,
+            "array": false,
+            "binding": false,
+            "canonicalMap": false,
+            "field": false,
+            "literal": false,
+            "object": false,
+            "select": false,
+            "source": false
+          },
+          "required": [
+            "norm"
+          ]
+        },
+        {
+          "properties": {
+            "ancestor": false,
+            "array": false,
+            "binding": false,
+            "canonicalMap": false,
+            "field": false,
+            "literal": false,
+            "norm": false,
+            "object": false,
+            "source": false
+          },
+          "required": [
+            "select"
+          ]
+        },
+        {
+          "properties": {
+            "ancestor": false,
+            "array": false,
+            "binding": false,
+            "field": false,
+            "literal": false,
+            "norm": false,
+            "object": false,
+            "select": false,
+            "source": false
+          },
+          "required": [
+            "canonicalMap"
+          ]
+        }
+      ],
+      "properties": {
+        "allowErrors": {
+          "type": "boolean"
+        },
+        "ancestor": {
+          "maximum": 16,
+          "minimum": 1,
+          "type": "integer"
+        },
+        "array": {
+          "items": {
+            "$ref": "#/$defs/declarativeValidationOperand"
+          },
+          "maxItems": 64,
+          "type": "array"
+        },
+        "binding": {
+          "pattern": "^[A-Za-z][A-Za-z0-9_]*$",
+          "type": "string"
+        },
+        "canonicalMap": {
+          "additionalProperties": true,
+          "properties": {
+            "omitValue": {
+              "$ref": "#/$defs/declarativeValidationOperand"
+            },
+            "value": {
+              "$ref": "#/$defs/declarativeValidationOperand"
+            }
+          },
+          "required": [
+            "value",
+            "omitValue"
+          ],
+          "type": "object"
+        },
+        "field": {
+          "pattern": "^(?:/(?:[^~]|~[01])*)?$",
+          "type": "string"
+        },
+        "literal": {},
+        "norm": {
+          "$ref": "#/$defs/declarativeValidationOperand"
+        },
+        "object": {
+          "additionalProperties": {
+            "$ref": "#/$defs/declarativeValidationOperand"
+          },
+          "maxProperties": 64,
+          "propertyNames": {
+            "not": {
+              "enum": [
+                "__proto__",
+                "constructor",
+                "prototype"
+              ]
+            },
+            "pattern": "^[A-Za-z_][A-Za-z0-9_]*$"
+          },
+          "type": "object"
+        },
+        "path": {
+          "pattern": "^(?:/(?:[^~]|~[01])*)?$",
+          "type": "string"
+        },
+        "select": {
+          "additionalProperties": true,
+          "properties": {
+            "childrenPath": {
+              "minLength": 1,
+              "pattern": "^(?:/(?:[^~]|~[01])*)?$",
+              "type": "string"
+            },
+            "flatten": {
+              "type": "boolean"
+            },
+            "from": {
+              "$ref": "#/$defs/declarativeValidationOperand"
+            },
+            "kind": {
+              "enum": [
+                "items",
+                "keys",
+                "values",
+                "entries"
+              ]
+            },
+            "single": {
+              "type": "boolean"
+            },
+            "value": {
+              "$ref": "#/$defs/declarativeValidationOperand"
+            },
+            "where": {
+              "$ref": "#/$defs/declarativeValidationCondition"
+            }
+          },
+          "required": [
+            "kind",
+            "from"
+          ],
+          "type": "object"
+        },
+        "source": {
+          "enum": [
+            "root",
+            "model",
+            "schema",
+            "context"
+          ]
+        }
+      },
+      "type": "object"
+    },
+    "declarativeValidationProgram": {
+      "additionalProperties": true,
+      "properties": {
+        "declarative": {
+          "$ref": "#/$defs/declarativeValidationSource"
+        },
+        "maximumErrors": {
+          "minimum": 1,
+          "type": "integer"
+        },
+        "rules": {
+          "items": {
+            "type": "object"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "rules"
+      ],
+      "type": "object"
+    },
+    "declarativeValidationScope": {
+      "additionalProperties": true,
+      "properties": {
+        "childrenPath": {
+          "minLength": 1,
+          "pattern": "^(?:/(?:[^~]|~[01])*)?$",
+          "type": "string"
+        },
+        "nested": {
+          "items": {
+            "additionalProperties": true,
+            "properties": {
+              "childrenPath": {
+                "minLength": 1,
+                "pattern": "^(?:/(?:[^~]|~[01])*)?$",
+                "type": "string"
+              },
+              "path": {
+                "pattern": "^(?:/(?:[^~]|~[01])*)?$",
+                "type": "string"
+              },
+              "when": {
+                "$ref": "#/$defs/declarativeValidationCondition"
+              }
+            },
+            "required": [
+              "path"
+            ],
+            "type": "object"
+          },
+          "maxItems": 16,
+          "type": "array"
+        },
+        "path": {
+          "pattern": "^(?:/(?:[^~]|~[01])*)?$",
+          "type": "string"
+        },
+        "source": {
+          "enum": [
+            "root",
+            "model",
+            "schema",
+            "context"
+          ]
+        },
+        "when": {
+          "$ref": "#/$defs/declarativeValidationCondition"
+        }
+      },
+      "required": [
+        "source",
+        "path"
+      ],
+      "type": "object"
+    },
+    "declarativeValidationSource": {
+      "additionalProperties": true,
+      "properties": {
+        "format": {
+          "const": "fullmeta-declarative-rules/1"
+        },
+        "obligations": {
+          "items": {
+            "$ref": "#/$defs/declarativeValidationObligation"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "format",
+        "obligations"
+      ],
+      "type": "object"
+    },
+    "documentWidget": {
+      "properties": {
+        "context": {
+          "title": "Editing context"
+        },
+        "id": {
+          "title": "Widget ID"
+        },
+        "label": {
+          "title": "Display label"
+        },
+        "path": {
+          "items": {
+            "title": "Path segment"
+          },
+          "title": "Document data path"
+        },
+        "placement": {
+          "title": "Widget placement"
+        },
+        "related": {
+          "items": {
+            "$ref": "#/$defs/documentWidgetResource"
+          },
+          "title": "Related resources"
+        },
+        "widget": {
+          "title": "Widget type"
+        }
+      },
+      "title": "Document widget"
+    },
+    "documentWidgetResource": {
+      "properties": {
+        "label": {
+          "title": "Display label"
+        },
+        "path": {
+          "items": {
+            "title": "Path segment"
+          },
+          "title": "Document data path"
+        }
+      },
+      "title": "Related resource"
+    },
+    "schemaAuthoring": {
+      "description": "Shared presentation and widget authoring profiles used when editing a JSON Schema document.",
+      "properties": {
+        "context": {
+          "title": "Authoring context"
+        },
+        "format": {
+          "title": "Annotation language format"
+        },
+        "presentation": {
+          "$ref": "#/$defs/schemaAuthoringPresentation"
+        },
+        "profiles": {
+          "$ref": "#/$defs/schemaAuthoringProfiles"
+        },
+        "schema": {
+          "title": "Authoring declaration version"
+        }
+      },
+      "title": "Schema authoring UI"
+    },
+    "schemaAuthoringPresentation": {
+      "properties": {
+        "declarationOverview": {
+          "$ref": "#/$defs/declarationOverview"
+        },
+        "documentWidgets": {
+          "items": {
+            "$ref": "#/$defs/documentWidget"
+          },
+          "title": "Document widgets"
+        },
+        "effectiveProperties": {
+          "title": "Show effective properties"
+        },
+        "propertiesFirst": {
+          "title": "Show properties first"
+        },
+        "schemaPropertyTable": {
+          "title": "Batch schema property table"
+        },
+        "tools": {
+          "description": "The host command ID selects the document operation. Optional widget and entry fields bind the tool to a public widget catalog interface.",
+          "items": {
+            "$ref": "#/$defs/schemaAuthoringTool"
+          },
+          "title": "Accelerated authoring tools",
+          "type": "array"
+        },
+        "widgetSpecializations": {
+          "title": "Show specialized widget editors"
+        }
+      },
+      "title": "Schema authoring presentation"
+    },
+    "schemaAuthoringProfile": {
+      "properties": {
+        "context": {
+          "title": "Authoring context"
+        },
+        "format": {
+          "title": "Annotation language format"
+        },
+        "payload": {
+          "$ref": "#/$defs/schemaAuthoringProfilePayload"
+        },
+        "target": {
+          "$ref": "#/$defs/schemaAuthoringProfileTarget"
+        }
+      },
+      "title": "Widget authoring profile"
+    },
+    "schemaAuthoringProfileEditor": {
+      "properties": {
+        "annotationLabel": {
+          "title": "Annotation label"
+        },
+        "arrayTable": {
+          "title": "Array table options"
+        },
+        "choices": {
+          "title": "Choice options"
+        },
+        "fields": {
+          "items": {
+            "$ref": "#/$defs/schemaAuthoringProfileField"
+          },
+          "title": "Authoring fields"
+        },
+        "groups": {
+          "title": "Authoring groups"
+        },
+        "heading": {
+          "title": "Editor heading"
+        },
+        "itemFields": {
+          "items": {
+            "$ref": "#/$defs/schemaAuthoringProfileField"
+          },
+          "title": "Item fields"
+        },
+        "labels": {
+          "title": "Editor labels"
+        },
+        "mode": {
+          "title": "Authoring mode"
+        },
+        "ownedUiAnnotations": {
+          "title": "Owned UI annotations"
+        },
+        "roles": {
+          "title": "Tree roles"
+        },
+        "scopes": {
+          "title": "Source scopes"
+        },
+        "textFields": {
+          "items": {
+            "$ref": "#/$defs/schemaAuthoringProfileField"
+          },
+          "title": "Text fields"
+        },
+        "validationContract": {
+          "title": "Validation contract"
+        },
+        "variantEditor": {
+          "title": "Alternative editor"
+        }
+      },
+      "title": "Widget annotation editor"
+    },
+    "schemaAuthoringProfileField": {
+      "properties": {
+        "key": {
+          "title": "Field key"
+        },
+        "label": {
+          "title": "Field label"
+        },
+        "properties": {
+          "title": "Nested fields"
+        },
+        "required": {
+          "title": "Required field"
+        },
+        "type": {
+          "title": "Field control type"
+        }
+      },
+      "title": "Widget authoring field"
+    },
+    "schemaAuthoringProfilePayload": {
+      "properties": {
+        "advancedFields": {
+          "title": "Advanced field display"
+        },
+        "advancedFieldsNote": {
+          "title": "Advanced field note"
+        },
+        "annotationKey": {
+          "title": "Annotation key"
+        },
+        "authoring": {
+          "$ref": "#/$defs/schemaAuthoringProfileEditor"
+        },
+        "context": {
+          "title": "Payload context"
+        },
+        "declarationOverview": {
+          "$ref": "#/$defs/declarationOverview"
+        },
+        "editor": {
+          "title": "Editor kind"
+        },
+        "placement": {
+          "title": "Editor placement"
+        },
+        "rawAnnotation": {
+          "title": "Raw annotation display"
+        },
+        "rawAnnotationPlacement": {
+          "title": "Raw annotation placement"
+        },
+        "requiresAny": {
+          "title": "Required annotation alternatives"
+        },
+        "requiresEmptyUiGroup": {
+          "title": "Requires an empty UI group"
+        },
+        "schemaLayout": {
+          "title": "Schema layout"
+        },
+        "showHeading": {
+          "title": "Show editor heading"
+        }
+      },
+      "title": "Widget authoring behavior"
+    },
+    "schemaAuthoringProfileTarget": {
+      "properties": {
+        "kind": {
+          "title": "Target kind"
+        },
+        "name": {
+          "title": "Widget name"
+        }
+      },
+      "title": "Widget target"
+    },
+    "schemaAuthoringProfiles": {
+      "additionalProperties": {
+        "$ref": "#/$defs/schemaAuthoringProfile"
+      },
+      "description": "Each named widget has a profile describing its schema annotation editor.",
+      "title": "Widget authoring profiles"
+    },
+    "schemaAuthoringTool": {
+      "dependentRequired": {
+        "entry": [
+          "widget"
+        ],
+        "widget": [
+          "entry"
+        ]
+      },
+      "properties": {
+        "entry": {
+          "title": "Public authoring export",
+          "type": "string"
+        },
+        "group": {
+          "minLength": 1,
+          "title": "Tool group",
+          "type": "string"
+        },
+        "id": {
+          "pattern": "^[a-z][a-z0-9-]*$",
+          "title": "Host command ID",
+          "type": "string"
+        },
+        "label": {
+          "minLength": 1,
+          "title": "Display label",
+          "type": "string"
+        },
+        "widget": {
+          "title": "Catalog widget ID",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "label",
+        "group"
+      ],
+      "title": "Authoring tool",
+      "type": "object"
+    }
+  },
+  "$id": "https://fullmeta.local/platform/schemas/schema-editor.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": true,
+  "author": "Jensen Li",
+  "description": "Application-neutral interpretation of an editable FullMeta JSON Schema document.",
+  "patternProperties": {
+    "^x-fullmeta-.+Validation$": {
+      "$ref": "#/$defs/declarativeValidationProgram"
+    }
+  },
+  "properties": {
+    "$id": {
+      "title": "Schema identifier",
+      "type": "string"
+    },
+    "$schema": {
+      "title": "JSON Schema dialect",
+      "type": "string"
+    },
+    "application": {
+      "title": "Application",
+      "type": "string"
+    },
+    "author": {
+      "title": "Author",
+      "type": "string"
+    },
+    "description": {
+      "title": "Description",
+      "type": "string"
+    },
+    "title": {
+      "title": "Title",
+      "type": "string"
+    },
+    "x-fullmeta-rules": {
+      "$ref": "#/$defs/declarativeValidationProgram",
+      "title": "Validation program"
+    },
+    "x-fullmeta-schema": {
+      "title": "FullMeta interpreting schema",
+      "type": "string"
+    },
+    "x-fullmeta-ui": {
+      "description": "Controls used while editing this schema document.",
+      "properties": {
+        "declarationAuthoring": {
+          "title": "Declaration authoring"
+        },
+        "onlyDeclaredProperties": {
+          "title": "Show only declared properties"
+        },
+        "structuralEditing": {
+          "title": "Structural editing"
+        }
+      },
+      "title": "Schema editor controls"
+    },
+    "x-fullmeta-ui-annotationCatalog": {
+      "description": "Workspace path to the field annotation catalog.",
+      "title": "UI annotation catalog"
+    },
+    "x-fullmeta-ui-editor": {
+      "additionalProperties": false,
+      "description": "Select and configure this schema’s document editor with the Editor widget authoring table.",
+      "properties": {
+        "options": {
+          "title": "Editor options",
+          "type": "object"
+        },
+        "widget": {
+          "minLength": 1,
+          "title": "Catalog editor widget",
+          "type": "string"
+        }
+      },
+      "readOnly": true,
+      "required": [
+        "widget"
+      ],
+      "title": "Editor widget",
+      "type": "object"
+    },
+    "x-fullmeta-ui-generated": {
+      "description": "Generated schema paths and the designer inputs that own them. Change these through guided schema authoring.",
+      "readOnly": true,
+      "title": "Generated schema ownership",
+      "type": "object"
+    },
+    "x-fullmeta-ui-schemaAuthoring": {
+      "$ref": "#/$defs/schemaAuthoring"
+    }
+  },
+  "required": [
+    "$schema",
+    "$id",
+    "x-fullmeta-schema"
+  ],
+  "title": "FullMeta schema document editor",
+  "type": "object",
+  "x-fullmeta-schema": "./schema-editor.schema.json",
+  "x-fullmeta-ui": {
+    "declarationAuthoring": true,
+    "onlyDeclaredProperties": true,
+    "structuralEditing": true
+  },
+  "x-fullmeta-ui-annotationCatalog": "platform/ui/annotation-catalog.json",
+  "x-fullmeta-ui-behavior": {
+    "context": "projectEditing",
+    "format": "fullmeta-ui-behavior/1",
+    "payload": {
+      "presentation": {
+        "icon": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 16 16\" fill=\"none\" stroke=\"#8bdacb\" stroke-width=\"1.35\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M1.5 4a1.5 1.5 0 0 1 1.5-1.5h3l1.5 2H13A1.5 1.5 0 0 1 14.5 6v6A1.5 1.5 0 0 1 13 13.5H3A1.5 1.5 0 0 1 1.5 12z\"/><path d=\"M1.8 6h12.4\"/></svg>"
+      }
+    },
+    "target": {
+      "kind": "field"
+    }
+  },
+  "x-fullmeta-ui-editor": {
+    "widget": "modelEditor"
+  },
+  "x-fullmeta-ui-graphicsConsole": {
+    "defaultScene": "document",
+    "presentation": {
+      "axes": [
+        [
+          "x",
+          [
+            1,
+            0,
+            0
+          ],
+          "#e26976"
+        ],
+        [
+          "y",
+          [
+            0,
+            1,
+            0
+          ],
+          "#55cbb7"
+        ]
+      ],
+      "widgets": {
+        "graphicsConsoleOverview": {
+          "label": "Graphics console overview",
+          "showSceneControls": false
+        }
+      }
+    },
+    "scenes": {
+      "document": {
+        "inputs": [
+          {
+            "id": "graphicsConsole",
+            "source": {
+              "path": "x-fullmeta-ui-graphicsConsole",
+              "scope": "model"
+            }
+          }
+        ],
+        "kind": "layered",
+        "layers": [
+          {
+            "id": "graphicsConsole",
+            "input": "graphicsConsole",
+            "label": "Declared scenes and bindings",
+            "widget": "graphicsConsoleOverview"
+          }
+        ],
+        "surface": {
+          "widget": "graphicsConsoleOverview"
+        }
+      }
+    },
+    "schema": "fullmeta-graphics-console/1"
+  },
+  "x-fullmeta-ui-graphicsInterfaces": {
+    "catalogs": [
+      "../ui/widgets/catalog.json"
+    ],
+    "schema": "fullmeta-graphics-interfaces/1",
+    "widgets": {
+      "graphicsConsoleOverview": {
+        "id": "graphicsConsoleOverview",
+        "kind": "diagram",
+        "label": "Graphics console overview"
+      }
+    }
+  },
+  "x-fullmeta-ui-modelEditor": {
+    "brandSubtitle": "Schema workspace",
+    "controlCopy": {
+      "validateHelp": "Validate this JSON Schema document"
+    },
+    "emptyState": {
+      "canvasLabel": "Schema document graphics",
+      "resolvedValues": "Select Validate to check this schema document."
+    },
+    "newModel": {
+      "description": "Create an empty FullMeta schema in an existing workspace folder. Add its declarations in the editor.",
+      "endpoint": "/api/program/document/create"
+    },
+    "panels": [],
+    "projectRootFolder": ".",
+    "roles": {},
+    "schema": "fullmeta-model-editor-ui/1"
+  },
+  "x-fullmeta-ui-schemaAuthoring": {
+    "context": "schemaAuthoring",
+    "format": "fullmeta-ui-behavior/1",
+    "presentation": {
+      "declarationOverview": {
+        "arrayHeading": "Each item contains",
+        "arrayItemFields": true,
+        "maxPreviewFields": 8,
+        "nestedHeading": "Contains",
+        "nestedObjectFields": true,
+        "propertyDescriptions": true,
+        "propertyLabels": true,
+        "variantHeading": "Allowed forms",
+        "variantOptions": true
+      },
+      "documentWidgets": [
+        {
+          "context": "schemaAuthoring",
+          "id": "graphicsConsole",
+          "label": "Graphics console",
+          "path": [
+            "x-fullmeta-ui-graphicsConsole"
+          ],
+          "placement": "rootSettings",
+          "related": [
+            {
+              "label": "Graphics interfaces",
+              "path": [
+                "x-fullmeta-ui-graphicsInterfaces"
+              ]
+            }
+          ],
+          "widget": "graphicsConsole"
+        },
+        {
+          "context": "schemaAuthoring",
+          "id": "graphicsInterfaces",
+          "label": "Graphics interfaces",
+          "path": [
+            "x-fullmeta-ui-graphicsInterfaces"
+          ],
+          "placement": "rootSettings",
+          "widget": "graphicsInterfaces"
+        },
+        {
+          "context": "schemaAuthoring",
+          "id": "modelEditorUi",
+          "label": "Model Editor UI",
+          "path": [
+            "x-fullmeta-ui-modelEditor"
+          ],
+          "placement": "rootSettings",
+          "widget": "structured"
+        },
+        {
+          "context": "schemaAuthoring",
+          "id": "programUi",
+          "label": "Program UI",
+          "path": [
+            "x-fullmeta-ui-program"
+          ],
+          "placement": "rootSettings",
+          "widget": "structured"
+        },
+        {
+          "context": "schemaAuthoring",
+          "id": "treeUi",
+          "label": "Tree UI",
+          "path": [
+            "x-fullmeta-ui-tree"
+          ],
+          "placement": "rootSettings",
+          "widget": "structured"
+        },
+        {
+          "context": "schemaAuthoring",
+          "id": "uiBehavior",
+          "label": "UI behavior",
+          "path": [
+            "x-fullmeta-ui-behavior"
+          ],
+          "placement": "rootSettings",
+          "widget": "structured"
+        },
+        {
+          "context": "schemaAuthoring",
+          "id": "schemaAuthoringUi",
+          "label": "Schema authoring UI",
+          "path": [
+            "x-fullmeta-ui-schemaAuthoring"
+          ],
+          "placement": "rootSettings",
+          "widget": "structured"
+        },
+        {
+          "context": "schemaAuthoring",
+          "id": "annotationCatalog",
+          "label": "UI annotation catalog",
+          "path": [
+            "x-fullmeta-ui-annotationCatalog"
+          ],
+          "placement": "rootSettings",
+          "widget": "structured"
+        },
+        {
+          "context": "schemaAuthoring",
+          "id": "schemaSource",
+          "label": "Schema source",
+          "path": [],
+          "placement": "rootSettings",
+          "widget": "source"
+        }
+      ],
+      "effectiveProperties": true,
+      "propertiesFirst": true,
+      "schemaPropertyTable": true,
+      "tools": [
+        {
+          "entry": "createBulkSchemaAuthoringDialog",
+          "group": "Field authoring",
+          "id": "bulk-schema-authoring",
+          "label": "Bulk schema authoring",
+          "widget": "modelEditor"
+        },
+        {
+          "group": "Field authoring",
+          "id": "bulk-annotations",
+          "label": "Other UI annotations"
+        },
+        {
+          "group": "Field authoring",
+          "id": "bulk-widgets",
+          "label": "Bulk widget settings"
+        },
+        {
+          "group": "Field authoring",
+          "id": "bulk-constraints",
+          "label": "Bulk field constraints"
+        },
+        {
+          "group": "Field authoring",
+          "id": "nested-structure",
+          "label": "Nested field structure"
+        },
+        {
+          "group": "Field authoring",
+          "id": "bulk-edit-actions",
+          "label": "Bulk collection actions"
+        },
+        {
+          "group": "Field authoring",
+          "id": "bulk-references",
+          "label": "Bulk field references"
+        },
+        {
+          "entry": "createValidationProgramTableDialog",
+          "group": "Validation rules",
+          "id": "bulk-validation",
+          "label": "Validation requirements",
+          "widget": "validationProgram"
+        },
+        {
+          "group": "Root contracts",
+          "id": "bulk-contracts",
+          "label": "Root contracts"
+        },
+        {
+          "group": "Root contracts",
+          "id": "branch-audit",
+          "label": "Schema branch audit"
+        },
+        {
+          "group": "Root contracts",
+          "id": "tree-annotations",
+          "label": "Tree annotations"
+        },
+        {
+          "group": "Root contracts",
+          "id": "runtime-routes",
+          "label": "Runtime API routes"
+        },
+        {
+          "group": "Root contracts",
+          "id": "root-constraints",
+          "label": "Root schema constraints"
+        },
+        {
+          "group": "Field authoring",
+          "id": "object-rules",
+          "label": "Object rules"
+        },
+        {
+          "group": "Root contracts",
+          "id": "conditional-definitions",
+          "label": "Conditional definitions"
+        },
+        {
+          "group": "Root contracts",
+          "id": "local-definitions",
+          "label": "Local definitions"
+        },
+        {
+          "group": "Root contracts",
+          "id": "definition-patches",
+          "label": "Patch reusable definitions"
+        },
+        {
+          "group": "Field authoring",
+          "id": "generated-overlays",
+          "label": "Generated field overlays"
+        },
+        {
+          "group": "Root contracts",
+          "id": "definition-worksheet",
+          "label": "Reusable definition worksheet"
+        },
+        {
+          "group": "Root contracts",
+          "id": "definition-refactor",
+          "label": "Factor schema reference"
+        },
+        {
+          "group": "Root contracts",
+          "id": "copy-definitions",
+          "label": "Copy reusable definitions"
+        },
+        {
+          "entry": "createEditorWidgetDialog",
+          "group": "Integration",
+          "id": "editor-widget",
+          "label": "Editor widget",
+          "widget": "modelEditor"
+        }
+      ],
+      "widgetSpecializations": true
+    },
+    "profiles": {
+      "dynamicPropertySet": {
+        "context": "schemaAuthoring",
+        "format": "fullmeta-ui-behavior/1",
+        "payload": {
+          "advancedFields": "collapsed",
+          "annotationKey": "x-fullmeta-ui-dynamicPropertySet",
+          "authoring": {
+            "fields": [
+              {
+                "key": "source",
+                "label": "Property source",
+                "required": true
+              },
+              {
+                "key": "groupLabel",
+                "label": "Property group label"
+              },
+              {
+                "key": "emptyMessage",
+                "label": "Empty message"
+              }
+            ],
+            "heading": "Dynamic property set",
+            "label": "Dynamic property set",
+            "mode": "annotationForm",
+            "validationContract": "../ui/widgets/dynamic-property-set/fullmeta-ui-dynamicPropertySet-1.schema.json"
+          },
+          "editor": "annotation",
+          "placement": "primary",
+          "rawAnnotation": "advanced",
+          "requiresEmptyUiGroup": true,
+          "schemaLayout": "focused",
+          "showHeading": true
+        },
+        "target": {
+          "kind": "widget",
+          "name": "dynamicPropertySet"
+        }
+      },
+      "keyedChoiceMatrix": {
+        "context": "schemaAuthoring",
+        "format": "fullmeta-ui-behavior/1",
+        "payload": {
+          "advancedFields": "collapsed",
+          "annotationKey": "x-fullmeta-ui-keyedChoiceMatrix",
+          "authoring": {
+            "fields": [
+              {
+                "key": "choiceSource",
+                "label": "Choice source",
+                "properties": [
+                  {
+                    "key": "valueProperty",
+                    "label": "Value property",
+                    "omitWhenFocused": true
+                  },
+                  {
+                    "advancedWhenFocused": true,
+                    "key": "schemaFilter",
+                    "label": "Filter records by schema annotation",
+                    "summary": "Filter choices by model context (optional)",
+                    "type": "schemaFilter"
+                  }
+                ],
+                "required": true,
+                "scopes": [
+                  "root",
+                  "document",
+                  "model",
+                  "component",
+                  "engine",
+                  "runtime"
+                ],
+                "type": "source"
+              },
+              {
+                "key": "choiceKeyProperty",
+                "label": "Choice key property",
+                "required": true
+              },
+              {
+                "key": "valueMapProperty",
+                "label": "Value map property",
+                "required": true
+              },
+              {
+                "key": "omittedValue",
+                "label": "Omitted value",
+                "required": true
+              },
+              {
+                "key": "choiceLabels",
+                "label": "Choice labels",
+                "type": "stringMap"
+              },
+              {
+                "key": "addLabel",
+                "label": "Add row button"
+              },
+              {
+                "key": "removeLabel",
+                "label": "Remove row button"
+              },
+              {
+                "advanced": true,
+                "key": "choiceLabelTemplate",
+                "label": "Choice label template"
+              },
+              {
+                "advanced": true,
+                "key": "rowLabelTemplate",
+                "label": "Row label template"
+              },
+              {
+                "advanced": true,
+                "key": "removeAriaLabelTemplate",
+                "label": "Remove accessibility label template"
+              },
+              {
+                "advanced": true,
+                "key": "choiceAriaLabelTemplate",
+                "label": "Choice accessibility label template"
+              },
+              {
+                "advanced": true,
+                "key": "choiceSetProperty",
+                "label": "Choice set property"
+              },
+              {
+                "advanced": true,
+                "key": "choiceSetsByValue",
+                "label": "Choice sets by value",
+                "type": "stringListMap"
+              },
+              {
+                "advanced": true,
+                "key": "initialChoiceByValue",
+                "label": "Initial choice by value",
+                "type": "initialChoice"
+              },
+              {
+                "advanced": true,
+                "key": "initialChoiceValue",
+                "label": "Initial choice value"
+              },
+              {
+                "advanced": true,
+                "key": "candidateLimit",
+                "label": "Candidate limit",
+                "type": "integer"
+              },
+              {
+                "advanced": true,
+                "key": "noChoicesMessage",
+                "label": "No choices message"
+              },
+              {
+                "advanced": true,
+                "key": "noUniqueChoiceMessage",
+                "label": "No unique choice message"
+              },
+              {
+                "advanced": true,
+                "key": "missingChoiceLabel",
+                "label": "Missing choice label"
+              },
+              {
+                "advanced": true,
+                "key": "missingChoiceLabelTemplate",
+                "label": "Missing choice label template"
+              },
+              {
+                "advanced": true,
+                "key": "choiceHelp",
+                "label": "Choice help"
+              },
+              {
+                "advanced": true,
+                "key": "summaryLabelTemplate",
+                "label": "Summary label template"
+              },
+              {
+                "advanced": true,
+                "key": "summaryHelp",
+                "label": "Summary help"
+              },
+              {
+                "advanced": true,
+                "key": "summaryCodes",
+                "label": "Summary codes",
+                "type": "stringMap"
+              },
+              {
+                "advanced": true,
+                "key": "helpText",
+                "label": "Help text"
+              },
+              {
+                "advanced": true,
+                "key": "changeMessage",
+                "label": "Change message"
+              },
+              {
+                "advanced": true,
+                "key": "addMessage",
+                "label": "Add message"
+              },
+              {
+                "advanced": true,
+                "key": "removeKeyMessage",
+                "label": "Remove key message"
+              },
+              {
+                "advanced": true,
+                "key": "minimumRowsMessage",
+                "label": "Minimum rows message"
+              },
+              {
+                "advanced": true,
+                "key": "maximumRowsMessage",
+                "label": "Maximum rows message"
+              }
+            ],
+            "heading": "Keyed choice matrix",
+            "label": "Keyed choice matrix",
+            "mode": "annotationForm",
+            "ownedUiAnnotations": [
+              "choiceLabels"
+            ],
+            "validationContract": "../ui/widgets/keyed-choice-matrix/fullmeta-ui-keyedChoiceMatrix-1.schema.json"
+          },
+          "editor": "annotation",
+          "placement": "primary",
+          "rawAnnotation": "advanced",
+          "requiresEmptyUiGroup": true,
+          "schemaLayout": "focused",
+          "showHeading": true
+        },
+        "target": {
+          "kind": "widget",
+          "name": "keyedChoiceMatrix"
+        }
+      },
+      "quantity": {
+        "context": "schemaAuthoring",
+        "format": "fullmeta-ui-behavior/1",
+        "payload": {
+          "advancedFields": "collapsed",
+          "annotationKey": "x-fullmeta-ui-quantity",
+          "authoring": {
+            "advancedHeading": "Field behavior",
+            "defaultValue": {
+              "clearLabel": "Clear default",
+              "control": "quantityValue",
+              "controlLabel": "Default quantity",
+              "defaultUnitFromAnnotation": "defaultUnit",
+              "heading": "Default value",
+              "hideWhenInheritedWithoutLocalValue": true,
+              "key": "default",
+              "label": "Quantity default",
+              "position": "beforeAnnotation",
+              "unitChoices": {
+                "merge": "intersection",
+                "schemaProperty": "unit"
+              },
+              "validationMessage": "Complete the quantity default expression and unit, or clear it."
+            },
+            "fields": [
+              {
+                "key": "unitReadOnly",
+                "label": "Unit read only",
+                "type": "boolean"
+              },
+              {
+                "key": "unitGroup",
+                "label": "Unit group"
+              },
+              {
+                "key": "defaultUnit",
+                "label": "Default unit"
+              },
+              {
+                "advanced": true,
+                "key": "hidden",
+                "label": "Hidden in the model editor",
+                "type": "boolean"
+              },
+              {
+                "advanced": true,
+                "key": "optionalToggleLabel",
+                "label": "Optional toggle label"
+              },
+              {
+                "addLabel": "Add property",
+                "advanced": true,
+                "key": "createWithProperties",
+                "label": "Create with properties",
+                "type": "stringList"
+              },
+              {
+                "addLabel": "Add property",
+                "advanced": true,
+                "key": "clearWithProperties",
+                "label": "Clear with properties",
+                "type": "stringList"
+              }
+            ],
+            "heading": "UI annotations",
+            "label": "Quantity",
+            "mode": "annotationForm",
+            "validationContract": "../ui/widgets/quantity/fullmeta-ui-quantity-1.schema.json",
+            "ownedUiAnnotations": [
+              "hidden",
+              "optionalToggleLabel",
+              "createWithProperties",
+              "clearWithProperties"
+            ]
+          },
+          "context": "schemaWidget",
+          "editor": "annotation",
+          "placement": "primary",
+          "rawAnnotation": "advanced",
+          "schemaLayout": "focused",
+          "showHeading": true
+        },
+        "target": {
+          "kind": "widget",
+          "name": "quantity"
+        }
+      },
+      "quantityVector": {
+        "context": "schemaAuthoring",
+        "format": "fullmeta-ui-behavior/1",
+        "payload": {
+          "advancedFields": "collapsed",
+          "annotationKey": "x-fullmeta-ui-quantityVector",
+          "authoring": {
+            "annotationLabel": "Quantity vector",
+            "arrayTable": {
+              "ariaLabel": "Quantity vector labels and default values",
+              "clearDefault": "Clear default",
+              "columns": [
+                {
+                  "ariaLabelTemplate": "Component {index} label",
+                  "cell": "rowHeader",
+                  "control": "text",
+                  "source": "rowLabel"
+                },
+                {
+                  "ariaLabelTemplate": "Component {index} default",
+                  "control": "quantityValue",
+                  "source": "defaultValue"
+                }
+              ],
+              "defaultValidationMessage": "Complete the quantity vector default from the first component, or clear it.",
+              "defaultValueFields": [
+                {
+                  "required": true,
+                  "targetProperty": "expression",
+                  "type": "string",
+                  "valueKey": "expression"
+                },
+                {
+                  "choicesSource": "itemSchema",
+                  "controlOption": "allowedUnits",
+                  "required": true,
+                  "targetProperty": "unit",
+                  "type": "string",
+                  "valueKey": "unit"
+                }
+              ],
+              "defaultValueKey": "default",
+              "heading": "Default values",
+              "labelsValidationMessage": "Each quantity vector component needs a nonempty label.",
+              "maximumEditableItems": 32,
+              "minimumItemsFallback": 1,
+              "omitAnnotationKeysWhenSaving": [
+                "label"
+              ],
+              "rowLabelsKey": "componentLabels"
+            },
+            "defaultLabel": "Quantity vector default",
+            "labels": {
+              "applyVariant": "Apply variant values",
+              "componentsHeading": "Components",
+              "incompleteVariant": "Fill every component expression for this default.",
+              "saveSource": "Save applied source document",
+              "variantComponentInitial": "{variant} {component} initial",
+              "variantHeading": "Field defaults by variant",
+              "variantNote": "Each default is declared on this field in its source schema. Existing model values are unchanged.",
+              "variantSelector": "Variant",
+              "variantTable": "Quantity vector initial expressions by variant"
+            },
+            "messages": {
+              "appliedStatus": "Applied field defaults in {file}. Save to keep the change.",
+              "savedStatus": "Saved {file}.",
+              "unchangedStatus": "{file} has no new changes to save."
+            },
+            "mode": "configuredArray",
+            "validationContract": "../ui/widgets/quantity-vector/fullmeta-ui-quantityVector-1.schema.json",
+            "variantEditor": {
+              "componentKeyPath": [
+                "key"
+              ],
+              "componentLabelPath": [
+                "label"
+              ],
+              "componentsPath": [
+                "components"
+              ],
+              "control": "quantityValue",
+              "copyKeys": {
+                "appliedStatus": "appliedMessage",
+                "applyVariant": "applyLabel",
+                "incompleteVariant": "incompleteMessage",
+                "saveSource": "saveLabel",
+                "savedStatus": "savedMessage",
+                "variantComponentInitial": "componentAriaLabelTemplate",
+                "variantHeading": "heading",
+                "variantNote": "note",
+                "variantSelector": "selectorLabel",
+                "variantTable": "tableAriaLabel"
+              },
+              "copyPath": [
+                "x-fullmeta-ui-program",
+                "componentVariantCopy"
+              ],
+              "defaultPath": [
+                "default"
+              ],
+              "fieldWrites": [
+                {
+                  "required": true,
+                  "targetProperty": "expression",
+                  "type": "string",
+                  "valueKey": "expression",
+                  "writePolicy": "replace"
+                },
+                {
+                  "componentFallbackPath": [
+                    "unit"
+                  ],
+                  "required": true,
+                  "targetProperty": "unit",
+                  "type": "string",
+                  "valueKey": "unit",
+                  "writePolicy": "ifMissing"
+                }
+              ],
+              "fields": [
+                {
+                  "control": "text",
+                  "key": "componentSource",
+                  "label": "Component source"
+                },
+                {
+                  "control": "checkbox",
+                  "key": "unitReadOnly",
+                  "label": "Use the component's declared unit"
+                }
+              ],
+              "initialValueFields": [
+                {
+                  "path": [
+                    "expressions"
+                  ],
+                  "source": "variantKeyed",
+                  "valueKey": "expression"
+                },
+                {
+                  "path": [
+                    "unit"
+                  ],
+                  "source": "component",
+                  "valueKey": "unit"
+                }
+              ],
+              "providerExport": "quantityVectorDesignerVariants",
+              "providerModulePath": [
+                "x-fullmeta-ui-program",
+                "componentSourceModule"
+              ],
+              "sourceKey": "componentSource",
+              "sourceRequiredMessage": "Choose a nonempty component source.",
+              "unitReadOnly": true,
+              "valueShape": "object",
+              "variantLabelPath": [
+                "label"
+              ]
+            }
+          },
+          "context": "schemaWidget",
+          "editor": "annotation",
+          "placement": "primary",
+          "rawAnnotation": "advanced",
+          "rawAnnotationPlacement": "otherFields",
+          "requiresAny": [
+            "componentLabels",
+            "componentSource"
+          ],
+          "schemaLayout": "array",
+          "showHeading": true
+        },
+        "target": {
+          "kind": "widget",
+          "name": "quantityVector"
+        }
+      },
+      "referenceSelector": {
+        "context": "schemaAuthoring",
+        "format": "fullmeta-ui-behavior/1",
+        "payload": {
+          "advancedFields": "collapsed",
+          "annotationKey": "x-fullmeta-ui-referenceSelector",
+          "authoring": {
+            "fields": [
+              {
+                "key": "maxVisibleOptions",
+                "label": "Maximum visible options",
+                "maximum": 20,
+                "minimum": 2,
+                "type": "integer",
+                "validationMessage": "Maximum visible options must be between 2 and 20."
+              },
+              {
+                "key": "emptyMessage",
+                "label": "Empty message"
+              }
+            ],
+            "heading": "Reference selector",
+            "label": "Reference selector",
+            "mode": "annotationForm",
+            "validationContract": "../ui/widgets/reference-selector/fullmeta-ui-referenceSelector-1.schema.json"
+          },
+          "editor": "annotation",
+          "placement": "primary",
+          "rawAnnotation": "advanced",
+          "schemaLayout": "focused",
+          "showHeading": true
+        },
+        "target": {
+          "kind": "widget",
+          "name": "referenceSelector"
+        }
+      },
+      "relatedFields": {
+        "context": "schemaAuthoring",
+        "format": "fullmeta-ui-behavior/1",
+        "payload": {
+          "advancedFields": "collapsed",
+          "annotationKey": "x-fullmeta-ui-relatedFields",
+          "authoring": {
+            "fields": [
+              {
+                "key": "siblings",
+                "label": "Sibling fields",
+                "required": true,
+                "type": "siblings"
+              }
+            ],
+            "heading": "Related fields",
+            "label": "Related fields",
+            "mode": "annotationForm",
+            "validationContract": "../ui/widgets/related-fields/fullmeta-ui-relatedFields-1.schema.json"
+          },
+          "editor": "annotation",
+          "placement": "primary",
+          "rawAnnotation": "advanced",
+          "requiresEmptyUiGroup": true,
+          "schemaLayout": "focused",
+          "showHeading": true
+        },
+        "target": {
+          "kind": "widget",
+          "name": "relatedFields"
+        }
+      },
+      "repeatableChoiceTable": {
+        "context": "schemaAuthoring",
+        "format": "fullmeta-ui-behavior/1",
+        "payload": {
+          "advancedFields": "collapsed",
+          "annotationKey": "x-fullmeta-ui-repeatableChoiceTable",
+          "authoring": {
+            "fields": [
+              {
+                "key": "choiceSource",
+                "label": "Choice source",
+                "properties": [
+                  {
+                    "key": "valueProperty",
+                    "label": "Value property"
+                  }
+                ],
+                "required": true,
+                "type": "source"
+              },
+              {
+                "key": "choiceValueProperty",
+                "label": "Choice value property"
+              },
+              {
+                "key": "choiceAssignments",
+                "label": "Choice assignments",
+                "type": "stringMap"
+              },
+              {
+                "key": "uniqueBy",
+                "label": "Unique row property"
+              },
+              {
+                "key": "labels",
+                "label": "Column labels",
+                "type": "stringMap"
+              },
+              {
+                "key": "addLabel",
+                "label": "Add row button"
+              },
+              {
+                "key": "removeLabel",
+                "label": "Remove row button"
+              },
+              {
+                "advanced": true,
+                "key": "generatedIdProperty",
+                "label": "Generated ID property"
+              },
+              {
+                "advanced": true,
+                "key": "generatedIdTemplate",
+                "label": "Generated ID template"
+              },
+              {
+                "advanced": true,
+                "key": "generatedIdPrefix",
+                "label": "Generated ID prefix"
+              },
+              {
+                "advanced": true,
+                "key": "rowDefaults",
+                "label": "Row defaults",
+                "type": "typedMap"
+              },
+              {
+                "advanced": true,
+                "key": "siblingMirrors",
+                "label": "Sibling mirrors",
+                "type": "stringMap"
+              },
+              {
+                "advanced": true,
+                "key": "choiceLabelTemplate",
+                "label": "Choice label template"
+              },
+              {
+                "advanced": true,
+                "key": "choiceDescriptionTemplate",
+                "label": "Choice description template"
+              },
+              {
+                "advanced": true,
+                "key": "rowLabelTemplate",
+                "label": "Row label template"
+              },
+              {
+                "advanced": true,
+                "key": "removeAriaLabelTemplate",
+                "label": "Remove accessibility label template"
+              },
+              {
+                "advanced": true,
+                "key": "ariaLabel",
+                "label": "Table accessibility label"
+              },
+              {
+                "advanced": true,
+                "key": "helpText",
+                "label": "Help text"
+              },
+              {
+                "advanced": true,
+                "key": "emptyMessage",
+                "label": "Empty message"
+              },
+              {
+                "advanced": true,
+                "key": "noChoicesMessage",
+                "label": "No choices message"
+              },
+              {
+                "advanced": true,
+                "key": "noUniqueChoiceMessage",
+                "label": "No unique choice message"
+              },
+              {
+                "advanced": true,
+                "key": "noAvailableChoicesMessage",
+                "label": "No available choices message"
+              },
+              {
+                "advanced": true,
+                "key": "invalidChoiceMessage",
+                "label": "Invalid choice message"
+              },
+              {
+                "advanced": true,
+                "key": "duplicateChoiceMessage",
+                "label": "Duplicate choice message"
+              },
+              {
+                "advanced": true,
+                "key": "changeMessage",
+                "label": "Change message"
+              },
+              {
+                "advanced": true,
+                "key": "removeMessage",
+                "label": "Remove message"
+              },
+              {
+                "advanced": true,
+                "key": "minimumRowsMessage",
+                "label": "Minimum rows message"
+              },
+              {
+                "advanced": true,
+                "key": "maximumRowsMessage",
+                "label": "Maximum rows message"
+              },
+              {
+                "advanced": true,
+                "key": "addMessage",
+                "label": "Add message"
+              },
+              {
+                "advanced": true,
+                "key": "addMessageTemplate",
+                "label": "Add message template"
+              }
+            ],
+            "heading": "Repeatable choice table",
+            "label": "Repeatable choice table",
+            "mode": "annotationForm",
+            "ownedUiAnnotations": [
+              "labels"
+            ],
+            "validationContract": "../ui/widgets/repeatable-choice-table/fullmeta-ui-repeatableChoiceTable-1.schema.json"
+          },
+          "editor": "annotation",
+          "placement": "primary",
+          "rawAnnotation": "advanced",
+          "requiresEmptyUiGroup": true,
+          "schemaLayout": "focused",
+          "showHeading": true
+        },
+        "target": {
+          "kind": "widget",
+          "name": "repeatableChoiceTable"
+        }
+      },
+      "scan": {
+        "context": "schemaAuthoring",
+        "format": "fullmeta-ui-behavior/1",
+        "payload": {
+          "advancedFields": "collapsed",
+          "annotationKey": "x-fullmeta-ui-scan",
+          "authoring": {
+            "fields": [
+              {
+                "entries": [
+                  [
+                    "parameterAriaLabelTemplate",
+                    "Choice accessibility label"
+                  ],
+                  [
+                    "valueRemoveAriaLabelTemplate",
+                    "Remove value accessibility label"
+                  ],
+                  [
+                    "removeValue",
+                    "Remove value button"
+                  ],
+                  [
+                    "addValuesTemplate",
+                    "Add value button template"
+                  ]
+                ],
+                "group": "labels",
+                "key": "labels",
+                "label": "Action labels",
+                "type": "namedLabels"
+              },
+              {
+                "defaultScope": "model",
+                "group": "bindings",
+                "key": "choiceSource",
+                "label": "Choice source",
+                "pathLabel": "Choice path",
+                "pathMinimumItems": 1,
+                "pathSegmentLabel": "Choice path segment",
+                "required": true,
+                "requiredMessage": "Choose a source scope and path, and complete the scan property bindings.",
+                "scopeLabel": "Choice scope",
+                "scopes": [
+                  "root",
+                  "document",
+                  "model",
+                  "component",
+                  "engine",
+                  "runtime"
+                ],
+                "type": "source",
+                "validationMessage": "Choose a source scope and path, and complete the scan property bindings."
+              },
+              {
+                "group": "bindings",
+                "key": "choiceValueProperty",
+                "label": "Choice value property",
+                "required": true,
+                "requiredMessage": "Choose a source scope and path, and complete the scan property bindings."
+              },
+              {
+                "group": "bindings",
+                "key": "rowChoiceProperty",
+                "label": "Row choice property",
+                "required": true,
+                "requiredMessage": "Choose a source scope and path, and complete the scan property bindings."
+              },
+              {
+                "group": "bindings",
+                "key": "rowValuesProperty",
+                "label": "Row values property",
+                "required": true,
+                "requiredMessage": "Choose a source scope and path, and complete the scan property bindings."
+              },
+              {
+                "group": "bindings",
+                "key": "sourceExpressionProperty",
+                "label": "Source expression property (optional)"
+              },
+              {
+                "group": "bindings",
+                "key": "sourceUnitProperty",
+                "label": "Source unit property (optional)"
+              },
+              {
+                "group": "bindings",
+                "key": "choiceLabelTemplate",
+                "label": "Choice label template (optional)"
+              }
+            ],
+            "groups": [
+              {
+                "heading": "Scan labels",
+                "key": "labels"
+              },
+              {
+                "heading": "Scan source and bindings",
+                "key": "bindings"
+              }
+            ],
+            "label": "Scan",
+            "mode": "annotationForm",
+            "validationContract": "../ui/widgets/scan/fullmeta-ui-scan-1.schema.json",
+            "ownedUiAnnotations": [
+              "labels"
+            ]
+          },
+          "editor": "annotation",
+          "placement": "primary",
+          "rawAnnotation": "advanced",
+          "requiresEmptyUiGroup": true,
+          "schemaLayout": "focused",
+          "showHeading": true
+        },
+        "target": {
+          "kind": "widget",
+          "name": "scan"
+        }
+      },
+      "scanTable": {
+        "context": "schemaAuthoring",
+        "format": "fullmeta-ui-behavior/1",
+        "payload": {
+          "advancedFields": "collapsed",
+          "annotationKey": "x-fullmeta-ui-scanTable",
+          "authoring": {
+            "fields": [
+              {
+                "entries": [
+                  [
+                    "addParameter",
+                    "Add row button"
+                  ],
+                  [
+                    "removeParameter",
+                    "Remove row button"
+                  ],
+                  [
+                    "parameterRemoveAriaLabelTemplate",
+                    "Remove row accessibility label"
+                  ]
+                ],
+                "key": "labels",
+                "label": "Action labels",
+                "type": "namedLabels"
+              }
+            ],
+            "heading": "Scan table labels",
+            "label": "Scan table",
+            "mode": "annotationForm",
+            "ownedUiAnnotations": [
+              "labels"
+            ],
+            "validationContract": "../ui/widgets/scan-table/fullmeta-ui-scanTable-1.schema.json"
+          },
+          "declarationOverview": {
+            "arrayHeading": "Each row contains"
+          },
+          "editor": "annotation",
+          "placement": "primary",
+          "rawAnnotation": "advanced",
+          "requiresEmptyUiGroup": true,
+          "schemaLayout": "focused",
+          "showHeading": true
+        },
+        "target": {
+          "kind": "widget",
+          "name": "scanTable"
+        }
+      },
+      "tabularSliceSelector": {
+        "context": "schemaAuthoring",
+        "format": "fullmeta-ui-behavior/1",
+        "payload": {
+          "advancedFields": "collapsed",
+          "annotationKey": "x-fullmeta-ui-tabularSliceSelector",
+          "authoring": {
+            "defaultValue": {
+              "control": "numberMap",
+              "heading": "Initial fixed values",
+              "key": "default",
+              "label": "Initial fixed values default",
+              "labels": {
+                "addLabel": "Add initial value",
+                "declareLabel": "Declare a default selection",
+                "emptyMessage": "No fixed values; the selector uses available samples.",
+                "keyAriaName": "parameter",
+                "keyPlaceholder": "Parameter",
+                "removeLabel": "Remove",
+                "valueAriaName": "sampled value",
+                "valuePlaceholder": "Sampled value"
+              },
+              "validationMessage": "Each initial value needs a unique parameter and a finite sampled number."
+            },
+            "fields": [
+              {
+                "key": "selectionMode",
+                "label": "Selection mode",
+                "options": [
+                  "fixed",
+                  "slice"
+                ],
+                "required": true
+              },
+              {
+                "key": "dataSource",
+                "label": "Data source",
+                "required": true,
+                "scopes": [
+                  "root",
+                  "document",
+                  "component",
+                  "engine",
+                  "runtime"
+                ],
+                "type": "source"
+              },
+              {
+                "key": "varyingColumnProperty",
+                "label": "Varying column property",
+                "visibleWhen": {
+                  "equals": "slice",
+                  "field": "selectionMode"
+                }
+              },
+              {
+                "key": "unitProperty",
+                "label": "Unit property",
+                "visibleWhen": {
+                  "equals": "slice",
+                  "field": "selectionMode"
+                }
+              },
+              {
+                "advanced": true,
+                "key": "tableIdProperty",
+                "label": "Table ID property override"
+              },
+              {
+                "advanced": true,
+                "key": "ownerIdProperty",
+                "label": "Owner ID property override"
+              },
+              {
+                "advanced": true,
+                "key": "fixedValuesProperty",
+                "label": "Fixed values property override"
+              },
+              {
+                "advanced": true,
+                "key": "showDefault",
+                "label": "Show selector when model value is absent",
+                "type": "boolean"
+              },
+              {
+                "advanced": true,
+                "key": "defaultWhenSiblingPropertyPresent",
+                "label": "When absent, show if sibling property is present",
+                "visibleWhen": {
+                  "field": "showDefault",
+                  "notEquals": true
+                }
+              },
+              {
+                "advanced": true,
+                "entries": [
+                  [
+                    "varyingColumn",
+                    "Varying column"
+                  ],
+                  [
+                    "allValues",
+                    "All values"
+                  ],
+                  [
+                    "fixedValue",
+                    "Fixed value"
+                  ]
+                ],
+                "key": "labels",
+                "label": "Control labels",
+                "type": "namedLabels"
+              },
+              {
+                "advanced": true,
+                "key": "emptyMessage",
+                "label": "No data message"
+              },
+              {
+                "advanced": true,
+                "key": "noChoicesMessage",
+                "label": "No choices message"
+              },
+              {
+                "advanced": true,
+                "key": "helpText",
+                "label": "Help text"
+              },
+              {
+                "advanced": true,
+                "key": "selectionAdjustedMessage",
+                "label": "Adjusted selection message"
+              },
+              {
+                "advanced": true,
+                "key": "changeMessage",
+                "label": "Change confirmation message"
+              }
+            ],
+            "heading": "Tabular slice selector",
+            "label": "Tabular slice selector",
+            "mode": "annotationForm",
+            "ownedUiAnnotations": [
+              "labels",
+              "showDefault",
+              "defaultWhenSiblingPropertyPresent"
+            ],
+            "validationContract": "../ui/widgets/tabular-slice-selector/fullmeta-ui-tabularSliceSelector-1.schema.json"
+          },
+          "editor": "annotation",
+          "placement": "primary",
+          "rawAnnotation": "advanced",
+          "requiresEmptyUiGroup": true,
+          "schemaLayout": "focused",
+          "showHeading": true
+        },
+        "target": {
+          "kind": "widget",
+          "name": "tabularSliceSelector"
+        }
+      },
+      "tree": {
+        "context": "schemaAuthoring",
+        "format": "fullmeta-ui-behavior/1",
+        "payload": {
+          "advancedFields": "collapsed",
+          "annotationKey": "x-fullmeta-ui-tree",
+          "authoring": {
+            "booleanOptions": [
+              [
+                "",
+                "Not specified"
+              ],
+              [
+                "true",
+                "Yes"
+              ],
+              [
+                "false",
+                "No"
+              ]
+            ],
+            "emptyNode": {
+              "path": [],
+              "role": "collection"
+            },
+            "heading": "Tree composition",
+            "labels": {
+              "addChild": "Add children",
+              "addPathSegment": "Add path segment",
+              "addRootItem": "Add top-level item",
+              "children": "Children",
+              "childrenPath": "Children path",
+              "down": "Down",
+              "humanizeKeys": "Humanize keys",
+              "maxDepth": "Maximum depth",
+              "maxDepthAria": "Maximum tree depth",
+              "modelPath": "Model path",
+              "moreSettings": "More tree settings",
+              "node": "Tree node",
+              "nodeTitle": "Title",
+              "pathSegment": "Path segment",
+              "remove": "Remove",
+              "role": "Role",
+              "rootChildren": "Top-level tree items",
+              "scope": "Scope",
+              "showHeading": "Show heading",
+              "up": "Up",
+              "useLocalNode": "Use local tree node"
+            },
+            "mode": "tree",
+            "ownedUiAnnotations": [
+              "label",
+              "widget",
+              "placeholder"
+            ],
+            "roles": [
+              "collectionLink",
+              "componentCollections",
+              "objectRoot",
+              "rootItems",
+              "componentRoot",
+              "optionalItem",
+              "collection",
+              "transparent",
+              "children",
+              "objectProperties",
+              "schemaDeclarations"
+            ],
+            "scopes": [
+              [
+                "",
+                "Not specified"
+              ],
+              [
+                "model",
+                "Model"
+              ]
+            ],
+            "textFields": [
+              {
+                "key": "ownerNameProperty",
+                "label": "Owner name property"
+              },
+              {
+                "key": "itemLabelProperty",
+                "label": "Item label property"
+              },
+              {
+                "key": "labelProperty",
+                "label": "Label property"
+              },
+              {
+                "key": "itemClass",
+                "label": "Item class"
+              },
+              {
+                "key": "disabledClass",
+                "label": "Disabled class"
+              },
+              {
+                "key": "sectionClass",
+                "label": "Section class"
+              }
+            ]
+          },
+          "editor": "annotation",
+          "placement": "primary",
+          "rawAnnotation": "advanced",
+          "schemaLayout": "focused",
+          "showHeading": true
+        },
+        "target": {
+          "kind": "widget",
+          "name": "tree"
+        }
+      },
+      "valueControl": {
+        "context": "schemaAuthoring",
+        "format": "fullmeta-ui-behavior/1",
+        "payload": {
+          "advancedFields": "collapsed",
+          "advancedFieldsNote": "These schema fields are preserved here for inspection and editing, including referenced schema structure.",
+          "annotationKey": "x-fullmeta-ui-valueControl",
+          "authoring": {
+            "choices": {
+              "editLabels": true,
+              "fieldLabel": "Value control choices",
+              "key": "enum",
+              "label": "Allowed values and display labels",
+              "labelsFieldLabel": "Value control choice labels",
+              "labelsKey": "choiceLabels",
+              "labelsMessage": "Each choice display label must be nonempty text."
+            },
+            "declarationValidator": "schemaValue",
+            "defaultValue": {
+              "addItemLabel": "Add value",
+              "ariaLabel": "Default value",
+              "arrayLabel": "Values",
+              "arrayMessage": "Default values must match the array declaration.",
+              "control": "jsonSchemaTyped",
+              "declareLabel": "Declare a default",
+              "heading": "Default value",
+              "itemAriaLabel": "Default item",
+              "key": "default",
+              "label": "Value control default",
+              "noLabel": "No",
+              "nullLabel": "Null",
+              "numberMessage": "Enter a finite number for every default value.",
+              "removeItemLabel": "Remove",
+              "valueLabel": "Value",
+              "yesLabel": "Yes"
+            },
+            "draftStatus": "Updated the value control. Apply item and Save to keep the change.",
+            "fields": [
+              {
+                "advancedWhen": {
+                  "path": "annotation.optionalToggleLabel",
+                  "present": false
+                },
+                "key": "optionalToggleLabel",
+                "label": "Presence toggle label"
+              },
+              {
+                "advancedWhen": {
+                  "path": "annotation.hiddenWhenSiblingPropertyEquals",
+                  "present": false
+                },
+                "key": "hiddenWhenSiblingPropertyEquals",
+                "label": "Hide when sibling equals",
+                "type": "siblingCondition"
+              },
+              {
+                "advancedWhen": {
+                  "not": {
+                    "all": [
+                      {
+                        "equals": "string",
+                        "path": "schema.type"
+                      },
+                      {
+                        "path": "source.enum",
+                        "present": false
+                      },
+                      {
+                        "path": "annotation.choiceSource",
+                        "present": false
+                      }
+                    ]
+                  }
+                },
+                "key": "placeholder",
+                "label": "Placeholder"
+              },
+              {
+                "advancedWhen": {
+                  "not": {
+                    "all": [
+                      {
+                        "equals": "string",
+                        "path": "schema.type"
+                      },
+                      {
+                        "path": "source.enum",
+                        "present": false
+                      },
+                      {
+                        "path": "annotation.choiceSource",
+                        "present": false
+                      }
+                    ]
+                  }
+                },
+                "key": "multiline",
+                "label": "Multiple lines",
+                "type": "boolean",
+                "visibleWhen": {
+                  "any": [
+                    {
+                      "path": "annotation.multiline",
+                      "present": true
+                    },
+                    {
+                      "all": [
+                        {
+                          "equals": "string",
+                          "path": "schema.type"
+                        },
+                        {
+                          "path": "source.enum",
+                          "present": false
+                        },
+                        {
+                          "path": "annotation.choiceSource",
+                          "present": false
+                        }
+                      ]
+                    }
+                  ]
+                }
+              },
+              {
+                "advanced": true,
+                "key": "choiceLabels",
+                "label": "Choice labels",
+                "type": "stringMap",
+                "visibleWhen": {
+                  "path": "source.enum",
+                  "present": false
+                }
+              },
+              {
+                "advancedWhen": {
+                  "path": "annotation.choiceSource",
+                  "present": false
+                },
+                "key": "choiceSource",
+                "label": "Choice source",
+                "properties": [
+                  {
+                    "key": "valueProperty",
+                    "label": "Value property"
+                  },
+                  {
+                    "key": "labelTemplate",
+                    "label": "Label template"
+                  }
+                ],
+                "scopes": [
+                  "root",
+                  "document",
+                  "model",
+                  "component",
+                  "engine",
+                  "runtime"
+                ],
+                "type": "source"
+              },
+              {
+                "advanced": true,
+                "key": "onChangeAction",
+                "label": "Change action"
+              }
+            ],
+            "label": "Value control",
+            "mode": "schemaValueForm",
+            "ownedUiAnnotations": [
+              "placeholder",
+              "choiceLabels",
+              "choiceSource",
+              "optionalToggleLabel",
+              "hiddenWhenSiblingPropertyEquals"
+            ],
+            "validationContract": "../ui/widgets/value-control/fullmeta-ui-valueControl-1.schema.json"
+          },
+          "editor": "annotation",
+          "placement": "primary",
+          "rawAnnotation": "advanced",
+          "schemaLayout": "focused",
+          "showHeading": true
+        },
+        "target": {
+          "kind": "widget",
+          "name": "valueControl"
+        }
+      }
+    },
+    "schema": "fullmeta-ui-schema-authoring/1"
+  },
+  "x-fullmeta-ui-tree": {
+    "actionMenus": [
+      {
+        "entries": [
+          {
+            "action": "schema.addChildItem",
+            "label": "Add schema structure…"
+          },
+          {
+            "action": "schema.promoteTreeChildren",
+            "label": "Move children up one level"
+          },
+          {
+            "action": "schema.moveTreeItemUp",
+            "label": "Move up"
+          },
+          {
+            "action": "schema.moveTreeItemDown",
+            "label": "Move down"
+          },
+          {
+            "action": "schema.duplicateItem",
+            "label": "Duplicate item"
+          },
+          {
+            "action": "schema.renameTitle",
+            "label": "Rename..."
+          },
+          {
+            "action": "schema.deleteItem",
+            "label": "Delete item"
+          }
+        ],
+        "when": {
+          "path": [
+            "**"
+          ],
+          "scope": "item"
+        }
+      }
+    ],
+    "children": [
+      {
+        "childrenPath": [
+          "x-fullmeta-ui-tree",
+          "children"
+        ],
+        "maxDepth": 6,
+        "path": [],
+        "role": "schemaDeclarations",
+        "title": "Schema declarations"
+      },
+      {
+        "children": [
+          {
+            "humanizeKeys": false,
+            "maxDepth": 6,
+            "path": [],
+            "role": "objectProperties"
+          }
+        ],
+        "path": [
+          "x-fullmeta-ui-schemaAuthoring"
+        ],
+        "role": "objectRoot",
+        "title": "Schema authoring UI"
+      }
+    ],
+    "menuTargets": [
+      {
+        "arrayPath": {
+          "from": "itemPath"
+        },
+        "when": {
+          "path": [
+            "**"
+          ],
+          "scope": "item"
+        }
+      }
+    ]
+  }
+}

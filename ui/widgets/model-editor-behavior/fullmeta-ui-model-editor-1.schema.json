@@ -1,0 +1,244 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "x-fullmeta-schema": "../../../schema-editor/schema-editor.schema.json",
+  "$id": "https://fullmeta.local/ui/schemas/fullmeta-ui-model-editor-1.schema.json",
+  "title": "FullMeta model editor UI bindings",
+  "type": "object",
+  "required": ["schema", "roles", "panels"],
+  "properties": {
+    "schema": { "const": "fullmeta-model-editor-ui/1" },
+    "brandSubtitle": { "type": "string" },
+    "layout": {
+      "type": "object",
+      "properties": { "defaultLayout": { "enum": ["stacked", "columns"], "default": "stacked" } },
+      "additionalProperties": false
+    },
+    "projectRootFolder": { "type": "string", "minLength": 1 },
+    "scenario": {
+      "type": "object",
+      "required": ["profileIdPath", "dimensionPath"],
+      "properties": {
+        "profileIdPath": { "$ref": "#/$defs/path" },
+        "dimensionPath": { "$ref": "#/$defs/path" },
+        "profileIdProperty": { "type": "string", "minLength": 1 },
+        "profileLabelProperty": { "type": "string", "minLength": 1 },
+        "profileDimensionProperty": { "type": "string", "minLength": 1 },
+        "profileStatusProperty": { "type": "string", "minLength": 1 },
+        "availableStatus": { "type": "string", "minLength": 1 },
+        "defaultProfileId": { "type": "string", "minLength": 1 },
+        "physicsFormulationPath": { "$ref": "#/$defs/path" },
+        "studyFormulationPath": { "$ref": "#/$defs/path" }
+      },
+      "additionalProperties": false
+    },
+    "actionCatalogs": {
+      "type": "object",
+      "additionalProperties": { "$ref": "#/$defs/path" }
+    },
+    "unitChoicesPath": { "$ref": "#/$defs/path" },
+    "scenarioStudyActionsPath": { "$ref": "#/$defs/path" },
+    "scenarioStudyTypeRulePath": { "$ref": "#/$defs/path" },
+    "scenarioPhysicsContractPath": { "$ref": "#/$defs/path" },
+    "geometryFeatureSchemaPath": { "$ref": "#/$defs/path" },
+    "preferredSweepUnits": { "type": "array", "items": { "type": "string", "minLength": 1 }, "uniqueItems": true },
+    "unitChoicesByGroup": { "type": "object", "additionalProperties": { "$ref": "#/$defs/path" } },
+    "newModel": {
+      "type": "object",
+      "required": ["description"],
+      "oneOf": [{ "required": ["api"] }, { "required": ["endpoint"] }],
+      "properties": {
+        "api": { "type": "string", "minLength": 1 },
+        "endpoint": { "type": "string", "pattern": "^/api/[A-Za-z0-9/_-]+$" },
+        "choiceLabel": { "type": "string" },
+        "choiceRequestKey": { "type": "string", "pattern": "^[A-Za-z][A-Za-z0-9]*$" },
+        "description": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "confirmations": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "required": ["title", "description", "confirmLabel"],
+        "properties": {
+          "title": { "type": "string" },
+          "description": { "type": "string" },
+          "confirmLabel": { "type": "string" }
+        },
+        "additionalProperties": false
+      }
+    },
+    "emptyState": {
+      "type": "object",
+      "properties": {
+        "canvasLabel": { "type": "string" },
+        "resolvedValues": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "fieldSummary": {
+      "type": "object",
+      "additionalProperties": { "type": "string" }
+    },
+    "previewCopy": {
+      "type": "object",
+      "additionalProperties": { "type": "string" }
+    },
+    "controlCopy": {
+      "type": "object",
+      "additionalProperties": { "type": "string" }
+    },
+    "fieldSettingsCopy": {
+      "type": "object",
+      "additionalProperties": { "type": "string" }
+    },
+    "workflowCopy": {
+      "type": "object",
+      "additionalProperties": { "type": "string" }
+    },
+    "componentRoles": { "type": "array", "uniqueItems": true, "items": { "type": "string" } },
+    "toggleEnabledRoles": { "type": "array", "uniqueItems": true, "items": { "type": "string" } },
+    "defaultSelectionEntity": { "type": "string", "minLength": 1 },
+    "insertionCopy": { "type": "object", "additionalProperties": { "type": "string" } },
+    "graphicsComponentId": { "type": "string", "minLength": 1 },
+    "previewPrerequisites": { "type": "array", "uniqueItems": true, "items": { "type": "string" } },
+    "previewInvalidationRoles": { "type": "array", "uniqueItems": true, "items": { "type": "string" } },
+    "previewCollectionInvalidationRoles": { "type": "array", "uniqueItems": true, "items": { "type": "string" } },
+    "meshByDimension": {
+      "type": "object",
+      "patternProperties": {
+        "^[1-9][0-9]*$": {
+          "type": "object",
+          "required": ["cellArray", "cellLabel", "measurementKey"],
+          "properties": {
+            "cellArray": { "type": "string" },
+            "cellLabel": { "type": "string" },
+            "measurementKey": { "type": "string" }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "overviewNote": { "type": "string" },
+    "collectionNotes": {
+      "type": "object",
+      "additionalProperties": { "type": "string" }
+    },
+    "definitionCollections": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "required": ["tableLabel", "emptyLabel", "addLabel", "symbolRole"],
+        "properties": {
+          "tableLabel": { "type": "string" },
+          "emptyLabel": { "type": "string" },
+          "addLabel": { "type": "string" },
+          "showResolvedValue": { "type": "boolean" },
+          "symbolRole": { "type": "string" },
+          "reservedSymbols": { "enum": ["parameter", "expression"] },
+          "invalidatePreview": { "type": "boolean" }
+        },
+        "additionalProperties": false
+      }
+    },
+    "geometryFeatureCollectionKey": { "type": "string", "minLength": 1 },
+    "componentPath": { "$ref": "#/$defs/path" },
+    "defaultDimension": { "type": "integer", "minimum": 1 },
+    "geometryGroupTypes": { "type": "array", "uniqueItems": true, "items": { "type": "string" } },
+    "selectionNames": { "type": "object", "additionalProperties": { "type": "object", "additionalProperties": { "type": "string" } } },
+    "menuLabels": {
+      "type": "object",
+      "additionalProperties": { "type": "string" }
+    },
+    "titles": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["when", "text"],
+        "properties": {
+          "when": { "$ref": "#/$defs/noteSelection" },
+          "text": { "type": "string" }
+        },
+        "additionalProperties": false
+      }
+    },
+    "roles": {
+      "type": "object",
+      "additionalProperties": { "$ref": "#/$defs/path" }
+    },
+    "panels": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["selector", "when"],
+        "properties": {
+          "selector": { "type": "string", "minLength": 1 },
+          "when": { "$ref": "#/$defs/selection" },
+          "heading": { "type": "string" },
+          "note": { "type": "string" }
+        },
+        "additionalProperties": false
+      }
+    },
+    "notes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["placement", "when"],
+        "properties": {
+          "placement": { "enum": ["selection", "settings"] },
+          "when": { "$ref": "#/$defs/noteSelection" },
+          "profileCopy": { "type": "string" },
+          "text": { "type": "string" }
+        },
+        "anyOf": [{ "required": ["profileCopy"] }, { "required": ["text"] }],
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "path": {
+      "type": "array",
+      "items": { "type": ["string", "integer"] }
+    },
+    "selection": {
+      "type": "object",
+      "required": ["path"],
+      "properties": {
+        "path": { "$ref": "#/$defs/path" },
+        "prefix": { "type": "boolean" },
+        "types": { "type": "array", "items": { "type": "string" } }
+      },
+      "additionalProperties": false
+    },
+    "noteSelection": {
+      "type": "object",
+      "properties": {
+        "role": { "type": "string" },
+        "path": { "$ref": "#/$defs/path" },
+        "prefix": { "type": "boolean" },
+        "depth": { "type": "integer", "minimum": 0 },
+        "types": { "type": "array", "items": { "type": "string" } },
+        "kinds": { "type": "array", "items": { "type": "string" } },
+        "arrayProperty": { "type": "string", "minLength": 1 },
+        "capability": {
+          "type": "object",
+          "required": ["path"],
+          "properties": {
+            "path": { "$ref": "#/$defs/path" },
+            "keyFromModel": { "$ref": "#/$defs/path" },
+            "exists": { "type": "boolean" },
+            "equals": {}
+          },
+          "anyOf": [{ "required": ["exists"] }, { "required": ["equals"] }],
+          "additionalProperties": false
+        },
+        "property": { "type": "string" },
+        "equals": {}
+      },
+      "additionalProperties": false
+    }
+  }
+}

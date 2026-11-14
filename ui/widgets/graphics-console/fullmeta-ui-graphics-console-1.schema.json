@@ -1,0 +1,142 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "x-fullmeta-schema": "../../../schema-editor/schema-editor.schema.json",
+  "$id": "https://fullmeta.local/ui/schemas/fullmeta-ui-graphics-console-1.schema.json",
+  "title": "FullMeta graphics console",
+  "type": "object",
+  "required": ["schema", "defaultScene", "scenes", "rules"],
+  "properties": {
+    "schema": { "const": "fullmeta-graphics-console/1" },
+    "label": { "type": "string" },
+    "presentation": { "$ref": "#/$defs/presentation" },
+    "defaultScene": { "type": "string" },
+    "adapters": { "type": "object", "additionalProperties": { "$ref": "#/$defs/adapter" } },
+    "focusTargets": { "type": "object", "additionalProperties": { "type": "string" } },
+    "focusModes": { "type": "object", "additionalProperties": { "$ref": "../selection-highlight/fullmeta-ui-selection-highlight-1.schema.json" } },
+    "scenes": { "type": "object", "additionalProperties": { "$ref": "#/$defs/scene" } },
+    "rules": { "type": "array", "items": { "$ref": "#/$defs/rule" } }
+  },
+  "$defs": {
+    "presentation": {
+      "type": "object",
+      "required": ["axes", "widgets"],
+      "properties": {
+        "axes": {
+          "type": "array", "minItems": 2, "maxItems": 3,
+          "items": {
+            "type": "array", "prefixItems": [
+              { "type": "string", "minLength": 1 },
+              { "type": "array", "minItems": 3, "maxItems": 3, "items": { "type": "number" } },
+              { "type": "string", "pattern": "^#[0-9a-fA-F]{6}$" }
+            ], "minItems": 3, "maxItems": 3, "items": false
+          }
+        },
+        "widgets": { "type": "object", "additionalProperties": { "$ref": "#/$defs/widgetPresentation" } }
+      },
+      "additionalProperties": false
+    },
+    "widgetPresentation": {
+      "type": "object", "required": ["label", "showSceneControls"],
+      "properties": {
+        "label": { "type": "string", "minLength": 1 },
+        "showSceneControls": { "type": "boolean" },
+        "resetViewLabel": { "type": "string", "minLength": 1 }
+      }, "additionalProperties": false
+    },
+    "adapter": {
+      "type": "object",
+      "required": ["kind"],
+      "properties": {
+        "kind": { "enum": ["layered", "tabs"] },
+        "requiredInputs": { "type": "array", "items": { "type": "string" }, "uniqueItems": true },
+        "requiredLayers": { "type": "array", "items": { "type": "string" }, "uniqueItems": true },
+        "layerRoles": { "type": "object", "additionalProperties": { "type": "string" } },
+        "requiredTabs": { "type": "array", "items": { "type": "string" }, "uniqueItems": true },
+        "tabRoles": { "type": "object", "additionalProperties": { "type": "string" } },
+        "surfaceKinds": { "type": "array", "items": { "type": "string" }, "uniqueItems": true },
+        "layerKinds": { "type": "object", "additionalProperties": { "type": "array", "items": { "type": "string" }, "uniqueItems": true } },
+        "tabKinds": { "type": "object", "additionalProperties": { "type": "array", "items": { "type": "string" }, "uniqueItems": true } }
+      },
+      "additionalProperties": false
+    },
+    "binding": { "$ref": "../selection-highlight/fullmeta-ui-selection-highlight-1.schema.json#/$defs/binding" },
+    "input": {
+      "type": "object",
+      "required": ["id", "source"],
+      "properties": {
+        "id": { "type": "string" },
+        "label": { "type": "string" },
+        "source": { "$ref": "#/$defs/binding" }
+      },
+      "additionalProperties": false
+    },
+    "layer": {
+      "type": "object",
+      "required": ["id", "label", "input"],
+      "properties": {
+        "id": { "type": "string" },
+        "role": { "type": "string" },
+        "label": { "type": "string" },
+        "input": { "type": "string" },
+        "widget": { "type": "string" },
+        "widgets": { "type": "object", "additionalProperties": { "type": "string" } },
+        "control": { "type": "string" },
+        "defaultVisible": { "type": "boolean" },
+        "handler": { "type": "string", "minLength": 1 },
+        "requiresVisible": { "type": "array", "items": { "type": "string", "minLength": 1 }, "uniqueItems": true }
+      },
+      "additionalProperties": false
+    },
+    "tab": {
+      "type": "object",
+      "required": ["id", "label", "widget", "input"],
+      "properties": {
+        "id": { "type": "string" },
+        "role": { "type": "string" },
+        "label": { "type": "string" },
+        "widget": { "type": "string" },
+        "input": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "scene": {
+      "type": "object",
+      "required": ["label", "kind", "inputs"],
+      "properties": {
+        "label": { "type": "string" },
+        "kind": { "enum": ["layered", "tabs"] },
+        "adapter": { "type": "string" },
+        "onSelect": { "type": "string", "minLength": 1 },
+        "surface": { "type": "object", "properties": { "widget": { "type": "string" } }, "additionalProperties": false },
+        "inputs": { "type": "array", "items": { "$ref": "#/$defs/input" } },
+        "layers": { "type": "array", "items": { "$ref": "#/$defs/layer" } },
+        "tabs": { "type": "array", "items": { "$ref": "#/$defs/tab" } },
+        "defaultTab": { "type": "string" },
+        "settingsInput": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "rule": {
+      "type": "object",
+      "required": ["id", "label", "scene"],
+      "properties": {
+        "id": { "type": "string" },
+        "label": { "type": "string" },
+        "scene": { "type": "string" },
+        "focus": { "type": "string" },
+        "when": {
+          "type": "object",
+          "properties": {
+            "path": { "type": "array", "items": { "type": "string" } },
+            "paths": { "type": "array", "items": { "type": "array", "items": { "type": "string" } } },
+            "types": { "type": "array", "items": { "type": "string" } },
+            "hasProperties": { "type": "array", "items": { "type": "string" } },
+            "dimensions": { "type": "array", "items": { "enum": [1, 2, 3] } }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}

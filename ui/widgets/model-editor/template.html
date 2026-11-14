@@ -1,0 +1,131 @@
+
+  <header class="topbar app-topbar">
+    <div class="brand"><img class="brand-icon" src="/platform/ui/brand-icon.svg" alt="" aria-hidden="true"><div><div class="brand-name">FullMeta</div><div class="brand-sub">Simulation workspace</div></div></div>
+    <details class="app-file-menu" id="file-menu">
+      <summary>File</summary>
+      <div class="app-file-menu-list" aria-label="File commands">
+        <button class="button" id="new-model" type="button"><span>New…</span><span class="menu-shortcut">Ctrl+N</span></button>
+        <button class="button" id="open-project" type="button"><span>Open…</span><span class="menu-shortcut">Ctrl+O</span></button>
+        <hr>
+        <button class="button" id="save" type="button" disabled><span>Save</span><span class="menu-shortcut">Ctrl+S</span></button>
+        <button class="button" id="save-as" type="button" disabled><span>Save As…</span><span class="menu-shortcut">Ctrl+Shift+S</span></button>
+        <hr>
+        <button class="button" id="exit-editor" type="button">Exit</button>
+      </div>
+    </details>
+    <details id="edit-menu" class="app-file-menu" data-standard-menu="edit"><summary>Edit</summary><div class="app-file-menu-list" role="menu" aria-label="Edit commands"><button type="button" id="edit-cut" class="button" role="menuitem">Cut<span class="menu-shortcut">Ctrl+X</span></button><button type="button" id="edit-copy" class="button" role="menuitem">Copy<span class="menu-shortcut">Ctrl+C</span></button><button type="button" id="edit-paste" class="button" role="menuitem">Paste<span class="menu-shortcut">Ctrl+V</span></button><hr/><button type="button" id="edit-select-all" class="button" role="menuitem">Select All<span class="menu-shortcut">Ctrl+A</span></button></div></details>
+    <details class="app-file-menu" id="view-menu"><summary>View</summary><div class="app-file-menu-list" role="menu" aria-label="Workspace layout"><button type="button" class="button" id="view-layout-stacked" role="menuitemradio" aria-checked="true" data-workspace-layout="stacked" title="Tree on the left; Graphics above Settings">Stacked</button><button type="button" class="button" id="view-layout-columns" role="menuitemradio" aria-checked="false" data-workspace-layout="columns" title="Tree | Settings | Graphics from left to right">Columns</button></div></details>
+    <details id="help-menu" class="app-file-menu" data-standard-menu="help"><summary>Help</summary><div class="app-file-menu-list" role="menu" aria-label="Help commands"><button type="button" id="help-documentation" class="button" role="menuitem">Documentation</button><button type="button" id="help-about" class="button" role="menuitem">About FullMeta</button></div></details>
+    <span id="model-edit-state" class="unsaved-edit-indicator app-unsaved-state" hidden role="status" aria-live="polite">Unsaved edits</span>
+  </header>
+  <main class="wrap">
+    <section id="schema-authoring-workflow" class="schema-authoring-document-workflow" aria-label="Document status" aria-live="polite" hidden>
+      <span id="schema-authoring-save-state">Saved</span>
+      <span id="schema-authoring-validation-state">Validate not run</span>
+      <output id="project-context" class="app-project-context" aria-label="Canonical file ID">Loading…</output>
+    </section>
+
+    <p class="server-compatibility-banner" id="server-compatibility" hidden role="alert"></p>
+    <div class="workspace">
+      <aside class="panel tree" aria-label="Model tree"><div class="tree-heading-row"><div class="tree-root-heading"><button class="tree-section-toggle" id="tree-root-toggle" type="button" aria-expanded="true" aria-label="Collapse project tree" title="Collapse project tree"><span class="tree-root-handle-collapsed" data-tree-toggle-handle="collapsed" hidden>▸</span><span class="tree-root-handle-expanded" data-tree-toggle-handle="expanded">▾</span></button><img id="tree-root-icon" class="tree-section-icon" alt="" aria-hidden="true"><h2><button id="tree-home" class="tree-home-button tree-root-title" type="button" title="Show model overview">Project</button></h2></div><button class="button" id="validate" type="button" disabled>Validate</button></div><div id="tree-children"><div id="tree-content"></div><p class="tree-help">Use the tree handles to expand sections. Right-click an item for available actions.</p></div></aside>
+      <div id="tree-splitter" class="panel-splitter tree-splitter" role="separator" aria-orientation="vertical" aria-label="Resize model tree and Graphics Console/Settings panes" aria-valuemin="210" aria-valuemax="420" aria-valuenow="260" tabindex="0"></div>
+      <div class="right-workspace" id="right-workspace">
+      <section class="panel graphics-panel" aria-label="Graphics Console"><div class="graphics-head"><strong id="graphics-widget-title">Graphics Console</strong><span id="preview-summary" class="crumb"></span><div class="graphics-controls" id="geometry-controls"></div></div><div class="graphics-content" id="geometry-view"><canvas id="preview-canvas" class="graphics-canvas" aria-label="Model graphics"></canvas><aside class="schema-tduv-overview" id="schema-tduv-overview" aria-label="Schema structure counters" hidden><div class="schema-tduv-heading">Schema structure counters</div><div class="schema-tduv-counts" id="schema-tduv-counts"></div><p>T = tree descriptor nodes; D paths = distinct logical fields, D declarations = each path plus its declaring branch; U facts = distinct UI behavior leaves, U physical keys = x-fullmeta-ui* keys stored in the schema; V = top-level validation rules.</p><p class="schema-tduv-caveat" id="schema-tduv-target-note"></p><button class="button" id="schema-branch-audit-open" type="button">Open current schema audit</button></aside></div><div class="graphics-context" id="graphics-selection-context" hidden></div><div class="graphics-note" id="geometry-note"></div><div class="results-content" id="results-view" hidden><div class="results-toolbar" id="results-toolbar"></div><div class="result-data-table" id="result-data-table" hidden></div><canvas id="result-chart" class="result-chart" aria-label="Model result plot"></canvas><div class="result-legend" id="result-legend"></div><div class="result-message" id="result-message"></div></div><div class="graphics-note" id="results-note" hidden></div></section>
+      <div id="right-splitter" class="panel-splitter horizontal-splitter right-splitter" role="separator" aria-orientation="horizontal" aria-label="Resize Graphics Console and Settings panels" aria-valuemin="260" aria-valuemax="700" aria-valuenow="480" tabindex="0"></div>
+      <section class="panel editor">
+        <div class="editor-head"><h2 id="selection-title">Settings</h2></div>
+        <div class="editor-note" id="editor-note">Select an item in the tree to edit its type-specific settings.</div>
+        <div class="settings-table-wrap" id="settings-view"><table class="settings-table" id="settings-table" data-column-resize-key="settings-item" aria-label="Selected item type settings"><thead><tr><th>Setting</th><th>Value</th></tr></thead><tbody><tr><td colspan="2" class="settings-empty">Select a model tree item to edit its settings.</td></tr></tbody></table></div>
+        <textarea class="editor-area hidden" id="full-json" spellcheck="false" aria-hidden="true" tabindex="-1"></textarea>
+        <div class="action-row"><button class="button" id="selection-parent" type="button" hidden>Up</button><span class="crumb" id="selection-path">No item selected</span><button class="button" id="apply-settings">Apply item</button><span id="application-selection-actions" class="selection-actions"></span></div>
+        <div class="resolved" id="resolved-values"></div>
+      </section>
+      </div>
+    </div>
+    <section class="panel operation-panel" id="operation-panel" aria-label="Operation progress" hidden><div class="operation-progress" id="operation-progress" data-state="idle" data-indeterminate="false" role="status" aria-live="polite"><span class="operation-progress-dot" aria-hidden="true"></span><strong class="operation-progress-title" id="operation-progress-title">Operation</strong><span class="operation-progress-message" id="operation-progress-message"></span><div class="operation-progress-track" aria-hidden="true"><div class="operation-progress-fill" id="operation-progress-fill"></div></div><span class="operation-progress-count" id="operation-progress-count"></span><span class="operation-progress-detail" id="operation-progress-detail"></span><span class="operation-progress-time" id="operation-progress-time"></span><button class="button operation-stop-button" id="stop-operation" type="button" hidden>Stop</button></div></section>
+  </main>
+  <footer class="app-statusbar" aria-label="Application status"><p class="status" id="status" role="status" aria-live="polite">Choose a FullMeta model to open.</p></footer>
+  <dialog id="unsaved-changes-dialog" class="unsaved-changes-dialog" aria-labelledby="unsaved-changes-title" aria-describedby="unsaved-changes-message">
+    <div class="unsaved-changes-content">
+      <h2 id="unsaved-changes-title">Unsaved changes</h2>
+      <p id="unsaved-changes-message"></p>
+      <div class="unsaved-changes-actions">
+        <button class="button primary" id="unsaved-save" type="button">Save</button>
+        <button class="button danger" id="unsaved-discard" type="button">Discard</button>
+        <button class="button" id="unsaved-cancel" type="button">Cancel</button>
+      </div>
+    </div>
+  </dialog>
+  <dialog id="new-model-dialog" class="unsaved-changes-dialog" aria-labelledby="new-model-title" aria-describedby="new-model-description">
+    <form id="new-model-form" class="save-as-content">
+      <h2 id="new-model-title">New model</h2>
+      <p id="new-model-description"></p>
+      <label for="new-model-id" id="new-model-id-row"><span id="new-model-id-label">Model ID</span><input id="new-model-id" type="text" maxlength="64" pattern="[A-Za-z][A-Za-z0-9_]{0,63}" autocomplete="off" required></label>
+      <label for="new-model-choice" id="new-model-choice-row"><span id="new-model-choice-label"></span><select id="new-model-choice"></select></label>
+      <label for="new-model-folder">Folder inside FullMeta<input id="new-model-folder" type="text" autocomplete="off" required><button type="button" class="button" id="new-model-folder-browse">Browse workspace folders…</button></label>
+      <label for="new-model-file">JSON filename<input id="new-model-file" type="text" pattern="[A-Za-z0-9][A-Za-z0-9._\-]*[.]json" autocomplete="off" required></label>
+      <p id="new-model-status" class="status error" role="status" hidden></p>
+      <div class="save-as-actions"><button class="button" id="new-model-cancel" type="button">Cancel</button><button class="button primary" id="new-model-confirm" type="submit">Create model</button></div>
+    </form>
+  </dialog>
+  <dialog id="workspace-file-dialog" class="workspace-file-dialog" aria-labelledby="workspace-file-picker-title"><div id="workspace-file-dialog-host"></div></dialog>
+  <dialog id="help-dialog" class="standard-help-dialog" aria-labelledby="standard-help-title"><div id="help-dialog-host"></div></dialog>
+  <dialog id="model-match-dialog" class="unsaved-changes-dialog" aria-labelledby="model-match-title">
+    <div class="save-as-content">
+      <h2 id="model-match-title">Choose the JSON file</h2>
+      <p>These files have the selected name and contents. Choose its location in FullMeta.</p>
+      <div id="model-match-list" class="save-as-actions" style="flex-direction:column;align-items:stretch"></div>
+      <div class="save-as-actions"><button class="button" id="model-match-cancel" type="button">Cancel</button></div>
+    </div>
+  </dialog>
+  <dialog id="save-as-dialog" class="unsaved-changes-dialog" aria-labelledby="save-as-title" aria-describedby="save-as-description">
+    <form id="save-as-form" class="save-as-content">
+      <h2 id="save-as-title">Save a model JSON copy</h2>
+      <p id="save-as-description">Save the open model under another filename in the same folder. The original and its generated files stay in place.</p>
+      <label for="save-as-name">JSON filename<input id="save-as-name" type="text" maxlength="124" pattern="[A-Za-z0-9][A-Za-z0-9._\-]*[.]json" autocomplete="off" required></label>
+      <div class="save-as-folder">Folder: <span id="save-as-folder-preview">.</span></div>
+      <p id="save-as-status" class="status error" role="status" hidden></p>
+      <div class="save-as-actions"><button class="button" id="save-as-cancel" type="button">Cancel</button><button class="button primary" id="save-as-confirm" type="submit">Save As</button></div>
+    </form>
+  </dialog>
+  <dialog id="schema-open-dialog" class="schema-open-dialog" aria-labelledby="schema-open-title" aria-describedby="schema-open-description">
+    <div class="schema-open-content">
+      <header class="schema-open-head"><div class="schema-open-head-copy"><h2 id="schema-open-title">Edit schema property</h2><p id="schema-open-description">Edit this property, then apply it to the open schema document.</p></div><button class="button" id="schema-open-follow-reference" type="button" hidden>Open referenced definition</button><button class="button" id="schema-open-guided" type="button" hidden>Guided add…</button><button class="button" id="schema-open-close" type="button" aria-label="Cancel editing">×</button></header>
+      <div class="schema-open-table-host" id="schema-open-table-host"></div>
+      <div class="schema-open-actions"><button class="button" id="schema-open-back" type="button" hidden>Back</button><button class="button" id="schema-open-cancel" type="button">Cancel</button><button class="button primary" id="schema-open-apply" type="button">Apply and close</button></div>
+    </div>
+  </dialog>
+  <dialog id="schema-validation-dialog" class="schema-validation-dialog" aria-labelledby="schema-validation-title" aria-describedby="schema-validation-note">
+    <div class="schema-validation-dialog-content">
+      <header class="schema-validation-dialog-head">
+        <div><h2 id="schema-validation-title">Validation checks</h2><p id="schema-validation-note" hidden></p></div>
+        <button class="button" id="schema-validation-dialog-close" type="button" aria-label="Close validation checks">×</button>
+      </header>
+      <div id="schema-validation-dialog-body" class="schema-validation-dialog-body"></div>
+      <div class="schema-validation-dialog-actions"><button class="button" id="schema-validation-dialog-done" type="button">Close</button></div>
+    </div>
+  </dialog>
+  <dialog id="schema-authoring-dialog" class="schema-authoring-dialog" aria-labelledby="schema-authoring-title" aria-describedby="schema-authoring-description">
+    <div class="schema-authoring-content">
+      <header class="schema-validation-dialog-head">
+        <div><h2 id="schema-authoring-title">Add schema structure</h2><p id="schema-authoring-description">Choose one design input. The editor will show the resulting project tree and generated schema code before applying it.</p></div>
+        <button class="button" id="schema-authoring-close" type="button" aria-label="Close schema authoring">×</button>
+      </header>
+      <form id="schema-authoring-form" class="schema-authoring-form">
+        <div class="schema-authoring-target-row"><label>Target property path<input id="schema-authoring-target-path" type="text" placeholder="Current tree item, model, model.geometry, scenario"></label><button class="button" id="schema-authoring-use-target" type="button">Use target</button></div>
+        <label>Operation<select id="schema-authoring-operation" required></select></label>
+        <div id="schema-authoring-inputs" class="schema-authoring-inputs"></div>
+        <p id="schema-authoring-status" class="schema-validation-dialog-status" hidden></p>
+        <section id="schema-authoring-preview" class="schema-authoring-preview" hidden>
+          <h3>Project tree preview</h3><pre id="schema-authoring-tree"></pre>
+          <h3>Generated schema code</h3><pre id="schema-authoring-code" aria-label="Generated schema code"></pre>
+        </section>
+        <footer class="schema-validation-dialog-actions">
+          <button class="button" id="schema-authoring-cancel" type="button">Cancel</button>
+          <button class="button" id="schema-authoring-preview-button" type="submit">Preview</button>
+          <button class="button" id="schema-authoring-apply" type="button" disabled>Apply</button>
+        </footer>
+      </form>
+    </div>
+  </dialog>
+

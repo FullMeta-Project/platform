@@ -1,0 +1,14 @@
+.schema-authoring-path-dialog{width:min(760px,calc(100vw - 32px))}
+.schema-authoring-path-dialog .schema-bulk-body{display:grid;gap:10px}
+.schema-authoring-path-dialog input,.schema-authoring-path-dialog select{box-sizing:border-box;min-width:0;width:100%;padding:7px;border:1px solid var(--border);border-radius:4px;background:var(--page);color:var(--text);font:12px ui-monospace,Consolas,monospace}
+.schema-authoring-path-dialog select{min-height:180px}
+.schema-authoring-path-representations{display:grid;gap:9px}
+.schema-authoring-path-representations label{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:5px;font-size:11px}
+.schema-authoring-path-representations label input{grid-column:1}
+.schema-authoring-path-representations label button{grid-column:2;grid-row:2}
+.schema-authoring-document-workflow{display:flex;flex:0 0 auto;gap:10px;flex-wrap:wrap;padding:6px 12px;border-bottom:1px solid var(--border);background:var(--panel);color:var(--muted);font-size:11px}
+.schema-authoring-document-workflow[hidden]{display:none}
+.schema-authoring-document-workflow [data-state="good"]{color:#9ce0bc}
+.schema-authoring-document-workflow [data-state="error"]{color:#ffaaa3}
+.schema-authoring-dialog-workflow{margin:0;padding:7px 16px;background:#142330;border-bottom:1px solid var(--border);color:#f4cf8c;font-size:11px;line-height:1.5}
+.schema-authoring-dialog-workflow[data-state="ready"]{color:#9ce0bc}

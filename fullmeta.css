@@ -1,0 +1,31 @@
+:root {
+  color-scheme: dark;
+  --page: #0b1018;
+  --panel: #121a25;
+  --panel-2: #172230;
+  --panel-3: #1d2a39;
+  --border: #29384a;
+  --text: #edf4fb;
+  --muted: #94a6b8;
+  --faint: #617487;
+  --accent: #54d2bd;
+  --accent-strong: #29b6a3;
+  --blue: #7eb9ff;
+  --warning: #ffca78;
+  --danger: #ff8787;
+  font-family: Inter, "Segoe UI", sans-serif;
+}
+
+* { box-sizing: border-box; }
+html, body { min-height: 100%; width: 100%; margin: 0; }
+body { background: var(--page); color: var(--text); font-size: 13px; }
+button, input, select { color: inherit; font: inherit; }
+button { cursor: pointer; }
+button:focus-visible, input:focus-visible, select:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+
+.brand { display: flex; align-items: center; gap: 11px; }
+.brand-icon { display: block; flex: none; width: 27px; height: 27px; }
+.brand-name { font-weight: 750; letter-spacing: .2px; font-size: 15px; }
+.brand-sub { color: var(--muted); font-size: 11px; margin-top: 2px; }
+.topbar { height: 52px; flex: 0 0 52px; display: flex; align-items: center; justify-content: space-between; gap: 20px; padding: 0 15px; border-bottom: 1px solid var(--border); background: #101722; }
+.topbar .brand-icon { width: 27px; height: 27px; }

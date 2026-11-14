@@ -1,0 +1,53 @@
+.schema-root-constraint-heading{display:flex;align-items:baseline;gap:16px;padding:13px 16px 10px;border-bottom:1px solid var(--border)}
+.schema-root-constraint-heading h2{margin:0;font-size:17px;white-space:nowrap}
+.schema-root-constraint-heading p{margin:0;color:var(--muted);font-size:11px;line-height:1.4}
+.schema-root-constraints-dialog .schema-bulk-body{gap:13px}
+.schema-root-constraints-dialog{width:min(860px,calc(100vw - 24px))}
+.schema-root-constraints-dialog .schema-bulk-content{max-width:100%}
+.schema-root-constraints-dialog .schema-bulk-body{gap:8px;padding:9px 12px}
+.schema-bulk-dialog.schema-root-constraints-dialog:has(input[aria-label="Edit root composition"]){width:min(1058px,calc(100vw - 24px));max-width:calc(100vw - 24px)}
+.schema-root-constraints-dialog .schema-bulk-body>section{grid-template-columns:repeat(2,minmax(0,1fr));align-items:start}
+.schema-root-constraints-dialog .schema-bulk-body>section>label{align-self:start;min-width:0}
+.schema-root-constraints-dialog .schema-bulk-body>section>button{align-self:start;justify-self:start;width:auto;min-height:30px}
+.schema-root-constraints-dialog .schema-bulk-body>section>.structured-value-editor{grid-column:1/-1;width:100%;min-width:0}
+.schema-bulk-dialog.schema-root-constraints-dialog:has(input[aria-label="Edit root composition"]) .schema-bulk-body>section>label:has(>input[type=checkbox]){display:flex;align-items:center;justify-self:start;gap:7px;width:max-content;max-width:100%;grid-template-columns:none;white-space:nowrap;overflow-wrap:normal}
+.schema-root-constraints-dialog .structured-value-head{display:grid;grid-template-columns:minmax(140px,1fr) 125px;align-items:center;gap:6px;width:100%}
+.schema-root-constraints-dialog .structured-value-head>.structured-value-type{width:125px;max-width:125px}
+.schema-root-constraint-section{display:grid;gap:8px;padding:11px;border:1px solid var(--border);border-radius:7px;background:#101d29}
+.schema-root-constraints-dialog .structured-value-editor{gap:4px}
+.schema-root-constraints-dialog .structured-value-node{gap:3px}
+.schema-root-constraints-dialog .structured-value-children{padding:4px}
+.schema-root-constraints-dialog .structured-value-list{gap:3px;margin:4px 0}
+.schema-root-constraints-dialog .structured-value-entry{gap:4px;padding:3px 0}
+.schema-root-constraints-dialog .structured-value-entry:has(> .structured-value-key){grid-template-columns:minmax(120px,.7fr) minmax(0,1.6fr) auto;align-items:center}
+.schema-root-constraints-dialog .structured-value-entry:has(> .structured-value-key)>.structured-value-node{grid-column:2;grid-row:1;display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:3px}
+.schema-root-constraints-dialog .structured-value-entry:has(> .structured-value-key)>.structured-value-node>.structured-value-head{display:contents}
+.schema-root-constraints-dialog .structured-value-entry:has(> .structured-value-key)>.structured-value-node .structured-value-label{display:none}
+.schema-root-constraints-dialog .structured-value-entry:has(> .structured-value-key)>.structured-value-node>.structured-value-text{grid-column:1;grid-row:1;min-height:26px}
+.schema-root-constraints-dialog .structured-value-entry:has(> .structured-value-key)>.structured-value-node .structured-value-type{grid-column:2;grid-row:1;width:105px}
+.schema-root-constraints-dialog .structured-value-entry:has(> .structured-value-key)>button{grid-column:3;grid-row:1}
+.schema-root-constraints-dialog section>label:has(input[type=checkbox]){display:flex;align-items:center;justify-content:flex-start;gap:7px}
+.schema-root-constraints-dialog section>label:has(input[type=checkbox]) input{width:auto}
+.schema-root-constraints-dialog .structured-value-batch{gap:3px;margin-top:3px}
+.schema-root-constraints-dialog .structured-value-batch-panel{gap:4px;padding:5px}
+.schema-root-constraint-section-head{display:flex;align-items:center;justify-content:space-between;gap:9px}
+.schema-root-constraint-section-head h3{margin:0;font-size:12px;color:#b8e5dc}
+.schema-root-constraint-table{min-width:630px}
+.schema-root-constraint-table th:first-child{width:8%}
+.schema-root-constraint-table th:nth-child(2){width:72%}
+.schema-root-constraint-table th:nth-child(3){width:20%}
+.schema-root-constraint-table td:last-child{white-space:nowrap}
+.schema-root-constraint-table td:last-child .button{margin-right:4px}
+.schema-root-constraint-table input,.schema-root-constraint-field input,.schema-root-constraint-field select{box-sizing:border-box;width:100%;min-width:0;padding:5px 6px;border:1px solid var(--border);border-radius:4px;background:var(--page);color:var(--text);font:11px 'Segoe UI',sans-serif}
+.schema-root-constraint-rows{display:grid;gap:7px}
+.schema-root-constraint-row{display:grid;grid-template-columns:80px minmax(0,2fr) minmax(115px,.8fr) minmax(0,1.2fr);align-items:end;gap:7px}
+.schema-root-constraint-row strong{align-self:center;color:#b8e5dc;font-size:11px}
+.schema-root-constraint-field{display:grid;gap:4px;color:var(--muted);font-size:10px}
+.schema-root-constraint-toggle{display:flex;align-items:center;gap:6px;white-space:nowrap;color:var(--text);font-size:11px}
+.schema-root-constraint-toggle input{width:auto}
+.schema-root-constraint-inspect{color:#a9cfdd;font-size:10px}
+.schema-root-constraint-inspect summary{cursor:pointer}
+.schema-root-constraint-inspect pre{max-height:140px;overflow:auto;white-space:pre-wrap;overflow-wrap:anywhere;color:var(--muted);font:10px/1.4 ui-monospace,Consolas,monospace}
+.schema-root-constraint-footer{display:flex;justify-content:flex-end;gap:8px;padding:8px 15px 13px;border-top:1px solid var(--border)}
+@media(max-width:850px){.schema-root-constraint-heading{display:block}.schema-root-constraint-row{grid-template-columns:70px minmax(0,1fr) minmax(0,1fr)}.schema-root-constraint-row .schema-root-constraint-field:last-child{grid-column:2/-1}}
+@media(max-width:600px){.schema-root-constraints-dialog .structured-value-entry:has(> .structured-value-key){grid-template-columns:minmax(0,1fr) auto}.schema-root-constraints-dialog .structured-value-entry:has(> .structured-value-key)>.structured-value-node{grid-column:1/-1;grid-row:2}.schema-root-constraints-dialog .structured-value-entry:has(> .structured-value-key)>button{grid-column:2;grid-row:1}}

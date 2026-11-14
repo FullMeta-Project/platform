@@ -1,0 +1,82 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "x-fullmeta-schema": "../../../schema-editor/schema-editor.schema.json",
+  "$id": "https://fullmeta.local/ui/fullmeta-ui-keyedChoiceMatrix-1.schema.json",
+  "title": "FullMeta Keyed Choice Matrix UI 1",
+  "description": "Application-neutral settings control for assigning declared choice values to keys in host-provided records.",
+  "type": "object",
+  "properties": {
+    "x-fullmeta-ui-keyedChoiceMatrix": { "$ref": "#/$defs/keyedChoiceMatrix" }
+  },
+  "$defs": {
+    "text": { "type": "string", "minLength": 1 },
+    "stringMap": { "type": "object", "additionalProperties": { "$ref": "#/$defs/text" } },
+    "choiceSource": {
+      "type": "object",
+      "required": ["scope", "path"],
+      "properties": {
+        "scope": { "enum": ["root", "document", "model", "component", "engine", "runtime"] },
+        "path": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/text" }, "uniqueItems": false },
+        "valueProperty": { "$ref": "#/$defs/text" },
+        "schemaFilter": {
+          "type": "object",
+          "required": ["annotationKeys", "valuePath"],
+          "properties": {
+            "annotationKeys": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/text" }, "uniqueItems": true },
+            "valuePath": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/text" } }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": true
+    },
+    "initialChoiceByValue": {
+      "type": "object",
+      "required": ["property", "values"],
+      "properties": {
+        "property": { "$ref": "#/$defs/text" },
+        "values": { "type": "object", "additionalProperties": { "$ref": "#/$defs/text" } }
+      },
+      "additionalProperties": false
+    },
+    "keyedChoiceMatrix": {
+      "type": "object",
+      "required": ["choiceSource", "choiceKeyProperty", "valueMapProperty", "omittedValue"],
+      "properties": {
+        "choiceSource": { "$ref": "#/$defs/choiceSource" },
+        "choiceKeyProperty": { "$ref": "#/$defs/text" },
+        "valueMapProperty": { "$ref": "#/$defs/text" },
+        "choiceLabelTemplate": { "$ref": "#/$defs/text" },
+        "rowLabelTemplate": { "$ref": "#/$defs/text" },
+        "addLabel": { "$ref": "#/$defs/text" },
+        "removeLabel": { "$ref": "#/$defs/text" },
+        "removeAriaLabelTemplate": { "$ref": "#/$defs/text" },
+        "noChoicesMessage": { "$ref": "#/$defs/text" },
+        "noUniqueChoiceMessage": { "$ref": "#/$defs/text" },
+        "missingChoiceLabel": { "$ref": "#/$defs/text" },
+        "missingChoiceLabelTemplate": { "$ref": "#/$defs/text" },
+        "choiceAriaLabelTemplate": { "$ref": "#/$defs/text" },
+        "omittedValue": { "$ref": "#/$defs/text" },
+        "minItems": { "type": "integer", "minimum": 0 },
+        "maxItems": { "type": "integer", "minimum": 1 },
+        "candidateLimit": { "type": "integer", "minimum": 1 },
+        "choiceSetProperty": { "$ref": "#/$defs/text" },
+        "initialChoiceByValue": { "$ref": "#/$defs/initialChoiceByValue" },
+        "initialChoiceValue": { "$ref": "#/$defs/text" },
+        "choiceLabels": { "$ref": "#/$defs/stringMap" },
+        "choiceSetsByValue": { "type": "object", "additionalProperties": { "type": "array", "items": { "$ref": "#/$defs/text" }, "uniqueItems": true } },
+        "summaryLabelTemplate": { "$ref": "#/$defs/text" },
+        "summaryHelp": { "$ref": "#/$defs/text" },
+        "summaryCodes": { "$ref": "#/$defs/stringMap" },
+        "choiceHelp": { "$ref": "#/$defs/text" },
+        "helpText": { "$ref": "#/$defs/text" },
+        "changeMessage": { "$ref": "#/$defs/text" },
+        "addMessage": { "$ref": "#/$defs/text" },
+        "removeKeyMessage": { "$ref": "#/$defs/text" },
+        "minimumRowsMessage": { "$ref": "#/$defs/text" },
+        "maximumRowsMessage": { "$ref": "#/$defs/text" }
+      },
+      "additionalProperties": false
+    }
+  }
+}

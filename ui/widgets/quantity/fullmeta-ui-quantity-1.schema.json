@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "x-fullmeta-schema": "../../../schema-editor/schema-editor.schema.json",
+  "$id": "https://fullmeta.local/ui/fullmeta-ui-quantity-1.schema.json",
+  "title": "FullMeta Quantity UI 1",
+  "description": "Application-neutral settings presentation for an expression paired with a unit.",
+  "type": "object",
+  "properties": {
+    "x-fullmeta-ui-quantity": {
+      "$ref": "#/$defs/quantity"
+    }
+  },
+  "$defs": {
+    "quantity": {
+      "type": "object",
+      "properties": {
+        "hidden": { "type": "boolean" },
+        "optionalToggleLabel": { "type": "string", "minLength": 1 },
+        "createWithProperties": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+        "clearWithProperties": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+        "unitReadOnly": { "type": "boolean" },
+        "unitGroup": { "type": "string", "minLength": 1 },
+        "defaultUnit": { "type": "string", "minLength": 1 }
+      },
+      "additionalProperties": false
+    }
+  }
+}

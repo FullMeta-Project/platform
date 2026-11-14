@@ -1,0 +1,19 @@
+.schema-definition-refactor-dialog{width:min(900px,calc(100vw - 28px));max-width:calc(100vw - 28px);max-height:calc(100dvh - 28px);padding:0;border:1px solid var(--border);border-radius:10px;background:var(--panel);color:var(--text);overflow:hidden}
+.schema-definition-refactor-dialog::backdrop{background:#02070dcc}
+.schema-definition-refactor-dialog .schema-bulk-content{display:flex;flex-direction:column;max-height:calc(100dvh - 30px)}
+.schema-definition-refactor-dialog .schema-bulk-body{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;padding:12px}
+.schema-definition-refactor-dialog .schema-bulk-field{display:grid;gap:4px;min-width:0;color:var(--muted);font-size:11px}
+.schema-definition-refactor-dialog input,.schema-definition-refactor-dialog select{box-sizing:border-box;width:100%;min-width:0;min-height:27px;padding:4px 7px;border:1px solid var(--border);border-radius:5px;background:var(--page);color:var(--text);font:inherit}
+.schema-definition-refactor-dialog .schema-bulk-note{grid-column:1/-1;margin:0}
+.schema-definition-refactor-dialog .schema-bulk-preview{max-height:min(48vh,390px);overflow:auto;margin:0 12px 8px}
+.schema-definition-refactor-dialog .schema-bulk-preview pre{white-space:pre-wrap;overflow-wrap:anywhere}
+.schema-definition-refactor-dialog .schema-validation-dialog-status{padding:3px 12px}
+.schema-definition-refactor-dialog .schema-validation-dialog-actions{display:flex;justify-content:flex-end;gap:8px;padding:10px 12px;border-top:1px solid var(--border)}
+@media(max-width:640px){.schema-definition-refactor-dialog .schema-bulk-body{grid-template-columns:minmax(0,1fr)}}
+.schema-bulk-dialog:has(.schema-bulk-body>section>label:nth-of-type(3)){width:min(800px,calc(100vw - 24px))}
+.schema-bulk-dialog:has(.schema-bulk-body>section>label:nth-of-type(3)) .schema-bulk-body{grid-template-columns:minmax(0,1fr);gap:8px;padding:10px 12px}
+.schema-bulk-dialog:has(.schema-bulk-body>section>label:nth-of-type(3)) .schema-bulk-body>section{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;min-width:0}
+.schema-bulk-dialog:has(.schema-bulk-body>section>label:nth-of-type(3)) .schema-bulk-body>section>p{grid-column:1/-1}
+.schema-bulk-dialog:has(.schema-bulk-body>section>label:nth-of-type(3)) .schema-bulk-body>section>label{min-width:0;display:grid;gap:4px}
+.schema-bulk-dialog:has(.schema-bulk-body>section>label:nth-of-type(3)) .schema-bulk-body input,.schema-bulk-dialog:has(.schema-bulk-body>section>label:nth-of-type(3)) .schema-bulk-body select{box-sizing:border-box;width:100%;min-width:0}
+@media(max-width:640px){.schema-bulk-dialog:has(.schema-bulk-body>section>label:nth-of-type(3)) .schema-bulk-body>section{grid-template-columns:minmax(0,1fr)}}

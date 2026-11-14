@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "x-fullmeta-schema": "../../../schema-editor/schema-editor.schema.json",
+  "$id": "https://fullmeta.local/ui/fullmeta-ui-scan-1.schema.json",
+  "title": "FullMeta Scan UI 1",
+  "description": "Application-neutral presentation contract for one scan. The model schema declares its value modes.",
+  "type": "object",
+  "properties": {
+    "x-fullmeta-ui-scan": { "$ref": "#/$defs/scan" }
+  },
+  "$defs": {
+    "name": { "type": "string", "minLength": 1 },
+    "choiceSource": {
+      "type": "object",
+      "required": ["scope", "path"],
+      "properties": {
+        "scope": { "enum": ["root", "document", "model", "component", "engine", "runtime"] },
+        "path": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/name" } }
+      },
+      "additionalProperties": false
+    },
+    "scan": {
+      "type": "object",
+      "required": ["choiceSource", "choiceValueProperty", "rowChoiceProperty", "rowValuesProperty"],
+      "properties": {
+        "labels": { "type": "object", "additionalProperties": { "type": "string", "minLength": 1 } },
+        "choiceSource": { "$ref": "#/$defs/choiceSource" },
+        "choiceValueProperty": { "$ref": "#/$defs/name" },
+        "rowChoiceProperty": { "$ref": "#/$defs/name" },
+        "rowValuesProperty": { "$ref": "#/$defs/name" },
+        "sourceExpressionProperty": { "$ref": "#/$defs/name" },
+        "sourceUnitProperty": { "$ref": "#/$defs/name" },
+        "rangeStartProperty": { "$ref": "#/$defs/name" },
+        "rangeEndProperty": { "$ref": "#/$defs/name" },
+        "rangeCountProperty": { "$ref": "#/$defs/name" },
+        "choiceLabelTemplate": { "$ref": "#/$defs/name" }
+      },
+      "allOf": [{
+        "if": { "anyOf": [{ "required": ["rangeStartProperty"] }, { "required": ["rangeEndProperty"] }, { "required": ["rangeCountProperty"] }] },
+        "then": { "required": ["rangeStartProperty", "rangeEndProperty", "rangeCountProperty"] }
+      }],
+      "additionalProperties": false
+    }
+  }
+}

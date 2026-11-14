@@ -1,0 +1,62 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "x-fullmeta-schema": "../../../schema-editor/schema-editor.schema.json",
+  "$id": "https://fullmeta.local/ui/fullmeta-ui-tabularSliceSelector-1.schema.json",
+  "title": "FullMeta Tabular Slice Selector UI 1",
+  "description": "Application-neutral presentation settings for choosing a varying column and sampled values from a host-provided table.",
+  "type": "object",
+  "properties": {
+    "x-fullmeta-ui-tabularSliceSelector": {
+      "$ref": "#/$defs/tabularSliceSelector"
+    }
+  },
+  "$defs": {
+    "text": { "type": "string", "minLength": 1 },
+    "dataSource": {
+      "type": "object",
+      "required": ["scope", "path"],
+      "properties": {
+        "scope": { "enum": ["root", "document", "component", "engine", "runtime"] },
+        "path": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/text" } }
+      },
+      "additionalProperties": false
+    },
+    "labels": {
+      "type": "object",
+      "properties": {
+        "varyingColumn": { "$ref": "#/$defs/text" },
+        "allValues": { "$ref": "#/$defs/text" },
+        "fixedValue": { "$ref": "#/$defs/text" }
+      },
+      "additionalProperties": false
+    },
+    "tabularSliceSelector": {
+      "type": "object",
+      "required": ["dataSource", "selectionMode"],
+      "properties": {
+        "showDefault": { "type": "boolean" },
+        "defaultWhenSiblingPropertyPresent": { "$ref": "#/$defs/text" },
+        "dataSource": { "$ref": "#/$defs/dataSource" },
+        "tableIdProperty": { "$ref": "#/$defs/text" },
+        "ownerIdProperty": { "$ref": "#/$defs/text" },
+        "varyingColumnProperty": { "$ref": "#/$defs/text" },
+        "fixedValuesProperty": { "$ref": "#/$defs/text" },
+        "unitProperty": { "$ref": "#/$defs/text" },
+        "selectionMode": { "enum": ["slice", "fixed"] },
+        "labels": { "$ref": "#/$defs/labels" },
+        "emptyMessage": { "$ref": "#/$defs/text" },
+        "noChoicesMessage": { "$ref": "#/$defs/text" },
+        "selectionAdjustedMessage": { "$ref": "#/$defs/text" },
+        "helpText": { "$ref": "#/$defs/text" },
+        "changeMessage": { "$ref": "#/$defs/text" }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "selectionMode": { "const": "slice" } } },
+          "then": { "required": ["varyingColumnProperty"] }
+        }
+      ],
+      "additionalProperties": false
+    }
+  }
+}

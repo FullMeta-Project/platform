@@ -1,4 +1,86 @@
 // Generated from quantity-value-control.jsx by scripts/build-frontend.mjs.
-import o from"./react/react-runtime.js";import{mountReactComponent as r}from"./react/mount.js";function p({draft:e,allowedUnits:u=[],label:n="Quantity",unitReadOnly:l=!1,onChange:i,disabled:s=!1}){const a=[...new Set(u.filter(Boolean))];return e.unit&&!a.includes(e.unit)&&a.push(e.unit),o.createElement(o.Fragment,null,o.createElement("input",{type:"text","data-quantity-role":"expression",placeholder:"\u27E8expression\u27E9",value:e.expression,disabled:s,"aria-label":n+" expression",onChange:t=>i({...e,expression:t.target.value},t)}),l?o.createElement("span",{className:"setting-unit-value","data-quantity-role":"unit"},e.unit):u.length?o.createElement("select",{className:"schema-design-unit-button","data-quantity-role":"unit",value:e.unit,disabled:s,"aria-label":n+" unit",onChange:t=>i({...e,unit:t.target.value},t)},o.createElement("option",{value:""},"\u27E8unit\u27E9"),a.map(t=>o.createElement("option",{key:t,value:t},t,u.includes(t)?"":" (not in schema)"))):o.createElement("input",{className:"schema-design-unit-button","data-quantity-role":"unit",type:"text",placeholder:"\u27E8unit\u27E9",value:e.unit,disabled:s,"aria-label":n+" unit",onChange:t=>i({...e,unit:t.target.value},t)}))}function y(e={}){let u=e,n={expression:typeof e.value?.expression=="string"?e.value.expression:"",unit:typeof e.value?.unit=="string"?e.value.unit:e.defaultUnit||""},l;const i=document.createElement("div");i.className="setting-inline schema-design-quantity";const s=()=>({...u,draft:n,onChange(a,t){n=a,l.update(s()),u.onInput?.(t)}});return l=r(i,p,s()),{element:i,get expression(){return i.querySelector('[data-quantity-role="expression"]')},get unit(){return i.querySelector('[data-quantity-role="unit"]')},value:()=>({...n}),snapshot:()=>({...n}),clear(){n={expression:"",unit:u.unitReadOnly?n.unit:""},l.update(s()),u.onInput?.(),i.dispatchEvent(new Event("input",{bubbles:!0}))},update(a){u={...u,...a},a.value&&(n={...a.value}),l.update(s())},dispose:()=>l.dispose()}}export{p as QuantityValueControl,y as createQuantityValueControl};
+import React from "./react/react-runtime.js";
+import { mountReactComponent } from "./react/mount.js";
+function QuantityValueControl({ draft, allowedUnits = [], label = "Quantity", unitReadOnly = false, onChange, disabled = false }) {
+  const units = [...new Set(allowedUnits.filter(Boolean))];
+  if (draft.unit && !units.includes(draft.unit)) units.push(draft.unit);
+  return /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement(
+    "input",
+    {
+      type: "text",
+      "data-quantity-role": "expression",
+      placeholder: "\u27E8expression\u27E9",
+      value: draft.expression,
+      disabled,
+      "aria-label": label + " expression",
+      onChange: (event) => onChange({ ...draft, expression: event.target.value }, event)
+    }
+  ), unitReadOnly ? /* @__PURE__ */ React.createElement("span", { className: "setting-unit-value", "data-quantity-role": "unit" }, draft.unit) : allowedUnits.length ? /* @__PURE__ */ React.createElement(
+    "select",
+    {
+      className: "schema-design-unit-button",
+      "data-quantity-role": "unit",
+      value: draft.unit,
+      disabled,
+      "aria-label": label + " unit",
+      onChange: (event) => onChange({ ...draft, unit: event.target.value }, event)
+    },
+    /* @__PURE__ */ React.createElement("option", { value: "" }, "\u27E8unit\u27E9"),
+    units.map((unit) => /* @__PURE__ */ React.createElement("option", { key: unit, value: unit }, unit, allowedUnits.includes(unit) ? "" : " (not in schema)"))
+  ) : /* @__PURE__ */ React.createElement(
+    "input",
+    {
+      className: "schema-design-unit-button",
+      "data-quantity-role": "unit",
+      type: "text",
+      placeholder: "\u27E8unit\u27E9",
+      value: draft.unit,
+      disabled,
+      "aria-label": label + " unit",
+      onChange: (event) => onChange({ ...draft, unit: event.target.value }, event)
+    }
+  ));
+}
+function createQuantityValueControl(options = {}) {
+  let configuration = options, draft = {
+    expression: typeof options.value?.expression === "string" ? options.value.expression : "",
+    unit: typeof options.value?.unit === "string" ? options.value.unit : options.defaultUnit || ""
+  }, mount;
+  const element = document.createElement("div");
+  element.className = "setting-inline schema-design-quantity";
+  const props = () => ({ ...configuration, draft, onChange(next, event) {
+    draft = next;
+    mount.update(props());
+    configuration.onInput?.(event);
+  } });
+  mount = mountReactComponent(element, QuantityValueControl, props());
+  return {
+    element,
+    get expression() {
+      return element.querySelector('[data-quantity-role="expression"]');
+    },
+    get unit() {
+      return element.querySelector('[data-quantity-role="unit"]');
+    },
+    value: () => ({ ...draft }),
+    snapshot: () => ({ ...draft }),
+    clear() {
+      draft = { expression: "", unit: configuration.unitReadOnly ? draft.unit : "" };
+      mount.update(props());
+      configuration.onInput?.();
+      element.dispatchEvent(new Event("input", { bubbles: true }));
+    },
+    update(next) {
+      configuration = { ...configuration, ...next };
+      if (next.value) draft = { ...next.value };
+      mount.update(props());
+    },
+    dispose: () => mount.dispose()
+  };
+}
+export {
+  QuantityValueControl,
+  createQuantityValueControl
+};
 
 //# sourceMappingURL=quantity-value-control.js.map

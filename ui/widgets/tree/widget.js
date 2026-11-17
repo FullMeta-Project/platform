@@ -1,4 +1,62 @@
 // Generated from widget.jsx by scripts/build-frontend.mjs.
-import{treeDesignLabel as x,renderTreeDesignEditor as S}from"./design-editor.js";import{populateTreeSection as j,renderSchemaTree as D,configureTreeSections as I,labelCase as R}from"./runtime.js";import{treePathMatches as w,treeConditionMatches as y,resolveTreeDescriptor as A,createSchemaTreeActionPlans as C}from"./tree-declarations.js";import{createTreeItem as M,setTreeToggleState as P,createTreeToggle as V}from"./tree-primitives.js";import{validateUiTreeAnnotation as L}from"./tree-schema.js";import{createTreeViewState as q,reduceTreeViewState as v,projectSchemaTree as z,visibleTreeItems as B}from"./tree-projection.js";import{SchemaTree as G,mountReactTree as H,TreeInlineRename as J}from"./react-tree.js";import{TreeDesignEditor as N}from"./design-editor.js";import p from"../shared/react/react-runtime.js";import{mountReactComponent as T}from"../shared/react/mount.js";import{SchemaTree as g}from"./react-tree.js";function n({view:t,onCommand:r,callbacks:i={},...o}){const a={...o,...t,...i};return p.createElement(g,{...o,...t,...i,projection:t?.projection||t?.value||o.projection||t,onSelect:(e,c)=>{a.onSelect?.(e,c),r?.({type:"widget.action",widget:"tree",path:e.path||[],action:"select",args:{id:e.id}})},onToggle:e=>{a.onToggle?.(e),r?.({type:"widget.action",widget:"tree",path:e.path||[],action:"toggle",args:{id:e.id,expanded:e.expanded}})}})}const d=(t,r)=>T(t,n,r);export{G as SchemaTree,n as Tree,N as TreeDesignEditor,J as TreeInlineRename,n as Widget,I as configureTreeSections,C as createSchemaTreeActionPlans,M as createTreeItem,V as createTreeToggle,q as createTreeViewState,R as labelCase,H as mountReactTree,d as mountWidget,j as populateTreeSection,z as projectSchemaTree,v as reduceTreeViewState,D as renderSchemaTree,S as renderTreeDesignEditor,A as resolveTreeDescriptor,P as setTreeToggleState,y as treeConditionMatches,x as treeDesignLabel,w as treePathMatches,L as validateUiTreeAnnotation,B as visibleTreeItems};
+import { treeDesignLabel, renderTreeDesignEditor } from "./design-editor.js";
+import { populateTreeSection, renderSchemaTree, configureTreeSections, labelCase } from "./runtime.js";
+import { treePathMatches, treeConditionMatches, resolveTreeDescriptor, createSchemaTreeActionPlans } from "./tree-declarations.js";
+import { createTreeItem, setTreeToggleState, createTreeToggle } from "./tree-primitives.js";
+import { validateUiTreeAnnotation } from "./tree-schema.js";
+import { createTreeViewState, reduceTreeViewState, projectSchemaTree, visibleTreeItems } from "./tree-projection.js";
+import { SchemaTree, mountReactTree, TreeInlineRename } from "./react-tree.js";
+import { TreeDesignEditor } from "./design-editor.js";
+import React from "../shared/react/react-runtime.js";
+import { mountReactComponent } from "../shared/react/mount.js";
+import { SchemaTree as SchemaTree2 } from "./react-tree.js";
+function Tree({ view, onCommand, callbacks = {}, ...props }) {
+  const handlers = { ...props, ...view, ...callbacks };
+  return /* @__PURE__ */ React.createElement(
+    SchemaTree2,
+    {
+      ...props,
+      ...view,
+      ...callbacks,
+      projection: view?.projection || view?.value || props.projection || view,
+      onSelect: (node, element) => {
+        handlers.onSelect?.(node, element);
+        onCommand?.({ type: "widget.action", widget: "tree", path: node.path || [], action: "select", args: { id: node.id } });
+      },
+      onToggle: (command) => {
+        handlers.onToggle?.(command);
+        onCommand?.({ type: "widget.action", widget: "tree", path: command.path || [], action: "toggle", args: { id: command.id, expanded: command.expanded } });
+      }
+    }
+  );
+}
+const mountWidget = (container, props) => mountReactComponent(container, Tree, props);
+export {
+  SchemaTree,
+  Tree,
+  TreeDesignEditor,
+  TreeInlineRename,
+  Tree as Widget,
+  configureTreeSections,
+  createSchemaTreeActionPlans,
+  createTreeItem,
+  createTreeToggle,
+  createTreeViewState,
+  labelCase,
+  mountReactTree,
+  mountWidget,
+  populateTreeSection,
+  projectSchemaTree,
+  reduceTreeViewState,
+  renderSchemaTree,
+  renderTreeDesignEditor,
+  resolveTreeDescriptor,
+  setTreeToggleState,
+  treeConditionMatches,
+  treeDesignLabel,
+  treePathMatches,
+  validateUiTreeAnnotation,
+  visibleTreeItems
+};
 
 //# sourceMappingURL=widget.js.map

@@ -1,4 +1,130 @@
 // Generated from schema-project-integration-form.jsx by scripts/build-frontend.mjs.
-import n from"../shared/react/react-runtime.js";import{mountReactComponent as D}from"../shared/react/mount.js";import{StructuredValueEditor as W,structuredValueDraft as P,readStructuredValueDraft as x}from"../shared/structured-value-editor.js";import{projectIntegrationDefaults as k}from"./schema-project-integration-authoring.js";import{catalogGraphicsRegistration as R,loadWidgetCatalogs as S,sharedWidgetCatalog as E}from"../shared/catalog.js";import{CandidateField as j,CandidateRows as B,draftProperty as f,withDraftProperty as w}from"./candidate-dialog.js";const G=[["Project storage",["modelFile","projectRootFolder","runsDirectory","resultsDirectory","reservedDirectories"]],["Runtime resources and creation",["resourcesRoot","uiProfileSchema","uiProfileExtensionSchema","modelCreateRoute","projectCreateRoute","defaultProfileId"]],["Default Graphics scene",["defaultScene","sceneLabel","surfaceWidget","inputPath","layerHandler"]]],L=[["externalPrograms","External executable registry",["id","executable","pathType","allowedEntries"]],["resultAdapters","Result adapters",["selector","path"]],["compatibility","Runtime compatibility",["key","label","capabilityPath","value"]],["capabilityFacts","Capability facts",["path","kind","value"]],["widgets","Registered Graphics widgets",["id","kind","label","registrationFile","registrationSymbol","registrationLabel"]],["validationBoundaries","Runtime validation boundaries",["id","inputs","declared","ensure"]]],U=[["profiles","Embedded profile presentation",["id","materialName","sweepResultQuantities"]],["fieldRows","Profile field variables",["profileId","formulation","role","symbol","unit","solverFamily","solverAxis","zeroInDimensions"]],["materialRows","Profile material templates",["profileId","key","symbol","label","unit","representation","defaultExpression","defaultUnit","optional","plottable","implementedValues","description"]],["annotationFacts","Profile annotation facts",["profileIds","annotation","path","repeatKeys","kind","value","unit"]]],A={modelFile:"Model filename",projectRootFolder:"Project root folder",runsDirectory:"Runs directory",resultsDirectory:"Results directory",reservedDirectories:"Reserved folders (comma separated)",resourcesRoot:"Resources root",uiProfileSchema:"UI profile schema",uiProfileExtensionSchema:"Profile extension schema",modelCreateRoute:"Model create route",projectCreateRoute:"Project create route",defaultProfileId:"Default profile",defaultScene:"Scene ID",sceneLabel:"Scene label",surfaceWidget:"Surface widget",inputPath:"Model input path (dot separated)",layerHandler:"First layer handler"},V={pathType:["relative","absolute","system"],role:["primary","derived","zero"],representation:["expression","quantity"],optional:["","true","false"],plottable:["","true","false"]};function M({model:t,commands:l}){const c=t.available.widgets.filter(e=>e.graphics),o=f(t.draft,"profileIntegration"),a=(e,p,d,i=t.draft,h=l.change)=>n.createElement(B,{key:e,draft:f(i,e)||P([]),label:p,columns:d.map(s=>({name:s,choices:V[s]})),template:Object.fromEntries(d.map(s=>[s,s==="ensure"?!0:s==="declared"?!1:""])),onDraftChange:s=>h(w(i,e,s))});return n.createElement("section",{"data-jsx-widget":"project-integration"},n.createElement("p",null,"Connect this schema to storage, executable routes, capability facts, profile presentation and registered Graphics widgets."),G.map(([e,p])=>n.createElement("fieldset",{key:e},n.createElement("legend",null,e),p.map(d=>n.createElement(j,{key:d,draft:t.draft,name:d,label:A[d],choices:d==="defaultProfileId"?["",...t.defaults.profileChoices]:d==="surfaceWidget"?["",...new Set([...c.map(i=>i.id),f(t.draft,d)?.value].filter(Boolean))]:void 0,onDraftChange:l.change})))),n.createElement("fieldset",null,n.createElement("legend",null,"Widget catalogs"),n.createElement(W,{draft:f(t.draft,"widgetCatalogs"),label:"Widget catalog paths",onDraftChange:e=>l.change(w(t.draft,"widgetCatalogs",e))}),n.createElement("button",{type:"button",onClick:l.loadCatalogs},"Load catalogs"),n.createElement("select",{"aria-label":"Available catalog widgets",value:t.selectedWidget,onChange:e=>l.selectWidget(e.target.value)},n.createElement("option",{value:""},"Choose widget"),t.available.widgets.map(e=>n.createElement("option",{key:e.id,value:e.id},e.label," \xB7 ",e.catalogLabel))),n.createElement("button",{type:"button",disabled:!c.some(e=>e.id===t.selectedWidget),onClick:l.useWidget},"Use catalog Graphics widget"),n.createElement("p",{role:"status"},t.status)),n.createElement(j,{draft:t.draft,name:"capabilityAnnotation",label:"Capability annotation key",onDraftChange:l.change}),L.map(e=>a(...e)),t.defaults.profileIntegration.source?U.map(e=>a(...e,o,p=>l.change(w(t.draft,"profileIntegration",p)))):null,t.error?n.createElement("p",{role:"alert"},t.error):null)}const g=new WeakMap;function O(t){const{applicationId:l,profileChoices:c,...o}=structuredClone(t);o.widgetCatalogs=o.widgetCatalogs.map(a=>{if(typeof a!="string")throw new Error("Widget catalog paths must be text.");return a.trim()}).filter(Boolean),o.validationBoundaries=o.validationBoundaries.map(({id:a,inputs:e,ensure:p})=>({id:a,inputs:e,ensure:p}));for(const[a,e]of[["resultAdapters",["selector","path"]],["widgets",["id","kind","label","registrationFile","registrationSymbol"]],["externalPrograms",["id","executable","allowedEntries"]],["compatibility",["key","label","capabilityPath","value"]],["capabilityFacts",["path","value"]]])o[a]=o[a].filter(p=>e.some(d=>p[d]));return o.profileIntegration.fieldRows=o.profileIntegration.fieldRows.filter(a=>a.symbol||a.unit),o.profileIntegration.materialRows=o.profileIntegration.materialRows.filter(a=>a.key||a.symbol||a.label),o.profileIntegration.annotationFacts=o.profileIntegration.annotationFacts.filter(a=>a.annotation||a.path||a.value),o}function Q(t,l,c,{schemaPath:o="",widgetCatalog:a=E}={}){g.get(t)?.dispose();const e=k(l);if(!e)throw new Error("Declare an application ID before configuring project integration.");const p=new URL(o,new URL("../../../../",import.meta.url)),d={...e,validationBoundaries:e.validationBoundaries.map(r=>({id:r.id,inputs:r.inputs,declared:r.declared,ensure:!r.declared&&r.ensure!==!1})),profileIntegration:{profiles:e.profileIntegration.profiles,fieldRows:e.profileIntegration.fieldRows,materialRows:e.profileIntegration.materialRows.map(r=>({...r,optional:r.optional===void 0?"":String(r.optional),plottable:r.plottable===void 0?"":String(r.plottable)})),annotationFacts:e.profileIntegration.annotationFacts}};let i={defaults:e,draft:P(d),available:a,selectedWidget:"",status:"",error:""},h,s=0;const b=()=>h.update({model:i,commands:I}),I={change(r){s++,i={...i,draft:r,error:""},c(),b()},selectWidget(r){i.selectedWidget=r,b()},async loadCatalogs(){const r=++s;try{const u=x(f(i.draft,"widgetCatalogs")),y=await S({schema:{"x-fullmeta-ui-graphicsInterfaces":u.length?{catalogs:u}:{}},schemaUrl:p});if(r!==s)return;i={...i,available:y,status:`${y.widgets.length} widgets available.`,error:""}}catch(u){if(r!==s)return;i.error=u.message}b()},useWidget(){try{const r=i.available.widgets.find(C=>C.id===i.selectedWidget);if(!r?.graphics)throw new Error("Choose a Graphics widget.");const u=R(r,p),y=f(i.draft,"widgets"),m=x(y),v=m.findIndex(C=>C.id===u.id);v<0?m.push(u):m[v]={...m[v],...u},I.change(w(i.draft,"widgets",P(m)))}catch(r){i.error=r.message,b()}}};h=D(t,M,{model:i,commands:I});const F={read:()=>O(x(i.draft)),snapshot:()=>structuredClone(i.draft),restore(r){i.draft=structuredClone(r),b()},dispose(){s++,h.dispose(),g.delete(t)}};return g.set(t,F),F}function $(t){const l=g.get(t);if(!l)throw new Error("Open project integration controls before reading them.");return l.read()}function J(t){return g.get(t)?.snapshot()||null}function X(t,l){const c=g.get(t);if(!c)throw new Error("Open project integration controls before restoring their draft.");c.restore(l)}export{M as ProjectIntegrationForm,$ as projectIntegrationFormInput,O as projectIntegrationInputValue,Q as renderProjectIntegrationForm,X as restoreProjectIntegrationForm,J as snapshotProjectIntegrationForm};
+import React from "../shared/react/react-runtime.js";
+import { mountReactComponent } from "../shared/react/mount.js";
+import { StructuredValueEditor, structuredValueDraft, readStructuredValueDraft } from "../shared/structured-value-editor.js";
+import { projectIntegrationDefaults } from "./schema-project-integration-authoring.js";
+import { catalogGraphicsRegistration, loadWidgetCatalogs, sharedWidgetCatalog } from "../shared/catalog.js";
+import { CandidateField, CandidateRows, draftProperty, withDraftProperty } from "./candidate-dialog.js";
+const fields = [
+  ["Project storage", ["modelFile", "projectRootFolder", "runsDirectory", "resultsDirectory", "reservedDirectories"]],
+  ["Runtime resources and creation", ["resourcesRoot", "uiProfileSchema", "uiProfileExtensionSchema", "modelCreateRoute", "projectCreateRoute", "defaultProfileId"]],
+  ["Default Graphics scene", ["defaultScene", "sceneLabel", "surfaceWidget", "inputPath", "layerHandler"]]
+];
+const groups = [
+  ["externalPrograms", "External executable registry", ["id", "executable", "pathType", "allowedEntries"]],
+  ["resultAdapters", "Result adapters", ["selector", "path"]],
+  ["compatibility", "Runtime compatibility", ["key", "label", "capabilityPath", "value"]],
+  ["capabilityFacts", "Capability facts", ["path", "kind", "value"]],
+  ["widgets", "Registered Graphics widgets", ["id", "kind", "label", "registrationFile", "registrationSymbol", "registrationLabel"]],
+  ["validationBoundaries", "Runtime validation boundaries", ["id", "inputs", "declared", "ensure"]]
+];
+const profileGroups = [
+  ["profiles", "Embedded profile presentation", ["id", "materialName", "sweepResultQuantities"]],
+  ["fieldRows", "Profile field variables", ["profileId", "formulation", "role", "symbol", "unit", "solverFamily", "solverAxis", "zeroInDimensions"]],
+  ["materialRows", "Profile material templates", ["profileId", "key", "symbol", "label", "unit", "representation", "defaultExpression", "defaultUnit", "optional", "plottable", "implementedValues", "description"]],
+  ["annotationFacts", "Profile annotation facts", ["profileIds", "annotation", "path", "repeatKeys", "kind", "value", "unit"]]
+];
+const labels = { modelFile: "Model filename", projectRootFolder: "Project root folder", runsDirectory: "Runs directory", resultsDirectory: "Results directory", reservedDirectories: "Reserved folders (comma separated)", resourcesRoot: "Resources root", uiProfileSchema: "UI profile schema", uiProfileExtensionSchema: "Profile extension schema", modelCreateRoute: "Model create route", projectCreateRoute: "Project create route", defaultProfileId: "Default profile", defaultScene: "Scene ID", sceneLabel: "Scene label", surfaceWidget: "Surface widget", inputPath: "Model input path (dot separated)", layerHandler: "First layer handler" };
+const choices = { pathType: ["relative", "absolute", "system"], role: ["primary", "derived", "zero"], representation: ["expression", "quantity"], optional: ["", "true", "false"], plottable: ["", "true", "false"] };
+function ProjectIntegrationForm({ model, commands }) {
+  const graphics = model.available.widgets.filter((widget) => widget.graphics), profile = draftProperty(model.draft, "profileIntegration");
+  const group = (name, title, columns, node = model.draft, update = commands.change) => /* @__PURE__ */ React.createElement(CandidateRows, { key: name, draft: draftProperty(node, name) || structuredValueDraft([]), label: title, columns: columns.map((name2) => ({ name: name2, choices: choices[name2] })), template: Object.fromEntries(columns.map((name2) => [name2, name2 === "ensure" ? true : name2 === "declared" ? false : ""])), onDraftChange: (value) => update(withDraftProperty(node, name, value)) });
+  return /* @__PURE__ */ React.createElement("section", { "data-jsx-widget": "project-integration" }, /* @__PURE__ */ React.createElement("p", null, "Connect this schema to storage, executable routes, capability facts, profile presentation and registered Graphics widgets."), fields.map(([title, names]) => /* @__PURE__ */ React.createElement("fieldset", { key: title }, /* @__PURE__ */ React.createElement("legend", null, title), names.map((name) => /* @__PURE__ */ React.createElement(CandidateField, { key: name, draft: model.draft, name, label: labels[name], choices: name === "defaultProfileId" ? ["", ...model.defaults.profileChoices] : name === "surfaceWidget" ? ["", ...new Set([...graphics.map((widget) => widget.id), draftProperty(model.draft, name)?.value].filter(Boolean))] : void 0, onDraftChange: commands.change })))), /* @__PURE__ */ React.createElement("fieldset", null, /* @__PURE__ */ React.createElement("legend", null, "Widget catalogs"), /* @__PURE__ */ React.createElement(StructuredValueEditor, { draft: draftProperty(model.draft, "widgetCatalogs"), label: "Widget catalog paths", onDraftChange: (value) => commands.change(withDraftProperty(model.draft, "widgetCatalogs", value)) }), /* @__PURE__ */ React.createElement("button", { type: "button", onClick: commands.loadCatalogs }, "Load catalogs"), /* @__PURE__ */ React.createElement("select", { "aria-label": "Available catalog widgets", value: model.selectedWidget, onChange: (event) => commands.selectWidget(event.target.value) }, /* @__PURE__ */ React.createElement("option", { value: "" }, "Choose widget"), model.available.widgets.map((widget) => /* @__PURE__ */ React.createElement("option", { key: widget.id, value: widget.id }, widget.label, " \xB7 ", widget.catalogLabel))), /* @__PURE__ */ React.createElement("button", { type: "button", disabled: !graphics.some((widget) => widget.id === model.selectedWidget), onClick: commands.useWidget }, "Use catalog Graphics widget"), /* @__PURE__ */ React.createElement("p", { role: "status" }, model.status)), /* @__PURE__ */ React.createElement(CandidateField, { draft: model.draft, name: "capabilityAnnotation", label: "Capability annotation key", onDraftChange: commands.change }), groups.map((args) => group(...args)), model.defaults.profileIntegration.source ? profileGroups.map((args) => group(...args, profile, (draft) => commands.change(withDraftProperty(model.draft, "profileIntegration", draft)))) : null, model.error ? /* @__PURE__ */ React.createElement("p", { role: "alert" }, model.error) : null);
+}
+const mounted = /* @__PURE__ */ new WeakMap();
+function projectIntegrationInputValue(value) {
+  const { applicationId, profileChoices, ...input } = structuredClone(value);
+  input.widgetCatalogs = input.widgetCatalogs.map((path) => {
+    if (typeof path !== "string") throw new Error("Widget catalog paths must be text.");
+    return path.trim();
+  }).filter(Boolean);
+  input.validationBoundaries = input.validationBoundaries.map(({ id, inputs, ensure }) => ({ id, inputs, ensure }));
+  for (
+    const [key, fields2] of
+    /** @type {[string,string[]][]} */
+    [["resultAdapters", ["selector", "path"]], ["widgets", ["id", "kind", "label", "registrationFile", "registrationSymbol"]], ["externalPrograms", ["id", "executable", "allowedEntries"]], ["compatibility", ["key", "label", "capabilityPath", "value"]], ["capabilityFacts", ["path", "value"]]]
+  ) input[key] = input[key].filter((row) => fields2.some((field) => row[field]));
+  input.profileIntegration.fieldRows = input.profileIntegration.fieldRows.filter((row) => row.symbol || row.unit);
+  input.profileIntegration.materialRows = input.profileIntegration.materialRows.filter((row) => row.key || row.symbol || row.label);
+  input.profileIntegration.annotationFacts = input.profileIntegration.annotationFacts.filter((row) => row.annotation || row.path || row.value);
+  return input;
+}
+function renderProjectIntegrationForm(host, documentValue, invalidate, { schemaPath = "", widgetCatalog = sharedWidgetCatalog } = {}) {
+  mounted.get(host)?.dispose();
+  const defaults = projectIntegrationDefaults(documentValue);
+  if (!defaults) throw new Error("Declare an application ID before configuring project integration.");
+  const schemaUrl = new URL(schemaPath, new URL("../../../../", import.meta.url));
+  const input = { ...defaults, validationBoundaries: defaults.validationBoundaries.map((row) => ({ id: row.id, inputs: row.inputs, declared: row.declared, ensure: !row.declared && row.ensure !== false })), profileIntegration: { profiles: defaults.profileIntegration.profiles, fieldRows: defaults.profileIntegration.fieldRows, materialRows: defaults.profileIntegration.materialRows.map((row) => ({ ...row, optional: row.optional === void 0 ? "" : String(row.optional), plottable: row.plottable === void 0 ? "" : String(row.plottable) })), annotationFacts: defaults.profileIntegration.annotationFacts } };
+  let model = { defaults, draft: structuredValueDraft(input), available: widgetCatalog, selectedWidget: "", status: "", error: "" }, mount, epoch = 0;
+  const render = () => mount.update({ model, commands });
+  const commands = { change(draft) {
+    epoch++;
+    model = { ...model, draft, error: "" };
+    invalidate();
+    render();
+  }, selectWidget(id) {
+    model.selectedWidget = id;
+    render();
+  }, async loadCatalogs() {
+    const version = ++epoch;
+    try {
+      const paths = readStructuredValueDraft(draftProperty(model.draft, "widgetCatalogs"));
+      const available = await loadWidgetCatalogs(
+        /** @type {any} */
+        { schema: { "x-fullmeta-ui-graphicsInterfaces": paths.length ? { catalogs: paths } : {} }, schemaUrl }
+      );
+      if (version !== epoch) return;
+      model = { ...model, available, status: `${available.widgets.length} widgets available.`, error: "" };
+    } catch (error) {
+      if (version !== epoch) return;
+      model.error = error.message;
+    }
+    render();
+  }, useWidget() {
+    try {
+      const widget = model.available.widgets.find((widget2) => widget2.id === model.selectedWidget);
+      if (!widget?.graphics) throw new Error("Choose a Graphics widget.");
+      const entry = catalogGraphicsRegistration(widget, schemaUrl), node = draftProperty(model.draft, "widgets"), values = readStructuredValueDraft(node), index = values.findIndex((value) => value.id === entry.id);
+      if (index < 0) values.push(entry);
+      else values[index] = { ...values[index], ...entry };
+      commands.change(withDraftProperty(model.draft, "widgets", structuredValueDraft(values)));
+    } catch (error) {
+      model.error = error.message;
+      render();
+    }
+  } };
+  mount = mountReactComponent(host, ProjectIntegrationForm, { model, commands });
+  const api = { read: () => projectIntegrationInputValue(readStructuredValueDraft(model.draft)), snapshot: () => structuredClone(model.draft), restore(draft) {
+    model.draft = structuredClone(draft);
+    render();
+  }, dispose() {
+    epoch++;
+    mount.dispose();
+    mounted.delete(host);
+  } };
+  mounted.set(host, api);
+  return api;
+}
+function projectIntegrationFormInput(host) {
+  const form = mounted.get(host);
+  if (!form) throw new Error("Open project integration controls before reading them.");
+  return form.read();
+}
+function snapshotProjectIntegrationForm(host) {
+  return mounted.get(host)?.snapshot() || null;
+}
+function restoreProjectIntegrationForm(host, draft) {
+  const form = mounted.get(host);
+  if (!form) throw new Error("Open project integration controls before restoring their draft.");
+  form.restore(draft);
+}
+export {
+  ProjectIntegrationForm,
+  projectIntegrationFormInput,
+  projectIntegrationInputValue,
+  renderProjectIntegrationForm,
+  restoreProjectIntegrationForm,
+  snapshotProjectIntegrationForm
+};
 
 //# sourceMappingURL=schema-project-integration-form.js.map

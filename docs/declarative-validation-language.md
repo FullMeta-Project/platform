@@ -79,9 +79,6 @@ alone do not establish this broader parity.
 | Dependent checks | Named results work at the model root, within an item, and from a parent item to nested children; diagnose cycles and missing inputs. Other cross-scope relationships remain to be evaluated. |
 | Existing programs | Preserve unknown metadata and runtime behavior, and provide a checked migration for programs that cannot yet be represented. |
 
-The [transition evidence](declarative-validation-transition-evidence.md) records
-the checks performed for the initial additions and their limitations.
-
 Program metadata and unknown obligation/source metadata survive edits. The
 compiler reads recognized fields and does not normalize unrelated declarations.
 Preview and Apply operate on a private candidate; Save and Validate remain
@@ -281,7 +278,7 @@ row order and rejects missing names, duplicates, incompatible scopes and
 cycles. If a producer fails, checks depending on its result are skipped;
 unrelated requirements still run. The numerical comparison predicates can
 compare two resolved values, for example lower and upper bounds.
-The [Model runtime contract](../model-rust/README.md#declarative-validation)
+The Model runtime contract
 describes checker input semantics. The separate compiled numerical evaluation
 policy remains a different interface.
 

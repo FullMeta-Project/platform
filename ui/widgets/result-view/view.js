@@ -1,4 +1,53 @@
 // Generated from view.jsx by scripts/build-frontend.mjs.
-import a,{useRef as h,useState as A}from"../shared/react/react-runtime.js";import{mountReactComponent as C}from"../shared/react/mount.js";import{LayeredScene as N}from"../scene-view/widget.js";import{resolveResultView as S}from"./runtime.js";function V({view:c,onCommand:o,widgets:w={},components:x={},inputs:d={},...f}){const t={...f,...c},[y,g]=A(null),b=h(new Map),i=S({...t,widgets:w,selectedTabId:t.selectedTabId||y}),T=e=>{g(e),o?.({type:"widget.action",widget:"resultView",path:t.path||[],action:"selectTab",args:{id:e}})};if(i.isSpatial){const e=[{id:"surface",renderer:i.surfaceRenderer,options:{data:t.surface,scene:t.surface||{primitives:[]}}},...i.contentLayers.map(({layer:s,renderer:r})=>({id:s.id,renderer:r,visible:t.visibility?.[s.id]??s.defaultVisible!==!1,options:{data:d[s.input],scene:d[s.input],...t.layerOptions?.[s.id]}}))];return a.createElement("section",{className:"result-view result-view-layered","data-jsx-widget":"result-view"},a.createElement(N,{layers:e,...t.canvas,view:{label:t.label||t.scene.label}}))}const p=x[i.contentWidgetId]||i.contentRenderer.Component,n=d[i.activeTab.input];let v=n;if(i.contentWidgetId==="plot2d"&&n&&typeof n=="object"){const e=n.data||n.value||n,s={x:{minimum:Number(e.xAxis?.minimum),maximum:Number(e.xAxis?.maximum)},y:{minimum:Number(e.yAxis?.minimum),maximum:Number(e.yAxis?.maximum)}},r=t.scene?.id||t.label||"result-view",m=`${r}:${i.activeTab.id}`,l=n.interaction||{},I={...l,id:l.id||`result-view:${m}`,frame:l.frame||r,viewState:b.current.get(m),onChange:u=>{b.current.set(m,{x:{...u.xAxis},y:{...u.yAxis},base:s}),l.onChange?.(u)}};v={...n,interaction:I}}return a.createElement("section",{className:"result-view result-view-tabs","data-jsx-widget":"result-view"},a.createElement("div",{role:"tablist","aria-label":t.label||"Result view"},i.tabs.map(e=>a.createElement("button",{type:"button",role:"tab",key:e.id,"aria-selected":i.activeTab.id===e.id,onClick:()=>T(e.id)},e.label||e.id))),a.createElement("div",{role:"tabpanel"},p?a.createElement(p,{key:i.activeTab.id,view:v,onCommand:o}):a.createElement("p",{role:"status"},"Renderer ",i.contentWidgetId," has no React component capability.")))}const $=(c,o)=>C(c,V,o);export{V as ResultView,$ as mountWidget};
+import React, { useRef, useState } from "../shared/react/react-runtime.js";
+import { mountReactComponent } from "../shared/react/mount.js";
+import { LayeredScene } from "../scene-view/widget.js";
+import { resolveResultView } from "./runtime.js";
+function ResultView({ view, onCommand, widgets = {}, components = {}, inputs = {}, ...props }) {
+  const model = { ...props, ...view }, [localTab, setLocalTab] = useState(null), viewportStates = useRef(/* @__PURE__ */ new Map());
+  const selected = resolveResultView({ ...model, widgets, selectedTabId: model.selectedTabId || localTab });
+  const choose = (id) => {
+    setLocalTab(id);
+    onCommand?.({ type: "widget.action", widget: "resultView", path: model.path || [], action: "selectTab", args: { id } });
+  };
+  if (selected.isSpatial) {
+    const layers = [{ id: "surface", renderer: selected.surfaceRenderer, options: { data: model.surface, scene: model.surface || { primitives: [] } } }, ...selected.contentLayers.map(({ layer, renderer }) => ({ id: layer.id, renderer, visible: model.visibility?.[layer.id] ?? layer.defaultVisible !== false, options: { data: inputs[layer.input], scene: inputs[layer.input], ...model.layerOptions?.[layer.id] } }))];
+    return /* @__PURE__ */ React.createElement("section", { className: "result-view result-view-layered", "data-jsx-widget": "result-view" }, /* @__PURE__ */ React.createElement(LayeredScene, { layers, ...model.canvas, view: { label: model.label || model.scene.label } }));
+  }
+  const Component = components[selected.contentWidgetId] || selected.contentRenderer.Component;
+  const activeInput = inputs[selected.activeTab.input];
+  let activeView = activeInput;
+  if (selected.contentWidgetId === "plot2d" && activeInput && typeof activeInput === "object") {
+    const raster = activeInput.data || activeInput.value || activeInput;
+    const bounds = {
+      x: { minimum: Number(raster.xAxis?.minimum), maximum: Number(raster.xAxis?.maximum) },
+      y: { minimum: Number(raster.yAxis?.minimum), maximum: Number(raster.yAxis?.maximum) }
+    };
+    const sceneKey = model.scene?.id || model.label || "result-view";
+    const stateKey = `${sceneKey}:${selected.activeTab.id}`;
+    const originalInteraction = activeInput.interaction || {};
+    const interaction = {
+      ...originalInteraction,
+      id: originalInteraction.id || `result-view:${stateKey}`,
+      frame: originalInteraction.frame || sceneKey,
+      viewState: viewportStates.current.get(stateKey),
+      onChange: (state) => {
+        viewportStates.current.set(stateKey, {
+          x: { ...state.xAxis },
+          y: { ...state.yAxis },
+          base: bounds
+        });
+        originalInteraction.onChange?.(state);
+      }
+    };
+    activeView = { ...activeInput, interaction };
+  }
+  return /* @__PURE__ */ React.createElement("section", { className: "result-view result-view-tabs", "data-jsx-widget": "result-view" }, /* @__PURE__ */ React.createElement("div", { role: "tablist", "aria-label": model.label || "Result view" }, selected.tabs.map((tab) => /* @__PURE__ */ React.createElement("button", { type: "button", role: "tab", key: tab.id, "aria-selected": selected.activeTab.id === tab.id, onClick: () => choose(tab.id) }, tab.label || tab.id))), /* @__PURE__ */ React.createElement("div", { role: "tabpanel" }, Component ? /* @__PURE__ */ React.createElement(Component, { key: selected.activeTab.id, view: activeView, onCommand }) : /* @__PURE__ */ React.createElement("p", { role: "status" }, "Renderer ", selected.contentWidgetId, " has no React component capability.")));
+}
+const mountWidget = (container, props) => mountReactComponent(container, ResultView, props);
+export {
+  ResultView,
+  mountWidget
+};
 
 //# sourceMappingURL=view.js.map

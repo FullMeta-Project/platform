@@ -1,9 +1,410 @@
 // Generated from schema-bulk-authoring.jsx by scripts/build-frontend.mjs.
-import t from"../shared/react/react-runtime.js";import{WorkspaceFileButton as z}from"../../workspace/file-picker.js";import{mountReactComponent as T}from"../shared/react/mount.js";import{createSchemaAuthoringPathPicker as X}from"../shared/schema-authoring-path-picker.js";import{schemaObjectTables as Y,annotationDraft as Z,schemaWithBulkAnnotations as L,simpleRule as B,statementFromRow as _,schemaWithBulkValidationRules as R}from"./schema-bulk-authoring-model.js";import{schemaObjectTables as be,schemaWithBulkAnnotations as ge,schemaWithBulkValidationRules as we}from"./schema-bulk-authoring-model.js";const N=e=>structuredClone(e),E=(e,r)=>JSON.stringify(e)===JSON.stringify(r),ee=e=>e!==null&&typeof e=="object"&&!Array.isArray(e),A=(e,r)=>r.reduce((l,o)=>l?.[o],e),j=e=>"#/"+e.map(r=>String(r).replace(/~/g,"~0").replace(/\//g,"~1")).join("/"),J=e=>Object.entries(e||{}).filter(([r])=>r.startsWith("x-")),te=e=>e.startsWith("x-fullmeta-ui")||["x-fullmeta-modelReference","x-fullmeta-symbolReference","x-fullmeta-symbolReferenceContext","x-fullmeta-edit","x-fullmeta-editorActions"].includes(e);function I({value:e,name:r}){const[l,o]=t.useState(!1);return ee(e)||Array.isArray(e)?t.createElement("details",{className:"schema-bulk-annotation-node",open:l,onToggle:n=>o(n.currentTarget.open)},t.createElement("summary",null,t.createElement("code",{className:"schema-bulk-annotation-key"},r),t.createElement("span",{className:"schema-bulk-annotation-count"},Object.keys(e).length," ",Array.isArray(e)?"items":"settings")),t.createElement("div",{className:"schema-bulk-annotation-children"},l?Object.entries(e).map(([n,i])=>t.createElement(I,{key:n,name:Array.isArray(e)?`[${n}]`:n,value:i})):null,l&&!Object.keys(e).length?t.createElement("span",{className:"schema-bulk-annotation-empty"},"Empty"):null)):t.createElement("div",{className:"schema-bulk-annotation-leaf"},t.createElement("code",{className:"schema-bulk-annotation-key"},r),t.createElement("span",{className:"schema-bulk-annotation-value"},JSON.stringify(e)))}function M({declaration:e}){const r=J(e);return t.createElement("div",{className:"schema-bulk-annotation-inventory"},r.length?null:t.createElement("p",{className:"schema-bulk-annotation-empty"},"No extension annotations on this declaration."),[["UI and editor annotations",!0],["Other extension metadata",!1]].map(([l,o])=>{const n=r.filter(([i])=>te(i)===o);return n.length?t.createElement("section",{key:String(l),className:"schema-bulk-annotation-group"},t.createElement("h4",null,l," \xB7 ",n.length),n.map(([i,a])=>t.createElement(I,{key:i,name:i,value:a}))):null}))}function W({model:e,commands:r,title:l,note:o,children:n}){return t.createElement("div",{className:"schema-bulk-content"},t.createElement("header",{className:"schema-validation-dialog-head"},t.createElement("div",null,t.createElement("h2",null,l),t.createElement("p",null,o)),t.createElement("button",{type:"button",className:"button","aria-label":"Close dialog",onClick:r.close},"\xD7")),t.createElement("div",{className:"schema-bulk-body"},n),t.createElement("p",{className:"schema-validation-dialog-status",hidden:!e.status},e.status),t.createElement("details",{className:"schema-bulk-preview",hidden:!e.preview},t.createElement("summary",null,"Preview changes"),e.proposalsView||null,t.createElement("pre",null,e.previewText||"")),t.createElement("footer",{className:"schema-validation-dialog-actions"},t.createElement("button",{type:"button",className:"button",onClick:r.close},"Close"),t.createElement("button",{type:"button",className:"button",onClick:r.preview},"Preview"),t.createElement("button",{type:"button",className:"button",disabled:!e.preview,onClick:r.apply},"Apply")))}function P({value:e,choices:r,label:l,onChange:o,disabled:n=!1}){return t.createElement("select",{"aria-label":l,value:e,disabled:n,onChange:i=>o(i.target.value)},r.map(([i,a])=>t.createElement("option",{key:i,value:i},a)),e&&!r.some(([i])=>i===e)?t.createElement("option",{value:e},e," (existing)"):null)}function ne(e){const r=e?.bounds||{};return{enabled:!!e,unit:e?.unit||"",description:e?.description||"",lowerKind:Object.hasOwn(r,"exclusiveMinimum")?"exclusiveMinimum":Object.hasOwn(r,"minimum")?"minimum":"none",lower:String(r.exclusiveMinimum??r.minimum??""),upperKind:Object.hasOwn(r,"exclusiveMaximum")?"exclusiveMaximum":Object.hasOwn(r,"maximum")?"maximum":"none",upper:String(r.exclusiveMaximum??r.maximum??"")}}function ae(e){const r=e.quantity,l=new Set(e.quantityChanged),o=e.original.quantityValidation;if(!r.enabled)return null;const n=N(o||{});for(const i of["unit","description"])(l.has(i)||i==="unit"&&!o)&&(r[i].trim()?n[i]=r[i].trim():delete n[i]);if(["lower","lowerKind","upper","upperKind"].some(i=>l.has(i))){const i=N(n.bounds||{});for(const[a,g,x,O]of[["lowerKind","lower",["minimum","exclusiveMinimum"],"Lower bound"],["upperKind","upper",["maximum","exclusiveMaximum"],"Upper bound"]])if(l.has(a)||l.has(g)){for(const h of x)delete i[h];if(r[a]!=="none"){const h=r[g].trim();if(!h||!Number.isFinite(Number(h)))throw new Error(`${O} must be a finite number.`);i[r[a]]=Number(h)}}Object.keys(i).length?n.bounds=i:delete n.bounds}return n}const V=e=>({...e.draft,quantityValidation:ae(e)});function oe({row:e,onChange:r}){const l=e.quantity,o=(n,i)=>r(n,i);return t.createElement("details",{className:"schema-bulk-quantity-validation",open:e.quantityOpen,onToggle:n=>{e.quantityOpen=n.currentTarget.open}},t.createElement("summary",null,"Edit quantity validation"),t.createElement("div",{className:"schema-bulk-quantity-body"},t.createElement("p",{className:"schema-bulk-annotation-readonly"},"Set the expected unit and optional numeric bounds. Other existing validation keys remain intact."),t.createElement("label",{className:"schema-bulk-field schema-bulk-quantity-toggle"},"Use quantity validation",t.createElement("input",{type:"checkbox",checked:l.enabled,onChange:n=>o("enabled",n.target.checked)})),t.createElement("fieldset",{className:"schema-bulk-slice-grid",disabled:!l.enabled},[["unit","Unit"],["lowerKind","Lower bound"],["lower","Lower value"],["upperKind","Upper bound"],["upper","Upper value"],["description","Validation description"]].map(([n,i])=>t.createElement("label",{className:"schema-bulk-field",key:n},i,n==="lowerKind"||n==="upperKind"?t.createElement(P,{value:l[n],label:i,choices:n==="lowerKind"?[["none","No lower bound"],["minimum","Inclusive minimum"],["exclusiveMinimum","Exclusive minimum"]]:[["none","No upper bound"],["maximum","Inclusive maximum"],["exclusiveMaximum","Exclusive maximum"]],onChange:a=>o(n,a)}):t.createElement("input",{type:"text",inputMode:n==="lower"||n==="upper"?"decimal":void 0,"aria-label":i,value:l[n],onChange:a=>o(n,a.target.value)}))))))}function re({row:e,commands:r}){const l=!!e.original.quantityValidation||["quantity","quantityVector"].includes(e.draft.widget)||/\/quantity(?:Vector)?$/.test(String(e.declaration.$ref||""));return t.createElement(t.Fragment,null,t.createElement("tr",{"data-key":e.key},t.createElement("td",{className:"schema-bulk-field-cell"},t.createElement("span",{className:"schema-bulk-key",title:e.generated?"Generated field: edit its supported annotations in this table.":void 0},e.key),t.createElement("button",{type:"button",className:"button schema-bulk-inspect-button","aria-label":`Inspect existing annotations for ${e.key}`,"aria-expanded":e.open,onClick:()=>r.inspect(e)},`Inspect ${J(e.declaration).length} annotations`),e.generated?t.createElement("span",{className:"schema-bulk-readonly-badge"},"Generated \xB7 editable here"):null,e.original.complexFilter?t.createElement("span",{className:"schema-bulk-readonly-badge"},"Compound filter \xB7 inspect"):null,l?t.createElement("button",{type:"button",className:"button schema-bulk-inspect-button",onClick:()=>r.quantityOpen(e)},"Edit quantity validation"):null),[["widget",""],["hidden",""],["choiceSource","Sibling key"],["unitGroup","e.g. frequency"],["defaultJson","JSON value"],["referenceScope",""],["referencePath","selections"],["referenceLabel","boundary selection"],["filterProperty","entity"],["filterValue","boundary"]].map(([o,n])=>t.createElement("td",{key:o,hidden:o==="widget"||o==="unitGroup"},o==="hidden"?t.createElement("input",{type:"checkbox",checked:e.draft.hidden,onChange:i=>r.fact(e,o,i.target.checked)}):o==="referenceScope"?t.createElement(P,{choices:[["","Component"],["model","Document"],["root","Root"]],value:e.draft[o],label:`Reference scope for ${e.key}`,onChange:i=>r.fact(e,o,i)}):t.createElement("input",{type:"text",value:e.draft[o],placeholder:n,"aria-label":o==="referencePath"?`Reference target path for ${e.key} (dotted keys)`:void 0,disabled:e.original.complexFilter&&["filterProperty","filterValue"].includes(o),onChange:i=>r.fact(e,o,i.target.value)}),o==="referencePath"?t.createElement("button",{type:"button",className:"button",onClick:()=>r.pick(e)},"Choose path\u2026"):null))),t.createElement("tr",{className:"schema-bulk-annotation-detail-row",hidden:!e.open},t.createElement("td",{className:"schema-bulk-annotation-detail-cell",colSpan:11},t.createElement("p",{className:"schema-bulk-annotation-readonly"},"Existing annotations on ",e.key," are read only below. The field description and structured editors can be changed; other settings are preserved."),t.createElement("label",{className:"schema-bulk-field schema-bulk-description-field"},"Field description",t.createElement("input",{type:"text","aria-label":`Field description for ${e.key}`,value:e.draft.description,onChange:o=>r.fact(e,"description",o.target.value)})),e.open?t.createElement(M,{declaration:e.declaration}):null,l?t.createElement(oe,{row:e,onChange:(o,n)=>r.quantity(e,o,n)}):null)))}function K({model:e,commands:r}){const l=e.worksheet.split(/\r?\n/).filter(o=>o.trim()&&!/^field\tfact\t/i.test(o)).length;return t.createElement(W,{model:e,commands:r,title:"Other UI annotations",note:"Edit visibility, choices, defaults, descriptions and reference bindings. Widget assignments and widget-specific parameters belong in Widget settings; existing widget settings are preserved here."},t.createElement("div",{className:"schema-bulk-toolbar"},t.createElement("label",{className:"schema-bulk-field"},"Object declaration",t.createElement(P,{label:"Object declaration",value:e.target,choices:e.tables.map(o=>[JSON.stringify(o.path),`${j(o.path)} \xB7 ${o.title} \xB7 ${o.count} fields`]),onChange:r.target})),r.widgets?t.createElement("button",{type:"button",className:"button",onClick:r.widgets},"Open Widget settings\u2026"):null),t.createElement("p",{className:"schema-bulk-note"},e.rows.length," fields at ",j(e.targetPath)," \xB7 ",e.rows.filter(o=>o.generated).length," generated fields can be edited through this table. Inspect each field for its full existing annotation structure; those details are read only and preserved on apply."),t.createElement("details",{className:"schema-bulk-annotation-worksheet"},t.createElement("summary",null,"Import field annotation facts"),t.createElement("p",{className:"schema-bulk-note"},"Three tab-separated columns: field key, fact, value. Facts: hidden, choiceSource, defaultJson, referenceScope, referencePath, referenceLabel, filterProperty, filterValue, description. Reference paths use dotted property keys; choose their source separately. Widget and unitGroup rows belong in Widget settings. Load overlays the staged table; Replace resets this target's staged changes before loading the batch."),t.createElement("p",{className:"schema-bulk-note",role:"status"},"Target: ",j(e.targetPath)," \xB7 ",l," batch rows \xB7 ",e.worksheet.trim()&&e.worksheet!==e.loadedText?"text not loaded":"table staged"),t.createElement("textarea",{rows:4,"aria-label":"Field annotation tab-separated rows",value:e.worksheet,placeholder:`frequency	hidden	false
-frequency	description	Frequency in Hz`,onChange:o=>r.worksheet(o.target.value)}),t.createElement("div",{className:"schema-bulk-annotation-worksheet-actions"},t.createElement(z,{label:"Import field annotation TSV file",extensions:[".tsv",".txt"],onFile:o=>r.file(o)}),t.createElement("button",{type:"button",className:"button",onClick:()=>r.import(!1)},"Load annotation rows"),t.createElement("button",{type:"button",className:"button",onClick:()=>r.import(!0)},"Replace staged annotation rows"),t.createElement("button",{type:"button",className:"button",onClick:r.clear},"Clear annotation batch"))),t.createElement("details",{className:"schema-bulk-context-inspection"},t.createElement("summary",null,"Inspect ",J(A(e.source,e.targetPath)).length," declaration annotations \xB7 read only"),t.createElement("div",{className:"schema-bulk-context-content"},t.createElement("p",{className:"schema-bulk-annotation-readonly"},"These are the existing extension annotations on the selected object. Expand any key to read its full structure."),t.createElement(M,{declaration:A(e.source,e.targetPath)}))),t.createElement("div",{className:"schema-bulk-table-wrap"},t.createElement("table",{className:"schema-structure-table schema-bulk-table"},t.createElement("thead",null,t.createElement("tr",null,["Field","Widget","Hidden","Choice source sibling","Quantity unit group","Default JSON","Reference source scope","Reference target path \xB7 dotted keys","Reference label","Filter property","Filter value"].map(o=>t.createElement("th",{key:o,hidden:o==="Widget"||o==="Quantity unit group"},o)))),t.createElement("tbody",null,e.rows.map(o=>t.createElement(re,{key:o.key,row:o,commands:r}))))))}function pe({getDocument:e,validateCandidate:r,applyCandidate:l,generatedOwnerAtPath:o,onOpenWidgetSettings:n}={}){const i=document.createElement("dialog");i.className="schema-bulk-dialog",i.dataset.toolId="bulkAnnotations",document.body.append(i);let a=null,g=null,x=0;const O=X({getDocument:()=>a?.source}),h=()=>{a&&g.update({model:a,commands:p})},w=()=>{a.preview=null,a.previewText="",a.status=""},u=()=>!!a.worksheet.trim()&&a.worksheet!==a.loadedText,f=()=>{a.targetPath=JSON.parse(a.target),a.rows=Object.entries(A(a.source,a.targetPath)?.properties||{}).map(([s,d])=>{const b=Z(d);return{key:s,declaration:N(d),original:b,draft:N(b),quantity:ne(b.quantityValidation),quantityChanged:[],generated:!!o?.(a.source,[...a.targetPath,"properties",s]),open:!1,quantityOpen:!1}}),w()},k=()=>{try{return a.rows.some(s=>!E(V(s),s.original))}catch{return!0}},p={close:()=>i.close(),target(s){if((u()||k())&&!globalThis.confirm("Discard the current annotation batch and staged table changes before changing declarations?")){h();return}a.target=s,a.worksheet="",a.loadedText="",f(),h()},worksheet(s){a.worksheet=s,w(),h()},clear(){a.worksheet="",a.loadedText="",f(),a.status="Cleared the batch and restored the selected declaration.",h()},fact(s,d,b){s.draft[d]=b,w(),h()},quantity(s,d,b){s.quantity[d]=b,s.quantityChanged.includes(d)||s.quantityChanged.push(d),w(),h()},inspect(s){s.open=!s.open,h()},quantityOpen(s){s.open=!0,s.quantityOpen=!0,h()},pick(s){O.open({representation:"referencePath",onPick:d=>{s.draft.referencePath=d.referencePath,s.draft.referenceScope="root",w(),h()}})},widgets:n?()=>{(a.worksheet.trim()||k())&&!globalThis.confirm("Discard the annotation batch and staged annotation changes before opening Widget settings?")||(i.close(),n(a.targetPath))}:null,import(s=!1){w();try{const d=a.worksheet.replace(/^\uFEFF/,"").replace(/\r/g,"").split(`
-`).map((c,y)=>({line:c,number:y+1})).filter(c=>c.line.trim());if(!d.length)throw new Error("Enter at least one field annotation row.");if(d.length>1e3)throw new Error("Import at most 1,000 field annotation rows at once.");const b=new Set,m=[];if(d.forEach(({line:c,number:y},G)=>{const q=c.split("	");if(G===0&&q[0]?.trim().toLowerCase()==="field"&&q[1]?.trim().toLowerCase()==="fact")return;if(q.length!==3)throw new Error(`Line ${y}: use field, fact, value columns.`);const[D,Q,S]=q,$=D.trim(),C=Q.trim();if(!a.rows.find(H=>H.key===$))throw new Error(`Line ${y}: ${$||"(blank field key)"} is not a field in the selected object.`);const F=$+"\0"+C;if(b.has(F))throw new Error(`Line ${y}: ${$}.${C} appears more than once.`);if(b.add(F),["widget","unitGroup"].includes(C))throw new Error(`Line ${y}: ${C} belongs in Widget settings. Open that tool to edit widget assignments or parameters.`);if(!["hidden","choiceSource","defaultJson","referenceScope","referencePath","referenceLabel","filterProperty","filterValue","description"].includes(C))throw new Error(`Line ${y}: unsupported field annotation ${C||"(blank fact)"}.`);if(C==="hidden"&&!["true","false"].includes(S))throw new Error(`Line ${y}: hidden must be true or false.`);if(C==="referenceScope"&&!["","model","root"].includes(S))throw new Error(`Line ${y}: referenceScope must be blank (component), model (document), or root.`);if(C==="defaultJson"&&S.trim())try{JSON.parse(S)}catch{throw new Error(`Line ${y}: defaultJson must contain valid JSON.`)}m.push({key:$,fact:C,value:C==="hidden"?S==="true":S})}),!m.length)throw new Error("The worksheet has no annotation facts.");const v=new Map(a.rows.map(c=>[c.key,N(s?c.original:V(c))]));for(const c of m)v.get(c.key)[c.fact]=c.value;L(a.source,a.targetPath,[...v].map(([c,y])=>({key:c,values:y}))),s&&f();for(const c of m)a.rows.find(y=>y.key===c.key).draft[c.fact]=c.value;a.loadedText=a.worksheet,a.status=`Loaded ${m.length} field annotation fact${m.length===1?"":"s"}. Preview to validate the batch.`}catch(d){w(),a.status=d.message}h()},async file(s){if(!s)return;const d=a.target,b=x;w(),h();try{const m=(await s.text()).replace(/^\uFEFF/,"");if(b!==x||d!==a.target)throw new Error("The annotation target changed while reading the file. Import it again.");a.worksheet=m,p.import()}catch(m){a&&b===x&&(a.status=`Could not import ${s.name}: ${m.message}`,h())}},preview(){try{if(u())throw new Error("Load, Replace or Clear the edited annotation batch before Preview.");const s=a.rows.map(m=>({key:m.key,values:V(m),original:m.original})).filter(m=>!E(m.values,m.original));if(!s.length)throw new Error("Change at least one annotation cell before previewing.");const d=L(a.source,a.targetPath,s),b=s.map(m=>[...a.targetPath,"properties",m.key]);r(d,{allowGeneratedSubtrees:b}),a.preview={candidate:d,base:JSON.stringify(a.source),allowGeneratedSubtrees:b},a.previewText=s.map(m=>`${m.key}: ${Object.entries(m.values).filter(([v,c])=>!E(c,m.original[v])).map(([v,c])=>`${v} = ${JSON.stringify(c)}`).join(", ")}`).join(`
-`),a.status=`${s.length} field${s.length===1?"":"s"} ready to apply.`}catch(s){w(),a.status=s.message}h()},apply(){if(a.preview)try{if(JSON.stringify(e())!==a.preview.base)throw new Error("The schema changed since preview. Reopen the table.");l(a.preview.candidate,"Applied bulk UI annotations. Save the schema to keep the changes.",{allowGeneratedSubtrees:a.preview.allowGeneratedSubtrees}),i.close()}catch(s){a.status=s.message,h()}}};return i.addEventListener("click",s=>{s.target===i&&i.close()}),{open(s=[]){const d=N(e()),b=Y(d);if(!b.length)throw new Error("This schema has no object declaration with fields.");const m=b.find(v=>E(v.path,s))||b.filter(v=>v.path.length&&s.length>=v.path.length&&v.path.every((c,y)=>c===s[y])).sort((v,c)=>c.path.length-v.path.length)[0]||b.find(v=>v.path.join("/")==="properties/model")||b[0];x++,a={source:d,tables:b,target:JSON.stringify(m.path),targetPath:[],rows:[],worksheet:"",loadedText:"",status:"",preview:null,previewText:""},f(),g?h():g=T(i,K,{model:a,commands:p}),i.showModal()},snapshot:()=>a?{format:"fullmeta-bulk-annotation-state/1",model:N(a)}:null,restore(s){if(s?.format!=="fullmeta-bulk-annotation-state/1"||!s.model||!E(s.model.source,e()))throw new Error("Unsupported annotation table state.");x++;const d=!!s.model.preview;a=N(s.model),a.preview=null,a.previewText="",g?h():g=T(i,K,{model:a,commands:p}),d&&p.preview()},preview(){if(!i.open)throw new Error("Open the annotation table before Preview.");if(p.preview(),!a.preview)throw new Error(a.status||"Preview failed.");return{ready:!0}},apply(){if(!i.open||!a.preview)throw new Error("Preview the current annotation table before Apply.");if(p.apply(),i.open)throw new Error(a.status||"The table could not be applied.");return{applied:!0}},close:p.close,dialog:i,dispose(){x++,O.dispose(),g?.dispose(),i.remove(),a=null}}}function U({model:e,commands:r}){return t.createElement(W,{model:e,commands:r,title:"Bulk validation rules",note:"Enter multiple assertion expressions and messages. A collection path wraps an assertion in one For each rule. Complex rule trees remain in the structured validation editor."},t.createElement("div",{className:"schema-bulk-toolbar"},t.createElement("label",{className:"schema-bulk-field"},"Validation program",t.createElement(P,{label:"Validation program",choices:e.programs.map(l=>[l,l]),value:e.program,onChange:r.program}))),t.createElement("p",{className:"schema-bulk-note"},e.rows.length," simple rules shown \xB7 ",e.complexCount," complex rules preserved in the structured editor. Leave Collection path empty for a root assertion. Expressions use the validation language's JSON form."),t.createElement("div",{className:"schema-bulk-table-wrap"},t.createElement("table",{className:"schema-structure-table schema-bulk-table schema-bulk-rules-table"},t.createElement("thead",null,t.createElement("tr",null,["Scope source","Collection path","Item variable","Assertion expression JSON","Message","When expression JSON",""].map((l,o)=>t.createElement("th",{key:o},l)))),t.createElement("tbody",null,e.rows.map((l,o)=>t.createElement("tr",{key:l.id},["source","path","alias","assertion","message","when"].map(n=>t.createElement("td",{key:n},n==="source"?t.createElement(P,{value:l[n],choices:[["","Root assertion"],["root","Root document"],["model","Model"]],label:`Scope source ${o+1}`,onChange:i=>r.patch(l,n,i)}):n==="assertion"||n==="when"?t.createElement("textarea",{rows:n==="assertion"?3:2,value:l[n],"aria-label":`${n} ${o+1}`,onChange:i=>r.patch(l,n,i.target.value)}):t.createElement("input",{type:"text",value:l[n],"aria-label":`${n} ${o+1}`,placeholder:n==="path"?"model/physics/*":void 0,onChange:i=>r.patch(l,n,i.target.value)}))),t.createElement("td",null,t.createElement("button",{type:"button",className:"button",onClick:()=>r.remove(l)},"Remove"))))))),t.createElement("button",{type:"button",className:"button",onClick:r.add},"Add assertion row"))}function he({getDocument:e,validateCandidate:r,applyCandidate:l}={}){const o=document.createElement("dialog");o.className="schema-bulk-dialog",o.dataset.toolId="bulkValidation",document.body.append(o);let n=null,i=null,a=0;const g=()=>i?.update({model:n,commands:w}),x=()=>{n.preview=null,n.previewText="",n.status=""},O=u=>({id:++a,index:u.index,source:u.source,path:u.path,alias:u.alias,assertion:u.rule?.assert===void 0?"":JSON.stringify(u.rule.assert),message:typeof u.rule?.message=="string"?u.rule.message:"",when:u.rule?.when===void 0?"":JSON.stringify(u.rule.when)});function h(){n.rows=[],n.complexCount=0,(n.source[n.program]?.rules||[]).forEach((u,f)=>{const k=B(u,f);if(k){const p=O(k);p.baseline=N(p),n.rows.push(p)}else n.complexCount++}),x()}const w={close:()=>o.close(),program(u){n.program=u,h(),g()},patch(u,f,k){u[f]=k,x(),g()},add(){n.rows.push(O({index:null,source:"",path:"",alias:"",rule:{}})),x(),g()},remove(u){n.rows=n.rows.filter(f=>f!==u),x(),g()},preview(){try{const u=p=>Object.fromEntries(["index","source","path","alias","assertion","message","when"].map(s=>[s,p[s]])),f=n.rows.filter(p=>p.index===null||!E(u(p),u(p.baseline))).map(u);for(const[p,s]of(n.source[n.program]?.rules||[]).entries())B(s,p)&&!n.rows.some(d=>d.index===p)&&f.push({index:p,remove:!0});if(!f.length)throw new Error("Add or change at least one assertion row before previewing.");const k=R(n.source,n.program,f);r(k),n.preview={candidate:k,base:JSON.stringify(n.source)},n.previewText=f.map(p=>p.remove?`Remove simple rule ${p.index+1}`:JSON.stringify(_(p),null,2)).join(`
-
-`),n.status=`${f.length} rule change${f.length===1?"":"s"} ready to apply.`}catch(u){x(),n.status=u.message}g()},apply(){if(n.preview)try{if(JSON.stringify(e())!==n.preview.base)throw new Error("The schema changed since preview. Reopen the table.");l(n.preview.candidate,"Applied bulk validation rules. Save the schema to keep the changes."),o.close()}catch(u){n.status=u.message,g()}}};return{open(){const u=N(e()),f=Object.keys(u).filter(k=>k==="x-fullmeta-rules"||/^x-fullmeta-.*Validation$/.test(k));f.includes("x-fullmeta-rules")||f.unshift("x-fullmeta-rules"),n={source:u,programs:f,program:"x-fullmeta-rules",rows:[],complexCount:0,preview:null,status:"",previewText:""},h(),i?g():i=T(o,U,{model:n,commands:w}),o.showModal()},snapshot:()=>n?{format:"fullmeta-bulk-validation-state/1",model:N(n)}:null,restore(u){if(u?.format!=="fullmeta-bulk-validation-state/1"||!u.model||!E(u.model.source,e()))throw new Error("Unsupported validation table state.");const f=!!u.model.preview;n=N(u.model),n.preview=null,n.previewText="",a=Math.max(a,...n.rows.map(k=>k.id||0)),i?g():i=T(o,U,{model:n,commands:w}),f&&w.preview()},preview(){if(!o.open)throw new Error("Open the validation table before Preview.");if(w.preview(),!n.preview)throw new Error(n.status||"Preview failed.");return{ready:!0}},apply(){if(!o.open||!n.preview)throw new Error("Preview the current validation table before Apply.");if(w.apply(),o.open)throw new Error(n.status||"The table could not be applied.");return{applied:!0}},close:w.close,dialog:o,dispose(){i?.dispose(),o.remove(),n=null}}}export{M as AnnotationInventory,I as AnnotationValue,K as BulkAnnotationEditor,W as BulkDialog,P as BulkSelect,U as BulkValidationEditor,oe as QuantityValidationFields,pe as createBulkAnnotationDialog,he as createBulkValidationDialog,be as schemaObjectTables,ge as schemaWithBulkAnnotations,we as schemaWithBulkValidationRules};
+import React from "../shared/react/react-runtime.js";
+import { WorkspaceFileButton } from "../../workspace/file-picker.js";
+import { mountReactComponent } from "../shared/react/mount.js";
+import { createSchemaAuthoringPathPicker } from "../shared/schema-authoring-path-picker.js";
+import { schemaObjectTables, annotationDraft, schemaWithBulkAnnotations, simpleRule, statementFromRow, schemaWithBulkValidationRules } from "./schema-bulk-authoring-model.js";
+import { schemaObjectTables as schemaObjectTables2, schemaWithBulkAnnotations as schemaWithBulkAnnotations2, schemaWithBulkValidationRules as schemaWithBulkValidationRules2 } from "./schema-bulk-authoring-model.js";
+const clone = (value) => structuredClone(value), same = (a, b) => JSON.stringify(a) === JSON.stringify(b), object = (value) => value !== null && typeof value === "object" && !Array.isArray(value);
+const at = (source, path) => path.reduce((value, key) => value?.[key], source), pointer = (path) => "#/" + path.map((key) => String(key).replace(/~/g, "~0").replace(/\//g, "~1")).join("/");
+const extensionEntries = (value) => Object.entries(value || {}).filter(([key]) => key.startsWith("x-"));
+const uiAnnotation = (key) => key.startsWith("x-fullmeta-ui") || ["x-fullmeta-modelReference", "x-fullmeta-symbolReference", "x-fullmeta-symbolReferenceContext", "x-fullmeta-edit", "x-fullmeta-editorActions"].includes(key);
+function AnnotationValue({ value, name }) {
+  const [open, setOpen] = React.useState(false);
+  return object(value) || Array.isArray(value) ? /* @__PURE__ */ React.createElement("details", { className: "schema-bulk-annotation-node", open, onToggle: (event) => setOpen(event.currentTarget.open) }, /* @__PURE__ */ React.createElement("summary", null, /* @__PURE__ */ React.createElement("code", { className: "schema-bulk-annotation-key" }, name), /* @__PURE__ */ React.createElement("span", { className: "schema-bulk-annotation-count" }, Object.keys(value).length, " ", Array.isArray(value) ? "items" : "settings")), /* @__PURE__ */ React.createElement("div", { className: "schema-bulk-annotation-children" }, open ? Object.entries(value).map(([key, child]) => /* @__PURE__ */ React.createElement(AnnotationValue, { key, name: Array.isArray(value) ? `[${key}]` : key, value: child })) : null, open && !Object.keys(value).length ? /* @__PURE__ */ React.createElement("span", { className: "schema-bulk-annotation-empty" }, "Empty") : null)) : /* @__PURE__ */ React.createElement("div", { className: "schema-bulk-annotation-leaf" }, /* @__PURE__ */ React.createElement("code", { className: "schema-bulk-annotation-key" }, name), /* @__PURE__ */ React.createElement("span", { className: "schema-bulk-annotation-value" }, JSON.stringify(value)));
+}
+function AnnotationInventory({ declaration }) {
+  const entries = extensionEntries(declaration);
+  return /* @__PURE__ */ React.createElement("div", { className: "schema-bulk-annotation-inventory" }, !entries.length ? /* @__PURE__ */ React.createElement("p", { className: "schema-bulk-annotation-empty" }, "No extension annotations on this declaration.") : null, [["UI and editor annotations", true], ["Other extension metadata", false]].map(([heading, ui]) => {
+    const values = entries.filter(([key]) => uiAnnotation(key) === ui);
+    return values.length ? /* @__PURE__ */ React.createElement("section", { key: String(heading), className: "schema-bulk-annotation-group" }, /* @__PURE__ */ React.createElement("h4", null, heading, " \xB7 ", values.length), values.map(([key, value]) => /* @__PURE__ */ React.createElement(AnnotationValue, { key, name: key, value }))) : null;
+  }));
+}
+function BulkDialog({ model, commands, title, note, children }) {
+  return /* @__PURE__ */ React.createElement("div", { className: "schema-bulk-content" }, /* @__PURE__ */ React.createElement("header", { className: "schema-validation-dialog-head" }, /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement("h2", null, title), /* @__PURE__ */ React.createElement("p", null, note)), /* @__PURE__ */ React.createElement("button", { type: "button", className: "button", "aria-label": "Close dialog", onClick: commands.close }, "\xD7")), /* @__PURE__ */ React.createElement("div", { className: "schema-bulk-body" }, children), /* @__PURE__ */ React.createElement("p", { className: "schema-validation-dialog-status", hidden: !model.status }, model.status), /* @__PURE__ */ React.createElement("details", { className: "schema-bulk-preview", hidden: !model.preview }, /* @__PURE__ */ React.createElement("summary", null, "Preview changes"), model.proposalsView || null, /* @__PURE__ */ React.createElement("pre", null, model.previewText || "")), /* @__PURE__ */ React.createElement("footer", { className: "schema-validation-dialog-actions" }, /* @__PURE__ */ React.createElement("button", { type: "button", className: "button", onClick: commands.close }, "Close"), /* @__PURE__ */ React.createElement("button", { type: "button", className: "button", onClick: commands.preview }, "Preview"), /* @__PURE__ */ React.createElement("button", { type: "button", className: "button", disabled: !model.preview, onClick: commands.apply }, "Apply")));
+}
+function BulkSelect({ value, choices, label, onChange, disabled = false }) {
+  return /* @__PURE__ */ React.createElement("select", { "aria-label": label, value, disabled, onChange: (event) => onChange(event.target.value) }, choices.map(([key, text]) => /* @__PURE__ */ React.createElement("option", { key, value: key }, text)), value && !choices.some(([key]) => key === value) ? /* @__PURE__ */ React.createElement("option", { value }, value, " (existing)") : null);
+}
+function quantityDraft(value) {
+  const bounds = value?.bounds || {};
+  return { enabled: Boolean(value), unit: value?.unit || "", description: value?.description || "", lowerKind: Object.hasOwn(bounds, "exclusiveMinimum") ? "exclusiveMinimum" : Object.hasOwn(bounds, "minimum") ? "minimum" : "none", lower: String(bounds.exclusiveMinimum ?? bounds.minimum ?? ""), upperKind: Object.hasOwn(bounds, "exclusiveMaximum") ? "exclusiveMaximum" : Object.hasOwn(bounds, "maximum") ? "maximum" : "none", upper: String(bounds.exclusiveMaximum ?? bounds.maximum ?? "") };
+}
+function quantityValue(row) {
+  const draft = row.quantity, changed = new Set(row.quantityChanged), original = row.original.quantityValidation;
+  if (!draft.enabled) return null;
+  const next = clone(original || {});
+  for (const key of ["unit", "description"]) if (changed.has(key) || key === "unit" && !original) {
+    if (draft[key].trim()) next[key] = draft[key].trim();
+    else delete next[key];
+  }
+  if (["lower", "lowerKind", "upper", "upperKind"].some((key) => changed.has(key))) {
+    const bounds = clone(next.bounds || {});
+    for (
+      const [kind, value, keys, label] of
+      /** @type {any[]} */
+      [["lowerKind", "lower", ["minimum", "exclusiveMinimum"], "Lower bound"], ["upperKind", "upper", ["maximum", "exclusiveMaximum"], "Upper bound"]]
+    ) if (changed.has(kind) || changed.has(value)) {
+      for (const key of keys) delete bounds[key];
+      if (draft[kind] !== "none") {
+        const raw = draft[value].trim();
+        if (!raw || !Number.isFinite(Number(raw))) throw new Error(`${label} must be a finite number.`);
+        bounds[draft[kind]] = Number(raw);
+      }
+    }
+    if (Object.keys(bounds).length) next.bounds = bounds;
+    else delete next.bounds;
+  }
+  return next;
+}
+const rowValues = (row) => ({ ...row.draft, quantityValidation: quantityValue(row) });
+function QuantityValidationFields({ row, onChange }) {
+  const draft = row.quantity;
+  const change = (key, value) => onChange(key, value);
+  return /* @__PURE__ */ React.createElement("details", { className: "schema-bulk-quantity-validation", open: row.quantityOpen, onToggle: (event) => {
+    row.quantityOpen = event.currentTarget.open;
+  } }, /* @__PURE__ */ React.createElement("summary", null, "Edit quantity validation"), /* @__PURE__ */ React.createElement("div", { className: "schema-bulk-quantity-body" }, /* @__PURE__ */ React.createElement("p", { className: "schema-bulk-annotation-readonly" }, "Set the expected unit and optional numeric bounds. Other existing validation keys remain intact."), /* @__PURE__ */ React.createElement("label", { className: "schema-bulk-field schema-bulk-quantity-toggle" }, "Use quantity validation", /* @__PURE__ */ React.createElement("input", { type: "checkbox", checked: draft.enabled, onChange: (event) => change("enabled", event.target.checked) })), /* @__PURE__ */ React.createElement("fieldset", { className: "schema-bulk-slice-grid", disabled: !draft.enabled }, [["unit", "Unit"], ["lowerKind", "Lower bound"], ["lower", "Lower value"], ["upperKind", "Upper bound"], ["upper", "Upper value"], ["description", "Validation description"]].map(([key, label]) => /* @__PURE__ */ React.createElement("label", { className: "schema-bulk-field", key }, label, key === "lowerKind" || key === "upperKind" ? /* @__PURE__ */ React.createElement(BulkSelect, { value: draft[key], label, choices: key === "lowerKind" ? [["none", "No lower bound"], ["minimum", "Inclusive minimum"], ["exclusiveMinimum", "Exclusive minimum"]] : [["none", "No upper bound"], ["maximum", "Inclusive maximum"], ["exclusiveMaximum", "Exclusive maximum"]], onChange: (value) => change(key, value) }) : /* @__PURE__ */ React.createElement("input", { type: "text", inputMode: key === "lower" || key === "upper" ? "decimal" : void 0, "aria-label": label, value: draft[key], onChange: (event) => change(key, event.target.value) }))))));
+}
+function AnnotationRow({ row, commands }) {
+  const quantityAvailable = Boolean(row.original.quantityValidation) || ["quantity", "quantityVector"].includes(row.draft.widget) || /\/quantity(?:Vector)?$/.test(String(row.declaration.$ref || ""));
+  return /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement("tr", { "data-key": row.key }, /* @__PURE__ */ React.createElement("td", { className: "schema-bulk-field-cell" }, /* @__PURE__ */ React.createElement("span", { className: "schema-bulk-key", title: row.generated ? "Generated field: edit its supported annotations in this table." : void 0 }, row.key), /* @__PURE__ */ React.createElement("button", { type: "button", className: "button schema-bulk-inspect-button", "aria-label": `Inspect existing annotations for ${row.key}`, "aria-expanded": row.open, onClick: () => commands.inspect(row) }, `Inspect ${extensionEntries(row.declaration).length} annotations`), row.generated ? /* @__PURE__ */ React.createElement("span", { className: "schema-bulk-readonly-badge" }, "Generated \xB7 editable here") : null, row.original.complexFilter ? /* @__PURE__ */ React.createElement("span", { className: "schema-bulk-readonly-badge" }, "Compound filter \xB7 inspect") : null, quantityAvailable ? /* @__PURE__ */ React.createElement("button", { type: "button", className: "button schema-bulk-inspect-button", onClick: () => commands.quantityOpen(row) }, "Edit quantity validation") : null), [["widget", ""], ["hidden", ""], ["choiceSource", "Sibling key"], ["unitGroup", "e.g. frequency"], ["defaultJson", "JSON value"], ["referenceScope", ""], ["referencePath", "selections"], ["referenceLabel", "boundary selection"], ["filterProperty", "entity"], ["filterValue", "boundary"]].map(([key, placeholder]) => /* @__PURE__ */ React.createElement("td", { key, hidden: key === "widget" || key === "unitGroup" }, key === "hidden" ? /* @__PURE__ */ React.createElement("input", { type: "checkbox", checked: row.draft.hidden, onChange: (event) => commands.fact(row, key, event.target.checked) }) : key === "referenceScope" ? /* @__PURE__ */ React.createElement(BulkSelect, { choices: [["", "Component"], ["model", "Document"], ["root", "Root"]], value: row.draft[key], label: `Reference scope for ${row.key}`, onChange: (value) => commands.fact(row, key, value) }) : /* @__PURE__ */ React.createElement("input", { type: "text", value: row.draft[key], placeholder, "aria-label": key === "referencePath" ? `Reference target path for ${row.key} (dotted keys)` : void 0, disabled: row.original.complexFilter && ["filterProperty", "filterValue"].includes(key), onChange: (event) => commands.fact(row, key, event.target.value) }), key === "referencePath" ? /* @__PURE__ */ React.createElement("button", { type: "button", className: "button", onClick: () => commands.pick(row) }, "Choose path\u2026") : null))), /* @__PURE__ */ React.createElement("tr", { className: "schema-bulk-annotation-detail-row", hidden: !row.open }, /* @__PURE__ */ React.createElement("td", { className: "schema-bulk-annotation-detail-cell", colSpan: 11 }, /* @__PURE__ */ React.createElement("p", { className: "schema-bulk-annotation-readonly" }, "Existing annotations on ", row.key, " are read only below. The field description and structured editors can be changed; other settings are preserved."), /* @__PURE__ */ React.createElement("label", { className: "schema-bulk-field schema-bulk-description-field" }, "Field description", /* @__PURE__ */ React.createElement("input", { type: "text", "aria-label": `Field description for ${row.key}`, value: row.draft.description, onChange: (event) => commands.fact(row, "description", event.target.value) })), row.open ? /* @__PURE__ */ React.createElement(AnnotationInventory, { declaration: row.declaration }) : null, quantityAvailable ? /* @__PURE__ */ React.createElement(QuantityValidationFields, { row, onChange: (key, value) => commands.quantity(row, key, value) }) : null)));
+}
+function BulkAnnotationEditor({ model, commands }) {
+  const count = model.worksheet.split(/\r?\n/).filter((line) => line.trim() && !/^field\tfact\t/i.test(line)).length;
+  return /* @__PURE__ */ React.createElement(BulkDialog, { model, commands, title: "Other UI annotations", note: "Edit visibility, choices, defaults, descriptions and reference bindings. Widget assignments and widget-specific parameters belong in Widget settings; existing widget settings are preserved here." }, /* @__PURE__ */ React.createElement("div", { className: "schema-bulk-toolbar" }, /* @__PURE__ */ React.createElement("label", { className: "schema-bulk-field" }, "Object declaration", /* @__PURE__ */ React.createElement(BulkSelect, { label: "Object declaration", value: model.target, choices: model.tables.map((table) => [JSON.stringify(table.path), `${pointer(table.path)} \xB7 ${table.title} \xB7 ${table.count} fields`]), onChange: commands.target })), commands.widgets ? /* @__PURE__ */ React.createElement("button", { type: "button", className: "button", onClick: commands.widgets }, "Open Widget settings\u2026") : null), /* @__PURE__ */ React.createElement("p", { className: "schema-bulk-note" }, model.rows.length, " fields at ", pointer(model.targetPath), " \xB7 ", model.rows.filter((row) => row.generated).length, " generated fields can be edited through this table. Inspect each field for its full existing annotation structure; those details are read only and preserved on apply."), /* @__PURE__ */ React.createElement("details", { className: "schema-bulk-annotation-worksheet" }, /* @__PURE__ */ React.createElement("summary", null, "Import field annotation facts"), /* @__PURE__ */ React.createElement("p", { className: "schema-bulk-note" }, "Three tab-separated columns: field key, fact, value. Facts: hidden, choiceSource, defaultJson, referenceScope, referencePath, referenceLabel, filterProperty, filterValue, description. Reference paths use dotted property keys; choose their source separately. Widget and unitGroup rows belong in Widget settings. Load overlays the staged table; Replace resets this target's staged changes before loading the batch."), /* @__PURE__ */ React.createElement("p", { className: "schema-bulk-note", role: "status" }, "Target: ", pointer(model.targetPath), " \xB7 ", count, " batch rows \xB7 ", model.worksheet.trim() && model.worksheet !== model.loadedText ? "text not loaded" : "table staged"), /* @__PURE__ */ React.createElement("textarea", { rows: 4, "aria-label": "Field annotation tab-separated rows", value: model.worksheet, placeholder: "frequency	hidden	false\nfrequency	description	Frequency in Hz", onChange: (event) => commands.worksheet(event.target.value) }), /* @__PURE__ */ React.createElement("div", { className: "schema-bulk-annotation-worksheet-actions" }, /* @__PURE__ */ React.createElement(WorkspaceFileButton, { label: "Import field annotation TSV file", extensions: [".tsv", ".txt"], onFile: (file) => commands.file(file) }), /* @__PURE__ */ React.createElement("button", { type: "button", className: "button", onClick: () => commands.import(false) }, "Load annotation rows"), /* @__PURE__ */ React.createElement("button", { type: "button", className: "button", onClick: () => commands.import(true) }, "Replace staged annotation rows"), /* @__PURE__ */ React.createElement("button", { type: "button", className: "button", onClick: commands.clear }, "Clear annotation batch"))), /* @__PURE__ */ React.createElement("details", { className: "schema-bulk-context-inspection" }, /* @__PURE__ */ React.createElement("summary", null, "Inspect ", extensionEntries(at(model.source, model.targetPath)).length, " declaration annotations \xB7 read only"), /* @__PURE__ */ React.createElement("div", { className: "schema-bulk-context-content" }, /* @__PURE__ */ React.createElement("p", { className: "schema-bulk-annotation-readonly" }, "These are the existing extension annotations on the selected object. Expand any key to read its full structure."), /* @__PURE__ */ React.createElement(AnnotationInventory, { declaration: at(model.source, model.targetPath) }))), /* @__PURE__ */ React.createElement("div", { className: "schema-bulk-table-wrap" }, /* @__PURE__ */ React.createElement("table", { className: "schema-structure-table schema-bulk-table" }, /* @__PURE__ */ React.createElement("thead", null, /* @__PURE__ */ React.createElement("tr", null, ["Field", "Widget", "Hidden", "Choice source sibling", "Quantity unit group", "Default JSON", "Reference source scope", "Reference target path \xB7 dotted keys", "Reference label", "Filter property", "Filter value"].map((heading) => /* @__PURE__ */ React.createElement("th", { key: heading, hidden: heading === "Widget" || heading === "Quantity unit group" }, heading)))), /* @__PURE__ */ React.createElement("tbody", null, model.rows.map((row) => /* @__PURE__ */ React.createElement(AnnotationRow, { key: row.key, row, commands }))))));
+}
+function createBulkAnnotationDialog({ getDocument, validateCandidate, applyCandidate, generatedOwnerAtPath, onOpenWidgetSettings } = {}) {
+  const dialog = document.createElement("dialog");
+  dialog.className = "schema-bulk-dialog";
+  dialog.dataset.toolId = "bulkAnnotations";
+  document.body.append(dialog);
+  let model = null, mount = null, epoch = 0;
+  const picker = createSchemaAuthoringPathPicker({ getDocument: () => model?.source });
+  const render = () => {
+    if (model) mount.update({ model, commands });
+  }, invalidate = () => {
+    model.preview = null;
+    model.previewText = "";
+    model.status = "";
+  }, pendingText = () => Boolean(model.worksheet.trim()) && model.worksheet !== model.loadedText;
+  const load = () => {
+    model.targetPath = JSON.parse(model.target);
+    model.rows = Object.entries(at(model.source, model.targetPath)?.properties || {}).map(([key, declaration]) => {
+      const original = annotationDraft(declaration);
+      return { key, declaration: clone(declaration), original, draft: clone(original), quantity: quantityDraft(original.quantityValidation), quantityChanged: [], generated: Boolean(generatedOwnerAtPath?.(model.source, [...model.targetPath, "properties", key])), open: false, quantityOpen: false };
+    });
+    invalidate();
+  };
+  const dirty = () => {
+    try {
+      return model.rows.some((row) => !same(rowValues(row), row.original));
+    } catch {
+      return true;
+    }
+  };
+  const commands = {
+    close: () => dialog.close(),
+    target(value) {
+      if ((pendingText() || dirty()) && !globalThis.confirm("Discard the current annotation batch and staged table changes before changing declarations?")) {
+        render();
+        return;
+      }
+      model.target = value;
+      model.worksheet = "";
+      model.loadedText = "";
+      load();
+      render();
+    },
+    worksheet(value) {
+      model.worksheet = value;
+      invalidate();
+      render();
+    },
+    clear() {
+      model.worksheet = "";
+      model.loadedText = "";
+      load();
+      model.status = "Cleared the batch and restored the selected declaration.";
+      render();
+    },
+    fact(row, key, value) {
+      row.draft[key] = value;
+      invalidate();
+      render();
+    },
+    quantity(row, key, value) {
+      row.quantity[key] = value;
+      if (!row.quantityChanged.includes(key)) row.quantityChanged.push(key);
+      invalidate();
+      render();
+    },
+    inspect(row) {
+      row.open = !row.open;
+      render();
+    },
+    quantityOpen(row) {
+      row.open = true;
+      row.quantityOpen = true;
+      render();
+    },
+    pick(row) {
+      picker.open({ representation: "referencePath", onPick: (selected) => {
+        row.draft.referencePath = selected.referencePath;
+        row.draft.referenceScope = "root";
+        invalidate();
+        render();
+      } });
+    },
+    widgets: onOpenWidgetSettings ? () => {
+      if ((model.worksheet.trim() || dirty()) && !globalThis.confirm("Discard the annotation batch and staged annotation changes before opening Widget settings?")) return;
+      dialog.close();
+      onOpenWidgetSettings(model.targetPath);
+    } : null,
+    import(replace = false) {
+      invalidate();
+      try {
+        const lines = model.worksheet.replace(/^\uFEFF/, "").replace(/\r/g, "").split("\n").map((line, index) => ({ line, number: index + 1 })).filter((entry) => entry.line.trim());
+        if (!lines.length) throw new Error("Enter at least one field annotation row.");
+        if (lines.length > 1e3) throw new Error("Import at most 1,000 field annotation rows at once.");
+        const seen = /* @__PURE__ */ new Set(), edits = [];
+        lines.forEach(({ line, number }, index) => {
+          const cells = line.split("	");
+          if (index === 0 && cells[0]?.trim().toLowerCase() === "field" && cells[1]?.trim().toLowerCase() === "fact") return;
+          if (cells.length !== 3) throw new Error(`Line ${number}: use field, fact, value columns.`);
+          const [rawKey, rawFact, value] = cells, key = rawKey.trim(), fact = rawFact.trim(), row = model.rows.find((row2) => row2.key === key);
+          if (!row) throw new Error(`Line ${number}: ${key || "(blank field key)"} is not a field in the selected object.`);
+          const identity = key + "\0" + fact;
+          if (seen.has(identity)) throw new Error(`Line ${number}: ${key}.${fact} appears more than once.`);
+          seen.add(identity);
+          if (["widget", "unitGroup"].includes(fact)) throw new Error(`Line ${number}: ${fact} belongs in Widget settings. Open that tool to edit widget assignments or parameters.`);
+          if (!["hidden", "choiceSource", "defaultJson", "referenceScope", "referencePath", "referenceLabel", "filterProperty", "filterValue", "description"].includes(fact)) throw new Error(`Line ${number}: unsupported field annotation ${fact || "(blank fact)"}.`);
+          if (fact === "hidden" && !["true", "false"].includes(value)) throw new Error(`Line ${number}: hidden must be true or false.`);
+          if (fact === "referenceScope" && !["", "model", "root"].includes(value)) throw new Error(`Line ${number}: referenceScope must be blank (component), model (document), or root.`);
+          if (fact === "defaultJson" && value.trim()) try {
+            JSON.parse(value);
+          } catch {
+            throw new Error(`Line ${number}: defaultJson must contain valid JSON.`);
+          }
+          edits.push({ key, fact, value: fact === "hidden" ? value === "true" : value });
+        });
+        if (!edits.length) throw new Error("The worksheet has no annotation facts.");
+        const staged = new Map(model.rows.map((row) => [row.key, clone(replace ? row.original : rowValues(row))]));
+        for (const edit of edits) staged.get(edit.key)[edit.fact] = edit.value;
+        schemaWithBulkAnnotations(model.source, model.targetPath, [...staged].map(([key, values]) => ({ key, values })));
+        if (replace) load();
+        for (const edit of edits) model.rows.find((row) => row.key === edit.key).draft[edit.fact] = edit.value;
+        model.loadedText = model.worksheet;
+        model.status = `Loaded ${edits.length} field annotation fact${edits.length === 1 ? "" : "s"}. Preview to validate the batch.`;
+      } catch (error) {
+        invalidate();
+        model.status = error.message;
+      }
+      render();
+    },
+    async file(file) {
+      if (!file) return;
+      const target = model.target, version = epoch;
+      invalidate();
+      render();
+      try {
+        const text = (await file.text()).replace(/^\uFEFF/, "");
+        if (version !== epoch || target !== model.target) throw new Error("The annotation target changed while reading the file. Import it again.");
+        model.worksheet = text;
+        commands.import();
+      } catch (error) {
+        if (model && version === epoch) {
+          model.status = `Could not import ${file.name}: ${error.message}`;
+          render();
+        }
+      }
+    },
+    preview() {
+      try {
+        if (pendingText()) throw new Error("Load, Replace or Clear the edited annotation batch before Preview.");
+        const edits = model.rows.map((row) => ({ key: row.key, values: rowValues(row), original: row.original })).filter((edit) => !same(edit.values, edit.original));
+        if (!edits.length) throw new Error("Change at least one annotation cell before previewing.");
+        const candidate = schemaWithBulkAnnotations(model.source, model.targetPath, edits), allowGeneratedSubtrees = edits.map((edit) => [...model.targetPath, "properties", edit.key]);
+        validateCandidate(candidate, { allowGeneratedSubtrees });
+        model.preview = { candidate, base: JSON.stringify(model.source), allowGeneratedSubtrees };
+        model.previewText = edits.map((edit) => `${edit.key}: ${Object.entries(edit.values).filter(([key, value]) => !same(value, edit.original[key])).map(([key, value]) => `${key} = ${JSON.stringify(value)}`).join(", ")}`).join("\n");
+        model.status = `${edits.length} field${edits.length === 1 ? "" : "s"} ready to apply.`;
+      } catch (error) {
+        invalidate();
+        model.status = error.message;
+      }
+      render();
+    },
+    apply() {
+      if (!model.preview) return;
+      try {
+        if (JSON.stringify(getDocument()) !== model.preview.base) throw new Error("The schema changed since preview. Reopen the table.");
+        applyCandidate(model.preview.candidate, "Applied bulk UI annotations. Save the schema to keep the changes.", { allowGeneratedSubtrees: model.preview.allowGeneratedSubtrees });
+        dialog.close();
+      } catch (error) {
+        model.status = error.message;
+        render();
+      }
+    }
+  };
+  dialog.addEventListener("click", (event) => {
+    if (event.target === dialog) dialog.close();
+  });
+  return { open(initialPath = []) {
+    const source = clone(getDocument()), tables = schemaObjectTables(source);
+    if (!tables.length) throw new Error("This schema has no object declaration with fields.");
+    const current = tables.find((table) => same(table.path, initialPath)) || tables.filter((table) => table.path.length && initialPath.length >= table.path.length && table.path.every((part, index) => part === initialPath[index])).sort((a, b) => b.path.length - a.path.length)[0] || tables.find((table) => table.path.join("/") === "properties/model") || tables[0];
+    epoch++;
+    model = { source, tables, target: JSON.stringify(current.path), targetPath: [], rows: [], worksheet: "", loadedText: "", status: "", preview: null, previewText: "" };
+    load();
+    if (mount) render();
+    else mount = mountReactComponent(dialog, BulkAnnotationEditor, { model, commands });
+    dialog.showModal();
+  }, snapshot: () => model ? { format: "fullmeta-bulk-annotation-state/1", model: clone(model) } : null, restore(state) {
+    if (state?.format !== "fullmeta-bulk-annotation-state/1" || !state.model || !same(state.model.source, getDocument())) throw new Error("Unsupported annotation table state.");
+    epoch++;
+    const hadPreview = Boolean(state.model.preview);
+    model = clone(state.model);
+    model.preview = null;
+    model.previewText = "";
+    if (mount) render();
+    else mount = mountReactComponent(dialog, BulkAnnotationEditor, { model, commands });
+    if (hadPreview) commands.preview();
+  }, preview() {
+    if (!dialog.open) throw new Error("Open the annotation table before Preview.");
+    commands.preview();
+    if (!model.preview) throw new Error(model.status || "Preview failed.");
+    return { ready: true };
+  }, apply() {
+    if (!dialog.open || !model.preview) throw new Error("Preview the current annotation table before Apply.");
+    commands.apply();
+    if (dialog.open) throw new Error(model.status || "The table could not be applied.");
+    return { applied: true };
+  }, close: commands.close, dialog, dispose() {
+    epoch++;
+    picker.dispose();
+    mount?.dispose();
+    dialog.remove();
+    model = null;
+  } };
+}
+function BulkValidationEditor({ model, commands }) {
+  return /* @__PURE__ */ React.createElement(BulkDialog, { model, commands, title: "Bulk validation rules", note: "Enter multiple assertion expressions and messages. A collection path wraps an assertion in one For each rule. Complex rule trees remain in the structured validation editor." }, /* @__PURE__ */ React.createElement("div", { className: "schema-bulk-toolbar" }, /* @__PURE__ */ React.createElement("label", { className: "schema-bulk-field" }, "Validation program", /* @__PURE__ */ React.createElement(BulkSelect, { label: "Validation program", choices: model.programs.map((key) => [key, key]), value: model.program, onChange: commands.program }))), /* @__PURE__ */ React.createElement("p", { className: "schema-bulk-note" }, model.rows.length, " simple rules shown \xB7 ", model.complexCount, " complex rules preserved in the structured editor. Leave Collection path empty for a root assertion. Expressions use the validation language's JSON form."), /* @__PURE__ */ React.createElement("div", { className: "schema-bulk-table-wrap" }, /* @__PURE__ */ React.createElement("table", { className: "schema-structure-table schema-bulk-table schema-bulk-rules-table" }, /* @__PURE__ */ React.createElement("thead", null, /* @__PURE__ */ React.createElement("tr", null, ["Scope source", "Collection path", "Item variable", "Assertion expression JSON", "Message", "When expression JSON", ""].map((text, index) => /* @__PURE__ */ React.createElement("th", { key: index }, text)))), /* @__PURE__ */ React.createElement("tbody", null, model.rows.map((row, index) => /* @__PURE__ */ React.createElement("tr", { key: row.id }, ["source", "path", "alias", "assertion", "message", "when"].map((key) => /* @__PURE__ */ React.createElement("td", { key }, key === "source" ? /* @__PURE__ */ React.createElement(BulkSelect, { value: row[key], choices: [["", "Root assertion"], ["root", "Root document"], ["model", "Model"]], label: `Scope source ${index + 1}`, onChange: (value) => commands.patch(row, key, value) }) : key === "assertion" || key === "when" ? /* @__PURE__ */ React.createElement("textarea", { rows: key === "assertion" ? 3 : 2, value: row[key], "aria-label": `${key} ${index + 1}`, onChange: (event) => commands.patch(row, key, event.target.value) }) : /* @__PURE__ */ React.createElement("input", { type: "text", value: row[key], "aria-label": `${key} ${index + 1}`, placeholder: key === "path" ? "model/physics/*" : void 0, onChange: (event) => commands.patch(row, key, event.target.value) }))), /* @__PURE__ */ React.createElement("td", null, /* @__PURE__ */ React.createElement("button", { type: "button", className: "button", onClick: () => commands.remove(row) }, "Remove"))))))), /* @__PURE__ */ React.createElement("button", { type: "button", className: "button", onClick: commands.add }, "Add assertion row"));
+}
+function createBulkValidationDialog({ getDocument, validateCandidate, applyCandidate } = {}) {
+  const dialog = document.createElement("dialog");
+  dialog.className = "schema-bulk-dialog";
+  dialog.dataset.toolId = "bulkValidation";
+  document.body.append(dialog);
+  let model = null, mount = null, nextId = 0;
+  const render = () => mount?.update({ model, commands }), invalidate = () => {
+    model.preview = null;
+    model.previewText = "";
+    model.status = "";
+  };
+  const row = (initial) => ({ id: ++nextId, index: initial.index, source: initial.source, path: initial.path, alias: initial.alias, assertion: initial.rule?.assert === void 0 ? "" : JSON.stringify(initial.rule.assert), message: typeof initial.rule?.message === "string" ? initial.rule.message : "", when: initial.rule?.when === void 0 ? "" : JSON.stringify(initial.rule.when) });
+  function load() {
+    model.rows = [];
+    model.complexCount = 0;
+    (model.source[model.program]?.rules || []).forEach((statement, index) => {
+      const simple = simpleRule(statement, index);
+      if (simple) {
+        const current = row(simple);
+        current.baseline = clone(current);
+        model.rows.push(current);
+      } else model.complexCount++;
+    });
+    invalidate();
+  }
+  const commands = { close: () => dialog.close(), program(value) {
+    model.program = value;
+    load();
+    render();
+  }, patch(row2, key, value) {
+    row2[key] = value;
+    invalidate();
+    render();
+  }, add() {
+    model.rows.push(row({ index: null, source: "", path: "", alias: "", rule: {} }));
+    invalidate();
+    render();
+  }, remove(row2) {
+    model.rows = model.rows.filter((item) => item !== row2);
+    invalidate();
+    render();
+  }, preview() {
+    try {
+      const values = (row2) => Object.fromEntries(["index", "source", "path", "alias", "assertion", "message", "when"].map((key) => [key, row2[key]]));
+      const edits = model.rows.filter((row2) => row2.index === null || !same(values(row2), values(row2.baseline))).map(values);
+      for (const [index, statement] of (model.source[model.program]?.rules || []).entries()) if (simpleRule(statement, index) && !model.rows.some((row2) => row2.index === index)) edits.push({ index, remove: true });
+      if (!edits.length) throw new Error("Add or change at least one assertion row before previewing.");
+      const candidate = schemaWithBulkValidationRules(model.source, model.program, edits);
+      validateCandidate(candidate);
+      model.preview = { candidate, base: JSON.stringify(model.source) };
+      model.previewText = edits.map((edit) => edit.remove ? `Remove simple rule ${edit.index + 1}` : JSON.stringify(statementFromRow(edit), null, 2)).join("\n\n");
+      model.status = `${edits.length} rule change${edits.length === 1 ? "" : "s"} ready to apply.`;
+    } catch (error) {
+      invalidate();
+      model.status = error.message;
+    }
+    render();
+  }, apply() {
+    if (!model.preview) return;
+    try {
+      if (JSON.stringify(getDocument()) !== model.preview.base) throw new Error("The schema changed since preview. Reopen the table.");
+      applyCandidate(model.preview.candidate, "Applied bulk validation rules. Save the schema to keep the changes.");
+      dialog.close();
+    } catch (error) {
+      model.status = error.message;
+      render();
+    }
+  } };
+  return { open() {
+    const source = clone(getDocument()), programs = Object.keys(source).filter((key) => key === "x-fullmeta-rules" || /^x-fullmeta-.*Validation$/.test(key));
+    if (!programs.includes("x-fullmeta-rules")) programs.unshift("x-fullmeta-rules");
+    model = { source, programs, program: "x-fullmeta-rules", rows: [], complexCount: 0, preview: null, status: "", previewText: "" };
+    load();
+    if (mount) render();
+    else mount = mountReactComponent(dialog, BulkValidationEditor, { model, commands });
+    dialog.showModal();
+  }, snapshot: () => model ? { format: "fullmeta-bulk-validation-state/1", model: clone(model) } : null, restore(state) {
+    if (state?.format !== "fullmeta-bulk-validation-state/1" || !state.model || !same(state.model.source, getDocument())) throw new Error("Unsupported validation table state.");
+    const hadPreview = Boolean(state.model.preview);
+    model = clone(state.model);
+    model.preview = null;
+    model.previewText = "";
+    nextId = Math.max(nextId, ...model.rows.map((row2) => row2.id || 0));
+    if (mount) render();
+    else mount = mountReactComponent(dialog, BulkValidationEditor, { model, commands });
+    if (hadPreview) commands.preview();
+  }, preview() {
+    if (!dialog.open) throw new Error("Open the validation table before Preview.");
+    commands.preview();
+    if (!model.preview) throw new Error(model.status || "Preview failed.");
+    return { ready: true };
+  }, apply() {
+    if (!dialog.open || !model.preview) throw new Error("Preview the current validation table before Apply.");
+    commands.apply();
+    if (dialog.open) throw new Error(model.status || "The table could not be applied.");
+    return { applied: true };
+  }, close: commands.close, dialog, dispose() {
+    mount?.dispose();
+    dialog.remove();
+    model = null;
+  } };
+}
+export {
+  AnnotationInventory,
+  AnnotationValue,
+  BulkAnnotationEditor,
+  BulkDialog,
+  BulkSelect,
+  BulkValidationEditor,
+  QuantityValidationFields,
+  createBulkAnnotationDialog,
+  createBulkValidationDialog,
+  schemaObjectTables2 as schemaObjectTables,
+  schemaWithBulkAnnotations2 as schemaWithBulkAnnotations,
+  schemaWithBulkValidationRules2 as schemaWithBulkValidationRules
+};
 
 //# sourceMappingURL=schema-bulk-authoring.js.map

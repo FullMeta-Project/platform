@@ -12,6 +12,10 @@
     "schema": {
       "const": "fullmeta-model-runtime/1"
     },
+    "operationRegistry": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9_-][A-Za-z0-9_.-]*\\.json$"
+    },
     "capabilityAnnotation": {
       "type": "string",
       "pattern": "^x-[A-Za-z0-9-]+$"

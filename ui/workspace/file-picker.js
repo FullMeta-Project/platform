@@ -1,4 +1,336 @@
 // Generated from file-picker.jsx by scripts/build-frontend.mjs.
-import l,{useLayoutEffect as J,useRef as X,useState as R}from"../widgets/shared/react/react-runtime.js";import{mountReactComponent as ee}from"../widgets/shared/react/mount.js";const N=new WeakMap,F=new WeakMap,re=new Set([".json",".tsv",".txt"]);function C(e,{root:i=!0}={}){if(typeof e!="string")throw new Error("Enter a workspace-relative path.");const f=e.trim();if(i&&(f===""||f==="."))return".";if(!f||f.startsWith("/")||/[\\:?#\u0000-\u001f]/.test(f)||f.split("/").some(g=>!g||g==="."||g===".."))throw new Error("Choose a path inside FullMeta without traversal or absolute path prefixes.");return f}const D=e=>{const i=e.split("/");return{folder:i.slice(0,-1).join("/")||".",file:i.at(-1)}},W=e=>e?.dataset.authoringTool||e?.dataset.schemaAuthoringTool||e?.id||null;function $(e=[".json",".tsv",".txt"]){if(!Array.isArray(e)||!e.length||e.some(i=>!re.has(i)))throw new Error("Choose JSON, TSV or TXT workspace files.");return[...new Set(e)]}function Q(e){if(!e||e.format!=="fullmeta-workspace-picker/1"||typeof e.open!="boolean")throw new Error("Unsupported workspace picker state.");if(!e.open)return e;if(!["open","schema-for-new","new-folder","import"].includes(e.purpose)||!["file","directory"].includes(e.mode))throw new Error("Unsupported workspace picker purpose.");if(e.purpose==="new-folder"!=(e.mode==="directory"))throw new Error("The workspace picker mode does not match its purpose.");if(C(e.folder)!==e.folder||typeof e.selectedPath!="string")throw new Error("Invalid canonical workspace picker path.");$(e.extensions),e.selectedPath&&C(e.selectedPath,{root:!1});for(const f of["pathDraft","filter","error"])if(typeof e[f]!="string")throw new Error("Invalid workspace picker text state.");if(e.ownerKey!==null&&typeof e.ownerKey!="string"||e.importKey!==null&&typeof e.importKey!="string")throw new Error("Invalid workspace picker owner.");if(e.focus!==void 0&&e.focus!==null&&(!["path","filter"].includes(e.focus.field)||!Number.isSafeInteger(e.focus.start)||!Number.isSafeInteger(e.focus.end)||e.focus.start<0||e.focus.end<e.focus.start||!["forward","backward","none"].includes(e.focus.direction)))throw new Error("Invalid workspace picker input focus.");if(e.purpose==="import"&&(!e.ownerKey||!e.importKey))throw new Error("An import picker needs its current owning controls.");H(e.listing,e.folder);const i=e.mode==="directory"?e.listing.directories:e.listing.files;if(e.selectedPath&&!i.some(f=>f.path===e.selectedPath))throw new Error("The saved selection is not in the workspace folder listing.");return e}function H(e,i){if(!e||!Array.isArray(e.directories)||!Array.isArray(e.files)||e.directories.length+e.files.length>2e4)throw new Error("Invalid saved workspace directory listing.");const f=i==="."?null:D(i).folder;if(e.parent!==f||!Number.isSafeInteger(e.total)||e.total<0||e.nextOffset!==null&&(!Number.isSafeInteger(e.nextOffset)||e.nextOffset<0))throw new Error("Invalid workspace directory page.");const g=new Set;for(const r of[...e.directories,...e.files]){if(!r||typeof r.name!="string"||r.name.length>512||C(r.path,{root:!1})!==r.path||D(r.path).folder!==i||D(r.path).file!==r.name||g.has(r.path))throw new Error("Invalid saved workspace entry.");g.add(r.path)}if(e.files.some(r=>!Number.isSafeInteger(r.bytes)||r.bytes<0))throw new Error("Invalid saved workspace file size.");return e}const O=e=>{Promise.resolve().then(e).catch(()=>{})};function te({state:e,commands:i}){const f=e.directories.filter(r=>r.name.toLowerCase().includes(e.filter.toLowerCase())),g=e.files.filter(r=>r.name.toLowerCase().includes(e.filter.toLowerCase()));return l.createElement("section",{className:"workspace-file-picker","aria-busy":e.loading||e.accepting},l.createElement("h2",{id:"workspace-file-picker-title"},e.title),l.createElement("p",null,"Choose ",e.mode==="directory"?"a folder":"a file"," inside FullMeta."),l.createElement("form",{onSubmit:r=>{r.preventDefault(),O(()=>i.navigate(e.pathDraft))},className:"workspace-picker-location"},l.createElement("label",null,"Folder inside FullMeta",l.createElement("input",{"aria-label":"Workspace folder",value:e.pathDraft,onChange:r=>i.pathDraft(r.target.value),disabled:e.accepting})),l.createElement("button",{type:"submit",disabled:e.accepting},"Go"),l.createElement("button",{type:"button",onClick:()=>O(()=>i.navigate(e.parent||".")),disabled:!e.parent||e.loading||e.accepting},"Up")),l.createElement("nav",{"aria-label":"Workspace folder breadcrumbs"},l.createElement("button",{type:"button",disabled:e.accepting,onClick:()=>O(()=>i.navigate("."))},"FullMeta"),e.folder!=="."?e.folder.split("/").map((r,u,h)=>l.createElement(l.Fragment,{key:h.slice(0,u+1).join("/")},l.createElement("span",{"aria-hidden":"true"}," / "),l.createElement("button",{type:"button",disabled:e.accepting,onClick:()=>O(()=>i.navigate(h.slice(0,u+1).join("/")))},r))):null),l.createElement("label",{className:"workspace-picker-filter"},"Filter this folder",l.createElement("input",{type:"search","aria-label":"Filter workspace files",value:e.filter,onChange:r=>i.filter(r.target.value),disabled:e.accepting})),l.createElement("div",{className:"workspace-picker-entries","aria-label":"Workspace entries"},f.map(r=>l.createElement("div",{key:r.path,className:"workspace-picker-entry"},l.createElement("button",{type:"button",disabled:e.accepting,"aria-label":`Open folder ${r.name}`,onClick:()=>O(()=>i.navigate(r.path))},"\u{1F4C1} ",r.name),e.mode==="directory"?l.createElement("button",{type:"button",disabled:e.accepting||e.loading,"aria-pressed":e.selectedPath===r.path,onClick:()=>i.select(r.path)},"Select folder"):null)),e.mode==="file"?g.map(r=>l.createElement("button",{key:r.path,type:"button",className:"workspace-picker-file",disabled:e.accepting||e.loading,"aria-pressed":e.selectedPath===r.path,onClick:()=>i.select(r.path),onDoubleClick:()=>O(()=>(i.select(r.path),i.accept()))},l.createElement("span",null,r.name),l.createElement("small",null,r.bytes.toLocaleString()," bytes"))):null,!e.loading&&!f.length&&(!g.length||e.mode==="directory")?l.createElement("p",{className:"settings-empty"},"No matching ",e.mode==="directory"?"folders":"files","."):null),e.nextOffset!==null?l.createElement("button",{type:"button",disabled:e.loading||e.accepting,onClick:()=>O(()=>i.more())},"More entries"):null,l.createElement("p",{className:"workspace-picker-selection"},e.mode==="directory"?`Folder: ${e.selectedPath||e.folder}`:e.selectedPath?`Selected: ${e.selectedPath}`:"Select a file to continue."),l.createElement("p",{role:"status",className:e.error?"status error":"status"},e.error||(e.loading?"Loading workspace\u2026":"")),l.createElement("div",{className:"save-as-actions"},l.createElement("button",{type:"button",onClick:i.cancel},"Cancel"),l.createElement("button",{type:"button",className:"primary",disabled:e.loading||e.accepting||e.mode==="file"&&!e.selectedPath,onClick:()=>O(()=>i.accept())},e.accepting?"Working\u2026":e.acceptLabel)))}function ie({dialog:e,container:i=e,requestJson:f,defaultFolder:g=()=>"."}){if(!e||typeof f!="function")throw new Error("The workspace picker needs its dialog and checked document services.");if(N.has(e.ownerDocument))throw new Error("This page already has a workspace file picker.");let r={format:"fullmeta-workspace-picker/1",open:!1,purpose:"open",mode:"file",folder:".",pathDraft:".",filter:"",selectedPath:"",extensions:[".json"],directories:[],files:[],parent:null,nextOffset:null,total:0,loading:!1,accepting:!1,error:"",title:"Open workspace file",acceptLabel:"Open",ownerKey:null,importKey:null},u=0,h=!1,P=null,w=null,I=null,d=null;const k=e.ownerDocument,v=F.get(k)||new Set;F.set(k,v);let x=null;const Y=()=>{const t=k.activeElement?.closest?.("dialog[open]");return t&&t!==e?t:r.open&&w?.open?w:[...k.querySelectorAll("dialog[open]")].filter(o=>o!==e).at(-1)||null},U=()=>{const t=Y();return t?[...v].filter(o=>o.button?.isConnected&&o.button.closest("dialog")===t).map(o=>{const s=o.options(),c=o.button,n=!!c.closest('[hidden],.hidden,[inert],[aria-hidden="true"]');let a=!1;for(let m=c;m&&m!==t.parentElement;m=m.parentElement){const p=k.defaultView?.getComputedStyle(m);if(p?.display==="none"||p?.visibility==="hidden"){a=!0;break}}return{entry:o,owner:t,options:s,metadata:{key:o.key,label:s.title||c.getAttribute("aria-label")||c.textContent.trim(),ownerKey:W(t),extensions:$(s.extensions),available:!h&&!n&&!a&&!c.matches(":disabled")&&t.open}}}):[]},Z=()=>{const t=U();return t.map(({metadata:o})=>({...o,available:o.available&&t.filter(s=>s.metadata.key===o.key).length===1}))},T=t=>{const o=t?.getAttribute?.("aria-label");return["Workspace folder","Filter workspace files"].includes(o)?{field:o==="Workspace folder"?"path":"filter",start:t.selectionStart??0,end:t.selectionEnd??0,direction:t.selectionDirection||"none"}:null},B=t=>t.map(o=>({...o})),b=()=>({format:r.format,open:r.open,...r.open?{purpose:r.purpose,mode:r.mode,folder:r.folder,pathDraft:r.pathDraft,filter:r.filter,selectedPath:r.selectedPath,extensions:[...r.extensions],ownerKey:W(w),importKey:r.importKey,error:r.error,focus:T(k.activeElement)||x,listing:{directories:B(r.directories),files:B(r.files),parent:r.parent,nextOffset:r.nextOffset,total:r.total}}:{}}),y=()=>{h||z.update({state:{...r},commands:S})},_=()=>{w&&d&&w.removeEventListener("close",d),d=null},A=()=>{u++,_(),r={...r,open:!1,loading:!1,accepting:!1},P=null,w=null,e.open&&e.close(),y(),I?.isConnected&&I.focus()},K=async(t,o=0)=>{const s=C(t),c=++u;r={...r,loading:!0,error:"",...o?{}:{folder:s,parent:s==="."?null:D(s).folder,pathDraft:s,selectedPath:"",directories:[],files:[],nextOffset:null,total:0,filter:""}},y();try{const n=await f(`/api/workspace/files?folder=${encodeURIComponent(s)}&extensions=${encodeURIComponent(r.extensions.join(","))}&offset=${o}&limit=500`,{cache:"no-store"});if(h||c!==u||!r.open)return b();if(n?.format!=="fullmeta-workspace-files/1"||n.folder!==s||!Array.isArray(n.directories)||!Array.isArray(n.files))throw new Error("The workspace directory response is invalid.");H(n,s);const a=n.directories.map(p=>({name:p.name,path:p.path})),m=n.files.map(p=>({name:p.name,path:p.path,bytes:p.bytes}));if((o?r.directories.length+r.files.length:0)+a.length+m.length>2e4)throw new Error("This workspace folder exceeds the 20,000-entry browsing limit.");r={...r,parent:n.parent===null?null:C(n.parent),directories:o?[...r.directories,...a]:a,files:o?[...r.files,...m]:m,nextOffset:Number.isSafeInteger(n.nextOffset)?n.nextOffset:null,total:n.total,loading:!1}}catch(n){if(c!==u||h)return b();throw r={...r,loading:!1,error:n.message},y(),n}return y(),b()},S={async navigate(t){if(!r.open)throw new Error("Open the workspace picker first.");if(r.accepting)throw new Error("Wait for the selected file to finish.");try{return await K(t)}catch(o){throw r={...r,error:o.message},y(),o}},more(){return r.nextOffset===null||r.loading||r.accepting?b():K(r.folder,r.nextOffset)},select(t){if(!r.open||r.loading||r.accepting)throw new Error("Wait for the workspace folder to load.");const o=C(t,{root:!1});if(!(r.mode==="directory"?r.directories:r.files).some(c=>c.path===o))throw new Error("Choose an entry from the current workspace folder.");return r={...r,selectedPath:o,error:""},y(),b()},pathDraft(t){r={...r,pathDraft:t},y()},filter(t){r={...r,filter:t},y()},async accept(){if(!r.open||r.loading||r.accepting)throw new Error("Wait for the workspace picker to finish.");if(r.mode==="file"&&!r.selectedPath)throw new Error("Select a workspace file first.");const t=u,o=r.mode==="directory"?r.selectedPath||r.folder:r.selectedPath,s=r.files.find(n=>n.path===o),c=P;r={...r,accepting:!0,error:""},y();try{let n=r.mode==="directory"?{folder:o,path:o}:{path:o,...D(o),name:s.name,bytes:s.bytes};if(r.purpose==="import"||r.purpose==="schema-for-new"){const a=await f(`/api/workspace/file?path=${encodeURIComponent(o)}`,{cache:"no-store"});if(a?.format!=="fullmeta-workspace-file/1"||a.path!==o||typeof a.text!="string"||!Number.isSafeInteger(a.bytes)||a.bytes<0||a.bytes>2*1024*1024||typeof a.contentHash!="string")throw new Error("The workspace file response is invalid.");n={...n,text:a.text,contentHash:a.contentHash,bytes:a.bytes}}return h||t!==u||!r.open||w&&!w.open?b():(await c?.(n),t===u&&r.open&&A(),{accepted:!0,...n})}catch(n){throw t===u&&!h&&(r={...r,accepting:!1,error:n.message},y()),n}},cancel(){return r.open&&A(),b()}},z=ee(i,te,{state:r,commands:S}),V=t=>{t.preventDefault(),S.cancel()},q=()=>{r.open&&A()},G=t=>{const o=T(t.target);o&&(x=o)};e.addEventListener("cancel",V),e.addEventListener("close",q),e.addEventListener("focusout",G);const L={...S,dialog:e,get ownerDialog(){return w},inspect:()=>({...b(),loading:r.loading,accepting:r.accepting,entries:[...r.directories.map(t=>({...t,kind:"directory"})),...r.files.map(t=>({...t,kind:"file"}))],nextOffset:r.nextOffset,total:r.total,availableImports:Z()}),snapshot:b,async openImport(t,o={}){if(h)throw new Error("The workspace picker has been disposed.");if(!o||typeof o!="object"||Array.isArray(o)||Object.keys(o).some(p=>p!=="folder"))throw new Error("An import action accepts its optional workspace folder only.");const s=o.folder===void 0?void 0:C(o.folder);if(typeof t!="string"||!t)throw new Error("Choose an import key from the current authoring dialog.");const c=U().filter(p=>p.metadata.key===t);if(c.length!==1||!c[0].metadata.available)throw new Error("This import control is not available in the current open dialog.");const{entry:n,owner:a,options:m}=c[0];if(r.open)throw new Error("Finish the current workspace file selection first.");for(let p=n.button.closest("details");p&&a.contains(p);p=p.parentElement?.closest("details"))p.open=!0;return L.open({...m,purpose:"import",mode:"file",ownerDialog:a,opener:n.button,importKey:t,...s===void 0?{}:{folder:s}})},async open(t={}){if(h)throw new Error("The workspace picker has been disposed.");if(r.open)throw new Error("Finish the current workspace file selection first.");const o=t.purpose||"open",s=t.mode||(o==="new-folder"?"directory":"file");x=null;const c=C(t.folder??g()),n=c==="."?null:D(c).folder;if(r={...r,open:!0,purpose:o,mode:s,folder:c,parent:n,pathDraft:c,filter:"",selectedPath:"",directories:[],files:[],nextOffset:null,total:0,extensions:$(t.extensions||[".json"]),error:"",loading:!1,accepting:!1,importKey:t.importKey||null,title:t.title||(s==="directory"?"Choose workspace folder":"Open workspace file"),acceptLabel:t.acceptLabel||(s==="directory"?"Choose folder":o==="import"?"Import file":"Open")},P=t.onAccept,w=t.ownerDialog||null,I=t.opener||k.activeElement,r.ownerKey=W(w),w&&(d=()=>S.cancel(),w.addEventListener("close",d,{once:!0})),Q(b()),y(),e.open||e.showModal(),t.restoredListing){const{directories:a,files:m,parent:p,nextOffset:j,total:E}=H(t.restoredListing,r.folder);r={...r,...structuredClone({directories:a,files:m,parent:p,nextOffset:j,total:E})},y()}else await K(r.folder);return i.querySelector('[aria-label="Workspace folder"]')?.focus(),b()},registerImport(t){return v.add(t),()=>v.delete(t)},async restore(t,o={}){if(Q(t),!t.open)return S.cancel(),b();let s=o;if(t.purpose==="import"){const E=[...v].find(M=>M.key===t.importKey&&M.button?.isConnected&&W(M.button.closest("dialog"))===t.ownerKey);if(!E)throw new Error("Reopen the owning import controls before restoring their workspace picker.");s=E.options()}const{purpose:c,mode:n,folder:a,extensions:m,importKey:p,listing:j}=t;if(await L.open({...s,purpose:c,mode:n,folder:a,extensions:m,importKey:p,restoredListing:j}),r={...r,pathDraft:t.pathDraft,filter:t.filter,error:t.error,selectedPath:[...r.directories,...r.files].some(E=>E.path===t.selectedPath)?t.selectedPath:""},y(),t.focus){x=structuredClone(t.focus);const E=i.querySelector(`[aria-label="${x.field==="path"?"Workspace folder":"Filter workspace files"}"]`);E?.focus(),E&&typeof E.setSelectionRange=="function"&&E.setSelectionRange(x.start,x.end,x.direction)}return b()},dispose(){h||(A(),h=!0,e.removeEventListener("cancel",V),e.removeEventListener("close",q),e.removeEventListener("focusout",G),z.dispose(),N.get(k)===L&&N.delete(k))}};return N.set(k,L),L}function le({label:e,extensions:i=[".json",".tsv",".txt"],onFile:f,disabled:g=!1,importKey:r=e}){const u=X(null),h=X(null),[P,w]=R("");h.current={onFile:f,label:e,extensions:i};const I=()=>({purpose:"import",extensions:h.current.extensions,importKey:r,ownerDialog:u.current?.closest("dialog"),opener:u.current,title:h.current.label,onAccept:async d=>h.current.onFile?.({name:d.name,path:d.path,size:d.bytes,contentHash:d.contentHash,text:async()=>d.text})});return J(()=>{const d=u.current.ownerDocument,k=F.get(d)||new Set;F.set(d,k);const v={key:r,button:u.current,options:I};return k.add(v),()=>k.delete(v)},[r]),l.createElement("span",{className:"workspace-file-import"},l.createElement("button",{ref:u,type:"button",className:"button",disabled:g,"aria-label":e,onClick:async()=>{try{w("");const d=N.get(u.current.ownerDocument);if(!d)throw new Error("The workspace file picker is not mounted.");await d.openImport(r)}catch(d){w(d.message)}}},e),P?l.createElement("span",{role:"alert"},P):null)}export{le as WorkspaceFileButton,te as WorkspaceFilePicker,C as canonicalWorkspacePath,ie as createWorkspaceFilePicker,Q as validateWorkspacePickerState};
+import React, { useLayoutEffect, useRef, useState } from "../widgets/shared/react/react-runtime.js";
+import { mountReactComponent } from "../widgets/shared/react/mount.js";
+const presenters = /* @__PURE__ */ new WeakMap();
+const importButtons = /* @__PURE__ */ new WeakMap();
+const allowedExtensions = /* @__PURE__ */ new Set([".json", ".tsv", ".txt"]);
+function canonicalWorkspacePath(value, { root = true } = {}) {
+  if (typeof value !== "string") throw new Error("Enter a workspace-relative path.");
+  const text = value.trim();
+  if (root && (text === "" || text === ".")) return ".";
+  if (!text || text.startsWith("/") || /[\\:?#\u0000-\u001f]/.test(text) || text.split("/").some((part) => !part || part === "." || part === "..")) throw new Error("Choose a path inside FullMeta without traversal or absolute path prefixes.");
+  return text;
+}
+const partsOf = (path) => {
+  const parts = path.split("/");
+  return { folder: parts.slice(0, -1).join("/") || ".", file: parts.at(-1) };
+};
+const ownerKey = (dialog) => dialog?.dataset.authoringTool || dialog?.dataset.schemaAuthoringTool || dialog?.id || null;
+function extensionsOf(values = [".json", ".tsv", ".txt"]) {
+  if (!Array.isArray(values) || !values.length || values.some((value) => !allowedExtensions.has(value))) throw new Error("Choose JSON, TSV or TXT workspace files.");
+  return [...new Set(values)];
+}
+function validateWorkspacePickerState(state) {
+  if (!state || state.format !== "fullmeta-workspace-picker/1" || typeof state.open !== "boolean") throw new Error("Unsupported workspace picker state.");
+  if (!state.open) return state;
+  if (!["open", "schema-for-new", "new-folder", "import"].includes(state.purpose) || !["file", "directory"].includes(state.mode)) throw new Error("Unsupported workspace picker purpose.");
+  if (state.purpose === "new-folder" !== (state.mode === "directory")) throw new Error("The workspace picker mode does not match its purpose.");
+  if (canonicalWorkspacePath(state.folder) !== state.folder || typeof state.selectedPath !== "string") throw new Error("Invalid canonical workspace picker path.");
+  extensionsOf(state.extensions);
+  if (state.selectedPath) canonicalWorkspacePath(state.selectedPath, { root: false });
+  for (const name of ["pathDraft", "filter", "error"]) if (typeof state[name] !== "string") throw new Error("Invalid workspace picker text state.");
+  if (state.ownerKey !== null && typeof state.ownerKey !== "string" || state.importKey !== null && typeof state.importKey !== "string") throw new Error("Invalid workspace picker owner.");
+  if (state.focus !== void 0 && state.focus !== null && (!["path", "filter"].includes(state.focus.field) || !Number.isSafeInteger(state.focus.start) || !Number.isSafeInteger(state.focus.end) || state.focus.start < 0 || state.focus.end < state.focus.start || !["forward", "backward", "none"].includes(state.focus.direction))) throw new Error("Invalid workspace picker input focus.");
+  if (state.purpose === "import" && (!state.ownerKey || !state.importKey)) throw new Error("An import picker needs its current owning controls.");
+  validateListing(state.listing, state.folder);
+  const entries = state.mode === "directory" ? state.listing.directories : state.listing.files;
+  if (state.selectedPath && !entries.some((entry) => entry.path === state.selectedPath)) throw new Error("The saved selection is not in the workspace folder listing.");
+  return state;
+}
+function validateListing(value, folder) {
+  if (!value || !Array.isArray(value.directories) || !Array.isArray(value.files) || value.directories.length + value.files.length > 2e4) throw new Error("Invalid saved workspace directory listing.");
+  const expectedParent = folder === "." ? null : partsOf(folder).folder;
+  if (value.parent !== expectedParent || !Number.isSafeInteger(value.total) || value.total < 0 || value.nextOffset !== null && (!Number.isSafeInteger(value.nextOffset) || value.nextOffset < 0)) throw new Error("Invalid workspace directory page.");
+  const paths = /* @__PURE__ */ new Set();
+  for (const entry of [...value.directories, ...value.files]) {
+    if (!entry || typeof entry.name !== "string" || entry.name.length > 512 || canonicalWorkspacePath(entry.path, { root: false }) !== entry.path || partsOf(entry.path).folder !== folder || partsOf(entry.path).file !== entry.name || paths.has(entry.path)) throw new Error("Invalid saved workspace entry.");
+    paths.add(entry.path);
+  }
+  if (value.files.some((entry) => !Number.isSafeInteger(entry.bytes) || entry.bytes < 0)) throw new Error("Invalid saved workspace file size.");
+  return value;
+}
+const safely = (callback) => {
+  Promise.resolve().then(callback).catch(() => {
+  });
+};
+function WorkspaceFilePicker({ state, commands }) {
+  const directories = state.directories.filter((entry) => entry.name.toLowerCase().includes(state.filter.toLowerCase())), files = state.files.filter((entry) => entry.name.toLowerCase().includes(state.filter.toLowerCase()));
+  return /* @__PURE__ */ React.createElement("section", { className: "workspace-file-picker", "aria-busy": state.loading || state.accepting }, /* @__PURE__ */ React.createElement("h2", { id: "workspace-file-picker-title" }, state.title), /* @__PURE__ */ React.createElement("p", null, "Choose ", state.mode === "directory" ? "a folder" : "a file", " inside FullMeta."), /* @__PURE__ */ React.createElement("form", { onSubmit: (event) => {
+    event.preventDefault();
+    safely(() => commands.navigate(state.pathDraft));
+  }, className: "workspace-picker-location" }, /* @__PURE__ */ React.createElement("label", null, "Folder inside FullMeta", /* @__PURE__ */ React.createElement("input", { "aria-label": "Workspace folder", value: state.pathDraft, onChange: (event) => commands.pathDraft(event.target.value), disabled: state.accepting })), /* @__PURE__ */ React.createElement("button", { type: "submit", disabled: state.accepting }, "Go"), /* @__PURE__ */ React.createElement("button", { type: "button", onClick: () => safely(() => commands.navigate(state.parent || ".")), disabled: !state.parent || state.loading || state.accepting }, "Up")), /* @__PURE__ */ React.createElement("nav", { "aria-label": "Workspace folder breadcrumbs" }, /* @__PURE__ */ React.createElement("button", { type: "button", disabled: state.accepting, onClick: () => safely(() => commands.navigate(".")) }, "FullMeta"), state.folder !== "." ? state.folder.split("/").map((part, index, all) => /* @__PURE__ */ React.createElement(React.Fragment, { key: all.slice(0, index + 1).join("/") }, /* @__PURE__ */ React.createElement("span", { "aria-hidden": "true" }, " / "), /* @__PURE__ */ React.createElement("button", { type: "button", disabled: state.accepting, onClick: () => safely(() => commands.navigate(all.slice(0, index + 1).join("/"))) }, part))) : null), /* @__PURE__ */ React.createElement("label", { className: "workspace-picker-filter" }, "Filter this folder", /* @__PURE__ */ React.createElement("input", { type: "search", "aria-label": "Filter workspace files", value: state.filter, onChange: (event) => commands.filter(event.target.value), disabled: state.accepting })), /* @__PURE__ */ React.createElement("div", { className: "workspace-picker-entries", "aria-label": "Workspace entries" }, directories.map((entry) => /* @__PURE__ */ React.createElement("div", { key: entry.path, className: "workspace-picker-entry" }, /* @__PURE__ */ React.createElement("button", { type: "button", disabled: state.accepting, "aria-label": `Open folder ${entry.name}`, onClick: () => safely(() => commands.navigate(entry.path)) }, "\u{1F4C1} ", entry.name), state.mode === "directory" ? /* @__PURE__ */ React.createElement("button", { type: "button", disabled: state.accepting || state.loading, "aria-pressed": state.selectedPath === entry.path, onClick: () => commands.select(entry.path) }, "Select folder") : null)), state.mode === "file" ? files.map((entry) => /* @__PURE__ */ React.createElement("button", { key: entry.path, type: "button", className: "workspace-picker-file", disabled: state.accepting || state.loading, "aria-pressed": state.selectedPath === entry.path, onClick: () => commands.select(entry.path), onDoubleClick: () => safely(() => {
+    commands.select(entry.path);
+    return commands.accept();
+  }) }, /* @__PURE__ */ React.createElement("span", null, entry.name), /* @__PURE__ */ React.createElement("small", null, entry.bytes.toLocaleString(), " bytes"))) : null, !state.loading && !directories.length && (!files.length || state.mode === "directory") ? /* @__PURE__ */ React.createElement("p", { className: "settings-empty" }, "No matching ", state.mode === "directory" ? "folders" : "files", ".") : null), state.nextOffset !== null ? /* @__PURE__ */ React.createElement("button", { type: "button", disabled: state.loading || state.accepting, onClick: () => safely(() => commands.more()) }, "More entries") : null, /* @__PURE__ */ React.createElement("p", { className: "workspace-picker-selection" }, state.mode === "directory" ? `Folder: ${state.selectedPath || state.folder}` : state.selectedPath ? `Selected: ${state.selectedPath}` : "Select a file to continue."), /* @__PURE__ */ React.createElement("p", { role: "status", className: state.error ? "status error" : "status" }, state.error || (state.loading ? "Loading workspace\u2026" : "")), /* @__PURE__ */ React.createElement("div", { className: "save-as-actions" }, /* @__PURE__ */ React.createElement("button", { type: "button", onClick: commands.cancel }, "Cancel"), /* @__PURE__ */ React.createElement("button", { type: "button", className: "primary", disabled: state.loading || state.accepting || state.mode === "file" && !state.selectedPath, onClick: () => safely(() => commands.accept()) }, state.accepting ? "Working\u2026" : state.acceptLabel)));
+}
+function createWorkspaceFilePicker({ dialog, container = dialog, requestJson, defaultFolder = () => "." }) {
+  if (!dialog || typeof requestJson !== "function") throw new Error("The workspace picker needs its dialog and checked document services.");
+  if (presenters.has(dialog.ownerDocument)) throw new Error("This page already has a workspace file picker.");
+  let state = { format: "fullmeta-workspace-picker/1", open: false, purpose: "open", mode: "file", folder: ".", pathDraft: ".", filter: "", selectedPath: "", extensions: [".json"], directories: [], files: [], parent: null, nextOffset: null, total: 0, loading: false, accepting: false, error: "", title: "Open workspace file", acceptLabel: "Open", ownerKey: null, importKey: null }, generation = 0, disposed = false, onAccept = null, ownerDialog = null, opener = null, ownerClose = null;
+  const document = dialog.ownerDocument, imports = importButtons.get(document) || /* @__PURE__ */ new Set();
+  importButtons.set(document, imports);
+  let lastFocus = null;
+  const currentImportOwner = () => {
+    const active = document.activeElement?.closest?.("dialog[open]");
+    return active && active !== dialog ? active : state.open && ownerDialog?.open ? ownerDialog : [...document.querySelectorAll("dialog[open]")].filter((node) => node !== dialog).at(-1) || null;
+  };
+  const currentImports = () => {
+    const owner = currentImportOwner();
+    if (!owner) return [];
+    return [...imports].filter((entry) => entry.button?.isConnected && entry.button.closest("dialog") === owner).map((entry) => {
+      const options = entry.options(), button = entry.button;
+      const hidden = Boolean(button.closest('[hidden],.hidden,[inert],[aria-hidden="true"]'));
+      let cssHidden = false;
+      for (let node = button; node && node !== owner.parentElement; node = node.parentElement) {
+        const style = document.defaultView?.getComputedStyle(node);
+        if (style?.display === "none" || style?.visibility === "hidden") {
+          cssHidden = true;
+          break;
+        }
+      }
+      return { entry, owner, options, metadata: { key: entry.key, label: options.title || button.getAttribute("aria-label") || button.textContent.trim(), ownerKey: ownerKey(owner), extensions: extensionsOf(options.extensions), available: !disposed && !hidden && !cssHidden && !button.matches(":disabled") && owner.open } };
+    });
+  };
+  const availableImports = () => {
+    const entries = currentImports();
+    return entries.map(({ metadata }) => ({ ...metadata, available: metadata.available && entries.filter((value) => value.metadata.key === metadata.key).length === 1 }));
+  };
+  const captureFocus = (node) => {
+    const label = node?.getAttribute?.("aria-label");
+    return ["Workspace folder", "Filter workspace files"].includes(label) ? { field: label === "Workspace folder" ? "path" : "filter", start: node.selectionStart ?? 0, end: node.selectionEnd ?? 0, direction: node.selectionDirection || "none" } : null;
+  };
+  const savedRows = (rows) => rows.map((entry) => ({ ...entry }));
+  const snapshot = () => ({ format: state.format, open: state.open, ...state.open ? { purpose: state.purpose, mode: state.mode, folder: state.folder, pathDraft: state.pathDraft, filter: state.filter, selectedPath: state.selectedPath, extensions: [...state.extensions], ownerKey: ownerKey(ownerDialog), importKey: state.importKey, error: state.error, focus: captureFocus(document.activeElement) || lastFocus, listing: { directories: savedRows(state.directories), files: savedRows(state.files), parent: state.parent, nextOffset: state.nextOffset, total: state.total } } : {} });
+  const render = () => {
+    if (!disposed) mount.update({ state: { ...state }, commands });
+  };
+  const releaseOwner = () => {
+    if (ownerDialog && ownerClose) ownerDialog.removeEventListener("close", ownerClose);
+    ownerClose = null;
+  };
+  const close = () => {
+    generation++;
+    releaseOwner();
+    state = { ...state, open: false, loading: false, accepting: false };
+    onAccept = null;
+    ownerDialog = null;
+    if (dialog.open) dialog.close();
+    render();
+    if (opener?.isConnected) opener.focus();
+  };
+  const listing = async (folder, offset = 0) => {
+    const next = canonicalWorkspacePath(folder), epoch = ++generation;
+    state = { ...state, loading: true, error: "", ...offset ? {} : { folder: next, parent: next === "." ? null : partsOf(next).folder, pathDraft: next, selectedPath: "", directories: [], files: [], nextOffset: null, total: 0, filter: "" } };
+    render();
+    try {
+      const result = await requestJson(`/api/workspace/files?folder=${encodeURIComponent(next)}&extensions=${encodeURIComponent(state.extensions.join(","))}&offset=${offset}&limit=500`, { cache: "no-store" });
+      if (disposed || epoch !== generation || !state.open) return snapshot();
+      if (result?.format !== "fullmeta-workspace-files/1" || result.folder !== next || !Array.isArray(result.directories) || !Array.isArray(result.files)) throw new Error("The workspace directory response is invalid.");
+      validateListing(result, next);
+      const directories = result.directories.map((entry) => ({ name: entry.name, path: entry.path })), files = result.files.map((entry) => ({ name: entry.name, path: entry.path, bytes: entry.bytes }));
+      if ((offset ? state.directories.length + state.files.length : 0) + directories.length + files.length > 2e4) throw new Error("This workspace folder exceeds the 20,000-entry browsing limit.");
+      state = { ...state, parent: result.parent === null ? null : canonicalWorkspacePath(result.parent), directories: offset ? [...state.directories, ...directories] : directories, files: offset ? [...state.files, ...files] : files, nextOffset: Number.isSafeInteger(result.nextOffset) ? result.nextOffset : null, total: result.total, loading: false };
+    } catch (error) {
+      if (epoch !== generation || disposed) return snapshot();
+      state = { ...state, loading: false, error: error.message };
+      render();
+      throw error;
+    }
+    render();
+    return snapshot();
+  };
+  const commands = {
+    async navigate(folder) {
+      if (!state.open) throw new Error("Open the workspace picker first.");
+      if (state.accepting) throw new Error("Wait for the selected file to finish.");
+      try {
+        return await listing(folder);
+      } catch (error) {
+        state = { ...state, error: error.message };
+        render();
+        throw error;
+      }
+    },
+    more() {
+      if (state.nextOffset === null || state.loading || state.accepting) return snapshot();
+      return listing(state.folder, state.nextOffset);
+    },
+    select(path) {
+      if (!state.open || state.loading || state.accepting) throw new Error("Wait for the workspace folder to load.");
+      const value = canonicalWorkspacePath(path, { root: false }), entries = state.mode === "directory" ? state.directories : state.files;
+      if (!entries.some((entry) => entry.path === value)) throw new Error("Choose an entry from the current workspace folder.");
+      state = { ...state, selectedPath: value, error: "" };
+      render();
+      return snapshot();
+    },
+    pathDraft(value) {
+      state = { ...state, pathDraft: value };
+      render();
+    },
+    filter(value) {
+      state = { ...state, filter: value };
+      render();
+    },
+    async accept() {
+      if (!state.open || state.loading || state.accepting) throw new Error("Wait for the workspace picker to finish.");
+      if (state.mode === "file" && !state.selectedPath) throw new Error("Select a workspace file first.");
+      const epoch = generation, target = state.mode === "directory" ? state.selectedPath || state.folder : state.selectedPath, entry = state.files.find((file) => file.path === target), callback = onAccept;
+      state = { ...state, accepting: true, error: "" };
+      render();
+      try {
+        let selected = state.mode === "directory" ? { folder: target, path: target } : { path: target, ...partsOf(target), name: entry.name, bytes: entry.bytes };
+        if (state.purpose === "import" || state.purpose === "schema-for-new") {
+          const file = await requestJson(`/api/workspace/file?path=${encodeURIComponent(target)}`, { cache: "no-store" });
+          if (file?.format !== "fullmeta-workspace-file/1" || file.path !== target || typeof file.text !== "string" || !Number.isSafeInteger(file.bytes) || file.bytes < 0 || file.bytes > 2 * 1024 * 1024 || typeof file.contentHash !== "string") throw new Error("The workspace file response is invalid.");
+          selected = { ...selected, text: file.text, contentHash: file.contentHash, bytes: file.bytes };
+        }
+        if (disposed || epoch !== generation || !state.open || ownerDialog && !ownerDialog.open) return snapshot();
+        await callback?.(selected);
+        if (epoch === generation && state.open) close();
+        return { accepted: true, ...selected };
+      } catch (error) {
+        if (epoch === generation && !disposed) {
+          state = { ...state, accepting: false, error: error.message };
+          render();
+        }
+        throw error;
+      }
+    },
+    cancel() {
+      if (state.open) close();
+      return snapshot();
+    }
+  };
+  const mount = mountReactComponent(container, WorkspaceFilePicker, { state, commands });
+  const cancelEvent = (event) => {
+    event.preventDefault();
+    commands.cancel();
+  }, closeEvent = () => {
+    if (state.open) close();
+  }, focusOut = (event) => {
+    const value = captureFocus(event.target);
+    if (value) lastFocus = value;
+  };
+  dialog.addEventListener("cancel", cancelEvent);
+  dialog.addEventListener("close", closeEvent);
+  dialog.addEventListener("focusout", focusOut);
+  const api = {
+    ...commands,
+    dialog,
+    get ownerDialog() {
+      return ownerDialog;
+    },
+    inspect: () => ({ ...snapshot(), loading: state.loading, accepting: state.accepting, entries: [...state.directories.map((entry) => ({ ...entry, kind: "directory" })), ...state.files.map((entry) => ({ ...entry, kind: "file" }))], nextOffset: state.nextOffset, total: state.total, availableImports: availableImports() }),
+    snapshot,
+    /** @param {string} key @param {{folder?:string}} options */
+    async openImport(key, options = {}) {
+      if (disposed) throw new Error("The workspace picker has been disposed.");
+      if (!options || typeof options !== "object" || Array.isArray(options) || Object.keys(options).some((name) => name !== "folder")) throw new Error("An import action accepts its optional workspace folder only.");
+      const folder = options.folder === void 0 ? void 0 : canonicalWorkspacePath(options.folder);
+      if (typeof key !== "string" || !key) throw new Error("Choose an import key from the current authoring dialog.");
+      const matches = currentImports().filter((value) => value.metadata.key === key);
+      if (matches.length !== 1 || !matches[0].metadata.available) throw new Error("This import control is not available in the current open dialog.");
+      const { entry, owner, options: registered } = matches[0];
+      if (state.open) throw new Error("Finish the current workspace file selection first.");
+      for (let details = entry.button.closest("details"); details && owner.contains(details); details = details.parentElement?.closest("details")) details.open = true;
+      return api.open({ ...registered, purpose: "import", mode: "file", ownerDialog: owner, opener: entry.button, importKey: key, ...folder === void 0 ? {} : { folder } });
+    },
+    async open(options = {}) {
+      if (disposed) throw new Error("The workspace picker has been disposed.");
+      if (state.open) throw new Error("Finish the current workspace file selection first.");
+      const purpose = options.purpose || "open", mode = options.mode || (purpose === "new-folder" ? "directory" : "file");
+      lastFocus = null;
+      const folder = canonicalWorkspacePath(options.folder ?? defaultFolder()), parent = folder === "." ? null : partsOf(folder).folder;
+      state = { ...state, open: true, purpose, mode, folder, parent, pathDraft: folder, filter: "", selectedPath: "", directories: [], files: [], nextOffset: null, total: 0, extensions: extensionsOf(options.extensions || [".json"]), error: "", loading: false, accepting: false, importKey: options.importKey || null, title: options.title || (mode === "directory" ? "Choose workspace folder" : "Open workspace file"), acceptLabel: options.acceptLabel || (mode === "directory" ? "Choose folder" : purpose === "import" ? "Import file" : "Open") };
+      onAccept = options.onAccept;
+      ownerDialog = options.ownerDialog || null;
+      opener = options.opener || document.activeElement;
+      state.ownerKey = ownerKey(ownerDialog);
+      if (ownerDialog) {
+        ownerClose = () => commands.cancel();
+        ownerDialog.addEventListener("close", ownerClose, { once: true });
+      }
+      validateWorkspacePickerState(snapshot());
+      render();
+      if (!dialog.open) dialog.showModal();
+      if (options.restoredListing) {
+        const { directories, files, parent: parent2, nextOffset, total } = validateListing(options.restoredListing, state.folder);
+        state = { ...state, ...structuredClone({ directories, files, parent: parent2, nextOffset, total }) };
+        render();
+      } else await listing(state.folder);
+      container.querySelector('[aria-label="Workspace folder"]')?.focus();
+      return snapshot();
+    },
+    registerImport(entry) {
+      imports.add(entry);
+      return () => imports.delete(entry);
+    },
+    async restore(stateToRestore, options = {}) {
+      validateWorkspacePickerState(stateToRestore);
+      if (!stateToRestore.open) {
+        commands.cancel();
+        return snapshot();
+      }
+      let restoreOptions = options;
+      if (stateToRestore.purpose === "import") {
+        const entry = [...imports].find((entry2) => entry2.key === stateToRestore.importKey && entry2.button?.isConnected && ownerKey(entry2.button.closest("dialog")) === stateToRestore.ownerKey);
+        if (!entry) throw new Error("Reopen the owning import controls before restoring their workspace picker.");
+        restoreOptions = entry.options();
+      }
+      const { purpose, mode, folder, extensions, importKey, listing: restoredListing } = stateToRestore;
+      await api.open({ ...restoreOptions, purpose, mode, folder, extensions, importKey, restoredListing });
+      state = { ...state, pathDraft: stateToRestore.pathDraft, filter: stateToRestore.filter, error: stateToRestore.error, selectedPath: [...state.directories, ...state.files].some((entry) => entry.path === stateToRestore.selectedPath) ? stateToRestore.selectedPath : "" };
+      render();
+      if (stateToRestore.focus) {
+        lastFocus = structuredClone(stateToRestore.focus);
+        const input = container.querySelector(`[aria-label="${lastFocus.field === "path" ? "Workspace folder" : "Filter workspace files"}"]`);
+        input?.focus();
+        if (input && typeof input.setSelectionRange === "function") input.setSelectionRange(lastFocus.start, lastFocus.end, lastFocus.direction);
+      }
+      return snapshot();
+    },
+    dispose() {
+      if (disposed) return;
+      close();
+      disposed = true;
+      dialog.removeEventListener("cancel", cancelEvent);
+      dialog.removeEventListener("close", closeEvent);
+      dialog.removeEventListener("focusout", focusOut);
+      mount.dispose();
+      if (presenters.get(document) === api) presenters.delete(document);
+    }
+  };
+  presenters.set(document, api);
+  return api;
+}
+function WorkspaceFileButton({ label, extensions = [".json", ".tsv", ".txt"], onFile, disabled = false, importKey = label }) {
+  const button = useRef(null), latest = useRef(null), [error, setError] = useState("");
+  latest.current = { onFile, label, extensions };
+  const options = () => ({ purpose: "import", extensions: latest.current.extensions, importKey, ownerDialog: button.current?.closest("dialog"), opener: button.current, title: latest.current.label, onAccept: async (selected) => latest.current.onFile?.({ name: selected.name, path: selected.path, size: selected.bytes, contentHash: selected.contentHash, text: async () => selected.text }) });
+  useLayoutEffect(() => {
+    const document = button.current.ownerDocument, entries = importButtons.get(document) || /* @__PURE__ */ new Set();
+    importButtons.set(document, entries);
+    const entry = { key: importKey, button: button.current, options };
+    entries.add(entry);
+    return () => entries.delete(entry);
+  }, [importKey]);
+  return /* @__PURE__ */ React.createElement("span", { className: "workspace-file-import" }, /* @__PURE__ */ React.createElement("button", { ref: button, type: "button", className: "button", disabled, "aria-label": label, onClick: async () => {
+    try {
+      setError("");
+      const picker = presenters.get(button.current.ownerDocument);
+      if (!picker) throw new Error("The workspace file picker is not mounted.");
+      await picker.openImport(importKey);
+    } catch (error2) {
+      setError(error2.message);
+    }
+  } }, label), error ? /* @__PURE__ */ React.createElement("span", { role: "alert" }, error) : null);
+}
+export {
+  WorkspaceFileButton,
+  WorkspaceFilePicker,
+  canonicalWorkspacePath,
+  createWorkspaceFilePicker,
+  validateWorkspacePickerState
+};
 
 //# sourceMappingURL=file-picker.js.map

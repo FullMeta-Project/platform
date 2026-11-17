@@ -1,4 +1,106 @@
 // Generated from schema-root-contracts-view.jsx by scripts/build-frontend.mjs.
-import o from"../shared/react/react-runtime.js";import{StructuredValueEditor as S,structuredValueDraft as y,readStructuredValueDraft as B}from"../shared/structured-value-editor.js";import{CandidateField as L,CandidateRows as F,createCandidateDialog as P,draftProperty as v,withDraftProperty as C}from"./candidate-dialog.js";import{contractFromFlatRows as T,flatContractRows as d,parseContractPath as D}from"./schema-root-contract-flat.js";import{parseSiblingObjectMatrix as N}from"./schema-root-contract-matrix.js";import{rootContractImportPath as A}from"./schema-root-contracts.js";const h=a=>Array.isArray(a)?"array":a===null?"null":typeof a,c=a=>a!==null&&typeof a=="object",M=(a,n)=>n.reduce((r,i)=>r?.[i],a),V=(a,n)=>JSON.stringify(a)===JSON.stringify(n),w=(a,n)=>{const r=n?structuredClone(a[n]):{};return{extensionKey:n,newKey:n?"":"x-example",value:r,mode:"nested",flatRows:c(r)?d(r):[],stagedRows:[],pathText:"",matrixText:"",matrixBranch:"",error:""}};function E(a,n){const i=String(a).replace(/^\uFEFF/,"").split(/\r?\n/).filter(e=>e.trim()).map((e,p)=>{const l=e.split("	");if(!p&&l[0]?.trim().toLowerCase()==="path"&&l[1]?.trim().toLowerCase()==="type")return null;if(l.length!==3)throw new Error(`Line ${p+1}: use path, type and value columns.`);return{path:A(l[0].trim(),n),type:l[1].trim(),value:l[2]}}).filter(Boolean);if(!i.length)throw new Error("Enter path and value rows.");return i}function K(a,n=[],r=[]){if(!c(a))return r;Object.values(a).some(c)&&r.push(n.map(i=>String(i).replace(/~/g,"~0").replace(/\//g,"~1")).join("/"));for(const[i,e]of Object.entries(a))c(e)&&K(e,[...n,i],r);return r}function I({draft:a,onDraftChange:n,source:r}){const i=w(r,v(a,"extensionKey")?.value||""),e=Object.fromEntries((a.entries||[]).map(t=>{try{return[t.key,B(t.value)]}catch{return[t.key,i[t.key]]}})),p=Object.keys(r).filter(t=>t.startsWith("x-")),l=t=>n(Object.entries(t).reduce((u,[m,b])=>C(u,m,y(b)),a)),f=t=>{try{t()}catch(u){l({error:u.message})}},x=e.mode==="flat"&&c(e.value)?(()=>{try{return T(h(e.value),e.flatRows)}catch{return e.value}})():e.value,O=t=>{(e.pathText.trim()||e.matrixText.trim()||e.stagedRows.length||!V(r[e.extensionKey],x))&&!globalThis.confirm("Discard unloaded batch text and staged extension changes?")||n(y({...w(r,t),mode:e.mode}))},g=(t,u=!1)=>{const m=r[e.extensionKey]??e.value;if(!c(m))throw new Error("Choose an object or array root extension for table rows.");const b=new Map((u?[]:e.stagedRows).map(s=>[s.path,s]));for(const s of t)b.set(s.path,s);const k=new Map(d(m).map(s=>[s.path,s]));for(const s of b.values())k.set(s.path,s);const j=T(h(m),[...k.values()]);l({value:j,flatRows:d(j),stagedRows:[...b.values()],pathText:"",matrixText:"",error:""})};return o.createElement("section",null,o.createElement("p",null,"Active extension: ",e.extensionKey||e.newKey," \xB7 type: ",h(x)," \xB7 schema path: #/",e.extensionKey||e.newKey),o.createElement("label",null,"Root extension",o.createElement("select",{"aria-label":"Root extension",value:e.extensionKey,onChange:t=>O(t.target.value)},p.map(t=>o.createElement("option",{key:t},t)))),o.createElement(L,{draft:a,name:"newKey",label:"New extension key (optional)",onDraftChange:n}),o.createElement("label",null,"Root contract view",o.createElement("select",{"aria-label":"Root contract view",value:e.mode,onChange:t=>{if(e.pathText.trim()||e.matrixText.trim()){l({error:"Load or Clear pending batch text before changing view."});return}l({mode:t.target.value,...t.target.value==="flat"&&c(e.value)?{flatRows:d(e.value)}:{}})}},o.createElement("option",{value:"nested"},"Nested structured fields"),o.createElement("option",{value:"flat"},"Typed path rows"))),e.mode==="nested"?o.createElement(S,{draft:v(a,"value"),label:"Extension value",onDraftChange:t=>{const u=C(a,"value",t);n(u)}}):o.createElement(o.Fragment,null,o.createElement(F,{draft:v(a,"flatRows"),label:"Root contract fields",columns:[{name:"path"},{name:"type",choices:["string","escaped-string","reference","number","boolean","null","object","array"]},{name:"value"}],template:{path:"",type:"string",value:""},onDraftChange:t=>n(C(a,"flatRows",t))}),o.createElement("label",null,"Tab-separated path and value rows",o.createElement("textarea",{"aria-label":"Tab-separated path and value rows",rows:4,value:e.pathText,onChange:t=>l({pathText:t.target.value,error:""})})),o.createElement("button",{type:"button",onClick:()=>f(()=>g(E(e.pathText,e.extensionKey)))},"Load table rows"),o.createElement("button",{type:"button",onClick:()=>f(()=>g(E(e.pathText,e.extensionKey),!0))},"Replace staged path rows"),o.createElement("label",null,"Sibling-object matrix branch",o.createElement("select",{"aria-label":"Sibling-object matrix branch",value:e.matrixBranch,onChange:t=>l({matrixBranch:t.target.value})},K(x).map(t=>o.createElement("option",{key:t,value:t},t||"(extension root)")))),o.createElement("label",null,"Tab-separated sibling-object matrix",o.createElement("textarea",{"aria-label":"Tab-separated sibling-object matrix",rows:4,value:e.matrixText,onChange:t=>l({matrixText:t.target.value,error:""})})),o.createElement("button",{type:"button",onClick:()=>f(()=>{const t=e.matrixBranch?D(e.matrixBranch):[];g(N(e.matrixText,t,M(x,t)))})},"Load matrix rows")),o.createElement("button",{type:"button",onClick:()=>l({pathText:"",matrixText:"",error:""})},"Clear batch text"),o.createElement("button",{type:"button",onClick:()=>n(y({...w(r,e.extensionKey),mode:e.mode}))},"Clear staged extension changes"),e.error?o.createElement("p",{role:"alert"},e.error):null)}function q(a){return P({...a,title:"Root extension contracts",toolId:"rootContracts",className:"schema-bulk-contracts-dialog",Editor:I,initialDraft(n,r){const i=Object.keys(n).filter(e=>e.startsWith("x-"));return w(n,typeof r=="string"&&i.includes(r)?r:i.find(e=>e!=="x-fullmeta-ui-generated")||i[0]||"")},buildCandidate(n,r){if(r.pathText.trim()||r.matrixText.trim())throw new Error("Load or Clear pending path/value and matrix text before Preview.");const i=String(r.newKey||r.extensionKey).trim();if(!/^x-[A-Za-z0-9_.-]+$/.test(i))throw new Error("Extension keys must begin with x-.");if(r.newKey&&Object.hasOwn(n,i))throw new Error("The new extension already exists. Select it instead.");const e=r.mode==="flat"&&c(r.value)?T(h(r.value),r.flatRows):r.value,p=structuredClone(n);return Object.defineProperty(p,i,{value:e,enumerable:!0,writable:!0,configurable:!0}),p}})}export{I as RootContractsEditor,q as createBulkRootContractsDialog};
+import React from "../shared/react/react-runtime.js";
+import { StructuredValueEditor, structuredValueDraft, readStructuredValueDraft } from "../shared/structured-value-editor.js";
+import { CandidateField, CandidateRows, createCandidateDialog, draftProperty, withDraftProperty } from "./candidate-dialog.js";
+import { contractFromFlatRows, flatContractRows, parseContractPath } from "./schema-root-contract-flat.js";
+import { parseSiblingObjectMatrix } from "./schema-root-contract-matrix.js";
+import { rootContractImportPath } from "./schema-root-contracts.js";
+const kind = (value) => Array.isArray(value) ? "array" : value === null ? "null" : typeof value;
+const container = (value) => value !== null && typeof value === "object";
+const at = (value, path) => path.reduce((node, key) => node?.[key], value);
+const same = (left, right) => JSON.stringify(left) === JSON.stringify(right);
+const initial = (source, extensionKey) => {
+  const value = extensionKey ? structuredClone(source[extensionKey]) : {};
+  return { extensionKey, newKey: extensionKey ? "" : "x-example", value, mode: "nested", flatRows: container(value) ? flatContractRows(value) : [], stagedRows: [], pathText: "", matrixText: "", matrixBranch: "", error: "" };
+};
+function parsedRows(text, key) {
+  const lines = String(text).replace(/^\uFEFF/, "").split(/\r?\n/).filter((line) => line.trim());
+  const rows = lines.map((line, index) => {
+    const cells = line.split("	");
+    if (!index && cells[0]?.trim().toLowerCase() === "path" && cells[1]?.trim().toLowerCase() === "type") return null;
+    if (cells.length !== 3) throw new Error(`Line ${index + 1}: use path, type and value columns.`);
+    return { path: rootContractImportPath(cells[0].trim(), key), type: cells[1].trim(), value: cells[2] };
+  }).filter(Boolean);
+  if (!rows.length) throw new Error("Enter path and value rows.");
+  return rows;
+}
+function branches(value, path = [], output = []) {
+  if (!container(value)) return output;
+  if (Object.values(value).some(container)) output.push(path.map((part) => String(part).replace(/~/g, "~0").replace(/\//g, "~1")).join("/"));
+  for (const [key, child] of Object.entries(value)) if (container(child)) branches(child, [...path, key], output);
+  return output;
+}
+function RootContractsEditor({ draft, onDraftChange, source }) {
+  const fallback = initial(source, draftProperty(draft, "extensionKey")?.value || "");
+  const value = Object.fromEntries((draft.entries || []).map((entry) => {
+    try {
+      return [entry.key, readStructuredValueDraft(entry.value)];
+    } catch {
+      return [entry.key, fallback[entry.key]];
+    }
+  })), keys = Object.keys(source).filter((key) => key.startsWith("x-"));
+  const update = (patch) => onDraftChange(Object.entries(patch).reduce((next, [key, value2]) => withDraftProperty(next, key, structuredValueDraft(value2)), draft));
+  const fail = (fn) => {
+    try {
+      fn();
+    } catch (error) {
+      update({ error: error.message });
+    }
+  };
+  const current = value.mode === "flat" && container(value.value) ? (() => {
+    try {
+      return contractFromFlatRows(kind(value.value), value.flatRows);
+    } catch {
+      return value.value;
+    }
+  })() : value.value;
+  const target = (key) => {
+    const dirty = value.pathText.trim() || value.matrixText.trim() || value.stagedRows.length || !same(source[value.extensionKey], current);
+    if (dirty && !globalThis.confirm("Discard unloaded batch text and staged extension changes?")) return;
+    onDraftChange(structuredValueDraft({ ...initial(source, key), mode: value.mode }));
+  };
+  const stage = (rows, replace = false) => {
+    const base = source[value.extensionKey] ?? value.value;
+    if (!container(base)) throw new Error("Choose an object or array root extension for table rows.");
+    const staged = new Map((replace ? [] : value.stagedRows).map((row) => [row.path, row]));
+    for (const row of rows) staged.set(row.path, row);
+    const merged = new Map(flatContractRows(base).map((row) => [row.path, row]));
+    for (const row of staged.values()) merged.set(row.path, row);
+    const next = contractFromFlatRows(kind(base), [...merged.values()]);
+    update({ value: next, flatRows: flatContractRows(next), stagedRows: [...staged.values()], pathText: "", matrixText: "", error: "" });
+  };
+  return /* @__PURE__ */ React.createElement("section", null, /* @__PURE__ */ React.createElement("p", null, "Active extension: ", value.extensionKey || value.newKey, " \xB7 type: ", kind(current), " \xB7 schema path: #/", value.extensionKey || value.newKey), /* @__PURE__ */ React.createElement("label", null, "Root extension", /* @__PURE__ */ React.createElement("select", { "aria-label": "Root extension", value: value.extensionKey, onChange: (event) => target(event.target.value) }, keys.map((key) => /* @__PURE__ */ React.createElement("option", { key }, key)))), /* @__PURE__ */ React.createElement(CandidateField, { draft, name: "newKey", label: "New extension key (optional)", onDraftChange }), /* @__PURE__ */ React.createElement("label", null, "Root contract view", /* @__PURE__ */ React.createElement("select", { "aria-label": "Root contract view", value: value.mode, onChange: (event) => {
+    if (value.pathText.trim() || value.matrixText.trim()) {
+      update({ error: "Load or Clear pending batch text before changing view." });
+      return;
+    }
+    update({ mode: event.target.value, ...event.target.value === "flat" && container(value.value) ? { flatRows: flatContractRows(value.value) } : {} });
+  } }, /* @__PURE__ */ React.createElement("option", { value: "nested" }, "Nested structured fields"), /* @__PURE__ */ React.createElement("option", { value: "flat" }, "Typed path rows"))), value.mode === "nested" ? /* @__PURE__ */ React.createElement(StructuredValueEditor, { draft: draftProperty(draft, "value"), label: "Extension value", onDraftChange: (node) => {
+    const next = withDraftProperty(draft, "value", node);
+    onDraftChange(next);
+  } }) : /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement(CandidateRows, { draft: draftProperty(draft, "flatRows"), label: "Root contract fields", columns: [{ name: "path" }, { name: "type", choices: ["string", "escaped-string", "reference", "number", "boolean", "null", "object", "array"] }, { name: "value" }], template: { path: "", type: "string", value: "" }, onDraftChange: (node) => onDraftChange(withDraftProperty(draft, "flatRows", node)) }), /* @__PURE__ */ React.createElement("label", null, "Tab-separated path and value rows", /* @__PURE__ */ React.createElement("textarea", { "aria-label": "Tab-separated path and value rows", rows: 4, value: value.pathText, onChange: (event) => update({ pathText: event.target.value, error: "" }) })), /* @__PURE__ */ React.createElement("button", { type: "button", onClick: () => fail(() => stage(parsedRows(value.pathText, value.extensionKey))) }, "Load table rows"), /* @__PURE__ */ React.createElement("button", { type: "button", onClick: () => fail(() => stage(parsedRows(value.pathText, value.extensionKey), true)) }, "Replace staged path rows"), /* @__PURE__ */ React.createElement("label", null, "Sibling-object matrix branch", /* @__PURE__ */ React.createElement("select", { "aria-label": "Sibling-object matrix branch", value: value.matrixBranch, onChange: (event) => update({ matrixBranch: event.target.value }) }, branches(current).map((path) => /* @__PURE__ */ React.createElement("option", { key: path, value: path }, path || "(extension root)")))), /* @__PURE__ */ React.createElement("label", null, "Tab-separated sibling-object matrix", /* @__PURE__ */ React.createElement("textarea", { "aria-label": "Tab-separated sibling-object matrix", rows: 4, value: value.matrixText, onChange: (event) => update({ matrixText: event.target.value, error: "" }) })), /* @__PURE__ */ React.createElement("button", { type: "button", onClick: () => fail(() => {
+    const path = value.matrixBranch ? parseContractPath(value.matrixBranch) : [];
+    stage(parseSiblingObjectMatrix(value.matrixText, path, at(current, path)));
+  }) }, "Load matrix rows")), /* @__PURE__ */ React.createElement("button", { type: "button", onClick: () => update({ pathText: "", matrixText: "", error: "" }) }, "Clear batch text"), /* @__PURE__ */ React.createElement("button", { type: "button", onClick: () => onDraftChange(structuredValueDraft({ ...initial(source, value.extensionKey), mode: value.mode })) }, "Clear staged extension changes"), value.error ? /* @__PURE__ */ React.createElement("p", { role: "alert" }, value.error) : null);
+}
+function createBulkRootContractsDialog(options) {
+  return createCandidateDialog({ ...options, title: "Root extension contracts", toolId: "rootContracts", className: "schema-bulk-contracts-dialog", Editor: RootContractsEditor, initialDraft(source, context) {
+    const keys = Object.keys(source).filter((key) => key.startsWith("x-"));
+    return initial(source, typeof context === "string" && keys.includes(context) ? context : keys.find((key) => key !== "x-fullmeta-ui-generated") || keys[0] || "");
+  }, buildCandidate(source, draft) {
+    if (draft.pathText.trim() || draft.matrixText.trim()) throw new Error("Load or Clear pending path/value and matrix text before Preview.");
+    const key = String(draft.newKey || draft.extensionKey).trim();
+    if (!/^x-[A-Za-z0-9_.-]+$/.test(key)) throw new Error("Extension keys must begin with x-.");
+    if (draft.newKey && Object.hasOwn(source, key)) throw new Error("The new extension already exists. Select it instead.");
+    const value = draft.mode === "flat" && container(draft.value) ? contractFromFlatRows(kind(draft.value), draft.flatRows) : draft.value;
+    const candidate = structuredClone(source);
+    Object.defineProperty(candidate, key, { value, enumerable: true, writable: true, configurable: true });
+    return candidate;
+  } });
+}
+export {
+  RootContractsEditor,
+  createBulkRootContractsDialog
+};
 
 //# sourceMappingURL=schema-root-contracts-view.js.map

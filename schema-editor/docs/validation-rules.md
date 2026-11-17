@@ -39,7 +39,7 @@ regenerate rather than silently overwriting them. Existing native-only rule
 programs remain data that must be preserved; the current declarative replacement
 flow is explicit. The exact source format, supported predicates, scopes, operand
 types and compiler boundary are described in the [validation language reference](../../docs/declarative-validation-language.md).
-The [model runtime reference](../../model-rust/README.md#declarative-validation)
+The model runtime reference
 describes the executable rule forms and data selectors consumed by the runtime.
 
 The current requirement selector includes presence (`required`, `forbidden`,

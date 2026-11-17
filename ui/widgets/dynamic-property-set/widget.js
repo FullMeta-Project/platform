@@ -1,4 +1,53 @@
 // Generated from widget.jsx by scripts/build-frontend.mjs.
-import r from"../shared/react/react-runtime.js";import{mountReactComponent as S}from"../shared/react/mount.js";import{renderLegacyWidgetMarkup as P}from"../shared/react/render-markup.js";import{dynamicPropertySetDesignLabel as T,renderDynamicPropertySetDesignEditor as x}from"./design-editor.js";import{validateDynamicPropertySetAnnotation as L}from"./fullmeta-ui-dynamicPropertySet-1.schema.js";function u({label:o,value:s,path:a=[],schema:p={},context:y={},ui:i={},renderField:g,renderObject:h,onCommand:d,fields:c}){let n="",l=c!=null,t=c;if(t==null&&y.dynamicPropertySet){l=!0;try{t=y.dynamicPropertySet(i.source,{label:o,value:s,path:a,schema:p})}catch(e){n=e instanceof Error?e.message:String(e),t=[]}}!n&&l&&(t&&typeof t.then=="function"?n="The provider returned an asynchronous response; it must return descriptors synchronously.":Array.isArray(t)?t.some(e=>!e||typeof e.key!="string"||!e.key||!e.schema||typeof e.schema!="object"||Array.isArray(e.schema))?n="The provider returned malformed field descriptors.":new Set(t.map(e=>e.key)).size!==t.length&&(n="The provider returned duplicate field keys."):n="The provider did not return a descriptor list.");const m=n?[]:Array.isArray(t)?t:[],k=m.map(e=>e.key),f=h?.({value:s,path:a,schemaNode:p,context:y,skip:k,onCommand:d});return r.createElement(r.Fragment,null,f,n?r.createElement("tr",null,r.createElement("td",{colSpan:2,role:"alert",className:"settings-empty"},"Could not load dynamic fields: ",n)):m.length?r.createElement(r.Fragment,null,r.createElement("tr",{className:"settings-group"},r.createElement("th",{colSpan:2},i.groupLabel||o||p.title||"Properties")),m.map(e=>r.createElement(r.Fragment,{key:e.key},g?.({label:e.label||e.schema.title||e.key,value:Object.hasOwn(s||{},e.key)?s[e.key]:e.default,present:Object.hasOwn(s||{},e.key),defaultHint:e.default,path:[...a,e.key],schemaNode:e.schema,context:y,onCommand:d})))):i.emptyMessage?r.createElement("tr",null,r.createElement("td",{colSpan:2,className:"settings-empty"},i.emptyMessage)):null)}function b(o){return r.createElement(u,{...o,...o.view})}const N=o=>P(u,o,["renderField","renderObject"]),O=(o,s)=>S(o,b,s);export{u as DynamicPropertySet,b as Widget,T as dynamicPropertySetDesignLabel,O as mountWidget,N as renderDynamicPropertySet,x as renderDynamicPropertySetDesignEditor,L as validateDynamicPropertySetAnnotation};
+import React from "../shared/react/react-runtime.js";
+import { mountReactComponent } from "../shared/react/mount.js";
+import { renderLegacyWidgetMarkup } from "../shared/react/render-markup.js";
+import { dynamicPropertySetDesignLabel, renderDynamicPropertySetDesignEditor } from "./design-editor.js";
+import { validateDynamicPropertySetAnnotation } from "./fullmeta-ui-dynamicPropertySet-1.schema.js";
+function DynamicPropertySet({ label, value, path = [], schema = {}, context = {}, ui = {}, renderField, renderObject, onCommand, fields: suppliedFields }) {
+  let providerError = "", providerInvoked = suppliedFields != null;
+  let descriptors = suppliedFields;
+  if (descriptors == null && context.dynamicPropertySet) {
+    providerInvoked = true;
+    try {
+      descriptors = context.dynamicPropertySet(ui.source, { label, value, path, schema });
+    } catch (error) {
+      providerError = error instanceof Error ? error.message : String(error);
+      descriptors = [];
+    }
+  }
+  if (!providerError && providerInvoked) {
+    if (descriptors && typeof descriptors.then === "function") providerError = "The provider returned an asynchronous response; it must return descriptors synchronously.";
+    else if (!Array.isArray(descriptors)) providerError = "The provider did not return a descriptor list.";
+    else if (descriptors.some((field) => !field || typeof field.key !== "string" || !field.key || !field.schema || typeof field.schema !== "object" || Array.isArray(field.schema))) providerError = "The provider returned malformed field descriptors.";
+    else if (new Set(descriptors.map((field) => field.key)).size !== descriptors.length) providerError = "The provider returned duplicate field keys.";
+  }
+  const fields = providerError ? [] : Array.isArray(descriptors) ? descriptors : [];
+  const keys = fields.map((field) => field.key), identity = renderObject?.({ value, path, schemaNode: schema, context, skip: keys, onCommand });
+  return /* @__PURE__ */ React.createElement(React.Fragment, null, identity, providerError ? /* @__PURE__ */ React.createElement("tr", null, /* @__PURE__ */ React.createElement("td", { colSpan: 2, role: "alert", className: "settings-empty" }, "Could not load dynamic fields: ", providerError)) : fields.length ? /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement("tr", { className: "settings-group" }, /* @__PURE__ */ React.createElement("th", { colSpan: 2 }, ui.groupLabel || label || schema.title || "Properties")), fields.map((field) => /* @__PURE__ */ React.createElement(React.Fragment, { key: field.key }, renderField?.({
+    label: field.label || field.schema.title || field.key,
+    value: Object.hasOwn(value || {}, field.key) ? value[field.key] : field.default,
+    present: Object.hasOwn(value || {}, field.key),
+    defaultHint: field.default,
+    path: [...path, field.key],
+    schemaNode: field.schema,
+    context,
+    onCommand
+  })))) : ui.emptyMessage ? /* @__PURE__ */ React.createElement("tr", null, /* @__PURE__ */ React.createElement("td", { colSpan: 2, className: "settings-empty" }, ui.emptyMessage)) : null);
+}
+function Widget(props) {
+  return /* @__PURE__ */ React.createElement(DynamicPropertySet, { ...props, ...props.view });
+}
+const renderDynamicPropertySet = (props) => renderLegacyWidgetMarkup(DynamicPropertySet, props, ["renderField", "renderObject"]);
+const mountWidget = (container, props) => mountReactComponent(container, Widget, props);
+export {
+  DynamicPropertySet,
+  Widget,
+  dynamicPropertySetDesignLabel,
+  mountWidget,
+  renderDynamicPropertySet,
+  renderDynamicPropertySetDesignEditor,
+  validateDynamicPropertySetAnnotation
+};
 
 //# sourceMappingURL=widget.js.map

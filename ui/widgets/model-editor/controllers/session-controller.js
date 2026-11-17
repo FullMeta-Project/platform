@@ -149,7 +149,7 @@ function inspectEditor(sessionContext){
     commands:Object.keys(sessionContext.editorCommands),commandSchemas:describeEditorCommands(Object.keys(sessionContext.editorCommands)).map(entry=>describeAdditionalEditorCommands([entry.name])[0]||entry),
     availability:inspectAdditionalEditorAvailability(sessionContext),
     applicationActions:sessionContext.applicationCommands.inspect(),authoringTools:sessionContext.activeApplicationPackage?.kind==='schemaDocument'?sessionContext.schemaAuthoringTools().map(({id,label,group})=>({id,label:label||id,group:group||''})):[],
-    nativeOperations:{digest:nativeOperationsDigest,actions:nativeOperationActions(sessionContext),last:sessionContext.lastNativeOperation},
+    nativeOperations:{digest:sessionContext.activeApplicationPackage?.nativeOperationsDigest ?? null,actions:nativeOperationActions(sessionContext),last:sessionContext.lastNativeOperation},
     tools:{contract:fullmetaToolContract,...sessionContext.editorWebMcp?.status()}});
 }
 

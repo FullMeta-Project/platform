@@ -1,4 +1,102 @@
 // Generated from number-map-default.jsx by scripts/build-frontend.mjs.
-import i from"./react/react-runtime.js";import{mountReactComponent as k}from"./react/mount.js";const h=p=>p!==null&&typeof p=="object"&&!Array.isArray(p);function O({view:p,onCommand:n}){const{label:t,labels:r,enabled:b,rows:y}=p;return i.createElement("section",{className:"sd-widget-detail sd-number-map-default"},i.createElement("h3",null,t),i.createElement("label",{className:"sd-number-map-presence"},i.createElement("input",{type:"checkbox",checked:b,"aria-label":r.declareAriaLabel||"Declare "+t.toLowerCase(),onChange:s=>n({type:"map.enabled",enabled:s.target.checked},s)})," ",r.declareLabel||"Declare default values"),i.createElement("div",{className:"sd-annotation-row-list",hidden:!b},y.length?null:i.createElement("p",{className:"sd-note"},r.emptyMessage||"No values declared."),y.map((s,u)=>i.createElement("div",{className:"sd-annotation-row",key:s.id},i.createElement("input",{type:"text",value:s.name,placeholder:r.keyPlaceholder||"Key","aria-label":t+" "+(r.keyAriaName||"key")+" "+(u+1),onChange:o=>n({type:"map.patch",index:u,key:"name",value:o.target.value},o)}),i.createElement("input",{type:"text",inputMode:"decimal",value:s.number,placeholder:r.valuePlaceholder||"Value","aria-label":t+" "+(r.valueAriaName||"value")+" "+(u+1),onChange:o=>n({type:"map.patch",index:u,key:"number",value:o.target.value},o)}),i.createElement("button",{type:"button","aria-label":"Remove "+t+" row "+(u+1),onClick:o=>n({type:"map.remove",index:u},o)},r.removeLabel||"Remove")))),i.createElement("button",{type:"button",hidden:!b,onClick:s=>n({type:"map.add"},s)},r.addLabel||"Add value"))}function S(p,{source:n,state:t,key:r="default",label:b="Initial values",labels:y={},validationMessage:s}={}){const u=Object.hasOwn(n||{},r)?JSON.stringify(n[r]):"";let o=h(n?.[r])?n[r]:{};if(typeof t=="string"&&t)try{const e=JSON.parse(t);h(e)&&(o=e)}catch{}let c=0,f=typeof t=="string"&&t!==u,a={label:b,labels:y,enabled:typeof t=="string"?t!=="":Object.hasOwn(n||{},r),rows:Object.entries(o).map(([e,l])=>({id:++c,name:e,number:String(l)}))},v;const d=t?.format==="fullmeta-number-map-default-state/1"?t.view:t;h(d)&&Array.isArray(d.rows)&&typeof d.enabled=="boolean"&&(a={...a,enabled:d.enabled,rows:structuredClone(d.rows)},c=Math.max(c,...a.rows.map(e=>Number.isSafeInteger(e.id)?e.id:0)),f=t.dirty===!0);const m=document.createElement("div");p.append(m);const w=(e,l)=>{if(a={...a,rows:a.rows.map(N=>({...N}))},f=!0,e.type==="map.enabled")a.enabled=e.enabled;else if(e.type==="map.patch")a.rows[e.index][e.key]=e.value;else if(e.type==="map.remove")a.rows.splice(e.index,1);else if(e.type==="map.add")a.rows.push({id:++c,name:"",number:""});else throw new Error("Unknown number-map command "+e.type);v.update({view:a,onCommand:w}),(!l||l.type==="click")&&m.dispatchEvent(new Event("input",{bubbles:!0})),e.type==="map.add"&&m.querySelector(".sd-annotation-row:last-child input")?.focus()};v=k(m,O,{view:a,onCommand:w});const g=()=>f?a.enabled?JSON.stringify(Object.fromEntries(a.rows.map(e=>{const l=Number(e.number);return[e.name.trim(),e.number.trim()&&Number.isFinite(l)?l:e.number]}))):"":u;return{label:b+" default",keys:[r],type:"json",input:{get value(){return g()}},original:u,snapshot:g,snapshotState:()=>structuredClone({format:"fullmeta-number-map-default-state/1",view:a,dirty:f}),dispose(){v.dispose(),m.remove()},validate(e){if(!h(e)||a.rows.some(l=>!l.name.trim()||!l.number.trim())||new Set(a.rows.map(l=>l.name.trim())).size!==a.rows.length||Object.values(e).some(l=>typeof l!="number"||!Number.isFinite(l)))throw new Error(s||"Each value needs a unique key and a finite number.")}}}export{O as NumberMapDefault,S as renderNumberMapDefault};
+import React from "./react/react-runtime.js";
+import { mountReactComponent } from "./react/mount.js";
+const object = (value) => value !== null && typeof value === "object" && !Array.isArray(value);
+function NumberMapDefault({ view, onCommand }) {
+  const { label, labels, enabled, rows } = view;
+  return /* @__PURE__ */ React.createElement("section", { className: "sd-widget-detail sd-number-map-default" }, /* @__PURE__ */ React.createElement("h3", null, label), /* @__PURE__ */ React.createElement("label", { className: "sd-number-map-presence" }, /* @__PURE__ */ React.createElement(
+    "input",
+    {
+      type: "checkbox",
+      checked: enabled,
+      "aria-label": labels.declareAriaLabel || "Declare " + label.toLowerCase(),
+      onChange: (event) => onCommand({ type: "map.enabled", enabled: event.target.checked }, event)
+    }
+  ), " ", labels.declareLabel || "Declare default values"), /* @__PURE__ */ React.createElement("div", { className: "sd-annotation-row-list", hidden: !enabled }, !rows.length ? /* @__PURE__ */ React.createElement("p", { className: "sd-note" }, labels.emptyMessage || "No values declared.") : null, rows.map((row, index) => /* @__PURE__ */ React.createElement("div", { className: "sd-annotation-row", key: row.id }, /* @__PURE__ */ React.createElement(
+    "input",
+    {
+      type: "text",
+      value: row.name,
+      placeholder: labels.keyPlaceholder || "Key",
+      "aria-label": label + " " + (labels.keyAriaName || "key") + " " + (index + 1),
+      onChange: (event) => onCommand({ type: "map.patch", index, key: "name", value: event.target.value }, event)
+    }
+  ), /* @__PURE__ */ React.createElement(
+    "input",
+    {
+      type: "text",
+      inputMode: "decimal",
+      value: row.number,
+      placeholder: labels.valuePlaceholder || "Value",
+      "aria-label": label + " " + (labels.valueAriaName || "value") + " " + (index + 1),
+      onChange: (event) => onCommand({ type: "map.patch", index, key: "number", value: event.target.value }, event)
+    }
+  ), /* @__PURE__ */ React.createElement("button", { type: "button", "aria-label": "Remove " + label + " row " + (index + 1), onClick: (event) => onCommand({ type: "map.remove", index }, event) }, labels.removeLabel || "Remove")))), /* @__PURE__ */ React.createElement("button", { type: "button", hidden: !enabled, onClick: (event) => onCommand({ type: "map.add" }, event) }, labels.addLabel || "Add value"));
+}
+function renderNumberMapDefault(parent, { source, state, key = "default", label = "Initial values", labels = {}, validationMessage } = {}) {
+  const original = Object.hasOwn(source || {}, key) ? JSON.stringify(source[key]) : "";
+  let value = object(source?.[key]) ? source[key] : {};
+  if (typeof state === "string" && state) try {
+    const saved2 = JSON.parse(state);
+    if (object(saved2)) value = saved2;
+  } catch {
+  }
+  let serial = 0, dirty = typeof state === "string" && state !== original;
+  let view = {
+    label,
+    labels,
+    enabled: typeof state === "string" ? state !== "" : Object.hasOwn(source || {}, key),
+    rows: Object.entries(value).map(([name, number]) => ({ id: ++serial, name, number: String(number) }))
+  }, mount;
+  const saved = state?.format === "fullmeta-number-map-default-state/1" ? state.view : state;
+  if (object(saved) && Array.isArray(saved.rows) && typeof saved.enabled === "boolean") {
+    view = { ...view, enabled: saved.enabled, rows: structuredClone(saved.rows) };
+    serial = Math.max(serial, ...view.rows.map((row) => Number.isSafeInteger(row.id) ? row.id : 0));
+    dirty = state.dirty === true;
+  }
+  const host = document.createElement("div");
+  parent.append(host);
+  const onCommand = (command, event) => {
+    view = { ...view, rows: view.rows.map((row) => ({ ...row })) };
+    dirty = true;
+    if (command.type === "map.enabled") view.enabled = command.enabled;
+    else if (command.type === "map.patch") view.rows[command.index][command.key] = command.value;
+    else if (command.type === "map.remove") view.rows.splice(command.index, 1);
+    else if (command.type === "map.add") view.rows.push({ id: ++serial, name: "", number: "" });
+    else throw new Error("Unknown number-map command " + command.type);
+    mount.update({ view, onCommand });
+    if (!event || event.type === "click") host.dispatchEvent(new Event("input", { bubbles: true }));
+    if (command.type === "map.add") /** @type {HTMLInputElement|null} */
+    host.querySelector(".sd-annotation-row:last-child input")?.focus();
+  };
+  mount = mountReactComponent(host, NumberMapDefault, { view, onCommand });
+  const snapshot = () => !dirty ? original : !view.enabled ? "" : JSON.stringify(Object.fromEntries(view.rows.map((row) => {
+    const number = Number(row.number);
+    return [row.name.trim(), row.number.trim() && Number.isFinite(number) ? number : row.number];
+  })));
+  return {
+    label: label + " default",
+    keys: [key],
+    type: "json",
+    input: { get value() {
+      return snapshot();
+    } },
+    original,
+    snapshot,
+    snapshotState: () => structuredClone({ format: "fullmeta-number-map-default-state/1", view, dirty }),
+    dispose() {
+      mount.dispose();
+      host.remove();
+    },
+    validate(candidate) {
+      if (!object(candidate) || view.rows.some((row) => !row.name.trim() || !row.number.trim()) || new Set(view.rows.map((row) => row.name.trim())).size !== view.rows.length || Object.values(candidate).some((number) => typeof number !== "number" || !Number.isFinite(number)))
+        throw new Error(validationMessage || "Each value needs a unique key and a finite number.");
+    }
+  };
+}
+export {
+  NumberMapDefault,
+  renderNumberMapDefault
+};
 
 //# sourceMappingURL=number-map-default.js.map

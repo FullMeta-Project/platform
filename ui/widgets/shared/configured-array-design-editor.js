@@ -1,4 +1,295 @@
 // Generated from configured-array-design-editor.jsx by scripts/build-frontend.mjs.
-import o from"./react/react-runtime.js";import{mountReactComponent as W}from"./react/mount.js";import{QuantityValueControl as X}from"./quantity-value-control.js";import{SchemaDesignRowControl as Y}from"./schema-design-row-controls.js";import{isRecord as P,interpolate as B,valueAtPath as C,configuredInitialValue as Z,itemSchemaPropertyChoices as $,validDefaultFieldValue as R,emptyDefaultFieldValue as ee}from"./configured-array-model.js";const D=(l,r)=>l==="quantityValue"?{expression:typeof r?.expression=="string"?r.expression:"",unit:typeof r?.unit=="string"?r.unit:""}:l==="checkbox"?r===!0:l==="number"?typeof r=="number"&&Number.isFinite(r)?String(r):"":typeof r=="string"?r:"",F=(l,r)=>l==="quantityValue"?{...r}:l==="number"?r===""?null:Number(r):r,te=l=>D(l,void 0),re=(l,r)=>l==="quantityValue"?!!r.expression.trim():l==="checkbox"||String(r).trim()!==""&&(l!=="number"||Number.isFinite(Number(r)));function _({kind:l,draft:r,options:v={},onChange:i}){if(!["quantityValue","checkbox","text","number"].includes(l))throw new Error("Unsupported schema design row control: "+l);return l==="quantityValue"?o.createElement("div",{className:"setting-inline schema-design-quantity"},o.createElement(X,{...v,draft:r,onChange:i})):o.createElement(Y,{...v,kind:l,draft:r,onChange:i})}function ae({view:l,onCommand:r}){const{table:v,rows:i}=l;return o.createElement("section",{className:"sd-widget-detail"},o.createElement("h3",null,v.heading||"Values"),o.createElement("table",{className:"schema-design-form","aria-label":v.ariaLabel||v.heading||"Array values"},o.createElement("tbody",null,i.map((s,k)=>o.createElement("tr",{key:k},(v.columns||[]).map((n,O)=>{const h=n.cell==="rowHeader"?"th":"td";return o.createElement(h,{key:O},o.createElement(_,{kind:n.control,draft:n.source==="rowLabel"?s.label:s.draft,options:{...n.source==="defaultValue"?s.options:{},label:B(n.ariaLabelTemplate||(n.source==="rowLabel"?"Item {index} label":"Item {index} value"),{index:k+1})},onChange:(w,g)=>r({type:n.source==="rowLabel"?"array.label":"array.value",index:k,value:w},g)}))}))))),o.createElement("button",{type:"button",className:"sd-widget-clear-default",onClick:s=>r({type:"array.clear"},s)},v.clearDefault||"Clear default"))}function ne({view:l,onCommand:r}){const{sourceFields:v,sourceDrafts:i,labels:s,variants:k,variant:n,variantIndex:O,rows:h,variantConfig:w,feedback:g}=l;return o.createElement(o.Fragment,null,o.createElement("section",{className:"sd-widget-detail"},o.createElement("h3",null,s.componentsHeading||"Components"),v.map(e=>o.createElement("label",{key:e.key},e.label||e.key,o.createElement(_,{kind:e.control,draft:i[e.key],options:{label:e.label||e.key},onChange:(u,E)=>r({type:"variant.source",key:e.key,value:u},E)})))),k.length?o.createElement("section",{className:"sd-widget-detail",onInput:e=>e.stopPropagation()},o.createElement("h3",null,s.variantHeading||"Field defaults by variant"),o.createElement("p",{className:"sd-note"},s.variantNote||"Each default is declared on this field in its source schema. Existing model values are unchanged."),o.createElement("label",null,s.variantSelector||"Variant",o.createElement("select",{value:String(O),onChange:e=>r({type:"variant.select",index:Number(e.target.value)},e)},k.map((e,u)=>o.createElement("option",{key:u,value:String(u)},C(e,w.variantLabelPath)||String(u+1))))),o.createElement("table",{className:"schema-design-form","aria-label":s.variantTable||"Variant values"},o.createElement("tbody",null,h.map((e,u)=>o.createElement("tr",{key:e.key},o.createElement("th",null,e.label),o.createElement("td",null,o.createElement(_,{kind:w.control,draft:e.draft,options:{unitReadOnly:w.unitReadOnly===!0,label:B(s.variantComponentInitial||"Initial value",{variant:C(n,w.variantLabelPath)||"",component:e.label})},onChange:(E,S)=>r({type:"variant.value",index:u,value:E},S)})))))),o.createElement("button",{type:"button",onClick:e=>r({type:"variant.apply"},e)},s.applyVariant||"Apply variant values"),o.createElement("button",{type:"button",onClick:e=>r({type:"variant.save"},e)},s.saveSource||"Save source document"),o.createElement("p",{className:"sd-error",role:"status"},g)):null)}function oe(l,{annotation:r,annotationKey:v,state:i,context:s,authoring:k,variantConfig:n,validate:O}){const h=Array.isArray(n.fields)?n.fields:[];let w;if(typeof i=="string")try{w=JSON.parse(i)}catch{}let g=Object.fromEntries(h.map(a=>[a.key,D(a.control,w?.[a.key]??r[a.key])])),e=0,u=[],E="",S;const j=()=>F(h.find(a=>a.key===n.sourceKey)?.control||"text",g[n.sourceKey])||"";let V=s?.schemaVariants?.(j())||[];const c=()=>{e=Math.min(Math.max(0,e),Math.max(0,V.length-1));const a=V[e];u=(C(a,n.componentsPath)||[]).map(b=>{const p=C(b,n.componentKeyPath);return{key:p,label:C(b,n.componentLabelPath)||"",draft:D(n.control,Z(a,b,p,n.initialValueFields,n.valueShape))}}),E=""};c(),i?.format==="fullmeta-configured-variant-state/1"&&(g=structuredClone(i.sourceDrafts),e=i.variantIndex,V=s?.schemaVariants?.(j())||[],c(),Array.isArray(i.rows)&&i.rows.length===u.length&&(u=structuredClone(i.rows)),E=i.feedback||"");const K=document.createElement("div");l.append(K);const N=Object.fromEntries([...new Set([...Object.keys(k.labels||{}),...Object.keys(n.copyKeys||{}),"variantHeading","variantNote","variantSelector","variantTable","variantComponentInitial","applyVariant","saveSource","incompleteVariant"])].map(a=>[a,s?.schemaVariantCopy?.[n.copyKeys?.[a]||a]||k.labels?.[a]])),L=()=>({view:{sourceFields:h,sourceDrafts:g,labels:N,variants:V,variant:V[e],variantIndex:e,rows:u,variantConfig:n,feedback:E},onCommand:J}),J=async(a,b)=>{try{if(a.type==="variant.source")g={...g,[a.key]:a.value},V=s?.schemaVariants?.(j())||[],c();else if(a.type==="variant.select")e=a.index,c();else if(a.type==="variant.value")u=u.map((p,d)=>d===a.index?{...p,draft:a.value}:p);else if(a.type==="variant.apply"){if(u.some(d=>!re(n.control,d.draft)))throw new Error(N.incompleteVariant||"Complete every component value.");const p=Object.fromEntries(u.map(d=>{const I=F(n.control,d.draft);return[d.key,P(I)?I:{[n.initialValueFields[0].valueKey]:I}]}));await s?.applySchemaVariant?.(V[e],p)}else if(a.type==="variant.save")await s?.saveSchemaVariant?.(V[e]);else throw new Error("Unknown variant command "+a.type);E=""}catch(p){E=p.message}S.update(L()),a.type==="variant.source"&&(!b||b.type==="click")&&K.dispatchEvent(new Event("input",{bubbles:!0}))};S=W(K,ne,L());const x=()=>{const a={...r};for(const b of h){const p=F(b.control,g[b.key]);typeof p=="boolean"?p||Object.hasOwn(r,b.key)?a[b.key]=p:delete a[b.key]:typeof p=="string"?a[b.key]=p.trim():p==null?delete a[b.key]:a[b.key]=p}return JSON.stringify(a)},A=()=>({format:"fullmeta-configured-variant-state/1",sourceDrafts:structuredClone(g),variantIndex:e,rows:structuredClone(u),feedback:E});return{annotationKey:v,handlesDefault:!0,usesPropertyLabel:!0,snapshotState:A,dispose(){S.dispose(),K.remove()},fields:[{label:k.annotationLabel||"Widget settings",keys:[v],type:"json",input:{get value(){return x()}},original:JSON.stringify(r),snapshot:x,snapshotState:A,validate(a){if(typeof a[n.sourceKey]!="string"||!a[n.sourceKey].trim())throw new Error(n.sourceRequiredMessage||"Enter a source value.");O?.(a)}}]}}function pe(l,r,{source:v,state:i,defaultState:s,context:k,configuration:n,validate:O}={}){const h=n?.authoring||{},w=n?.annotation||h.annotation,g=v?.[w]??r?.[w];if(!P(g)||!w)return null;if(h.variantEditor&&typeof g[h.variantEditor.sourceKey]=="string")return oe(l,{annotation:g,annotationKey:w,state:i,context:k,authoring:h,variantConfig:h.variantEditor,validate:O});const e=h.arrayTable;if(!P(e))return null;const u=g[e.rowLabelsKey];if(!Array.isArray(u)||!u.length)return null;const E=Number.isInteger(r.minItems)?r.minItems:Number.isInteger(e.minimumItemsFallback)?e.minimumItemsFallback:1,S=Number.isInteger(r.maxItems)?r.maxItems:u.length,j=Number.isInteger(e.maximumEditableItems)?e.maximumEditableItems:32,V=S>=u.length&&S<=j?S:u.length,c=e.defaultValueFields,K=t=>typeof t!="string"||!t||["__proto__","constructor","prototype"].includes(t);if(!Array.isArray(c)||!c.length||c.some(t=>!P(t)||K(t.valueKey)||K(t.targetProperty)||t.type!==void 0&&!["string","boolean","number"].includes(t.type)||t.choicesSource!==void 0&&t.choicesSource!=="itemSchema"||t.controlOption!==void 0&&K(t.controlOption)))throw new Error("The array default field mapping is invalid.");if(new Set(c.map(t=>t.valueKey)).size!==c.length||new Set(c.map(t=>t.targetProperty)).size!==c.length)throw new Error("The array default field mapping has duplicate keys.");const N=(e.columns||[]).find(t=>t.source==="defaultValue"),L=(e.columns||[]).find(t=>t.source==="rowLabel");if(N?.valueShape==="scalar"&&c.length!==1)throw new Error("A scalar array default needs one value field.");if((e.columns||[]).some(t=>!["defaultValue","rowLabel"].includes(t.source)))throw new Error("Unsupported array column source.");let J;if(typeof i=="string")try{J=JSON.parse(i)?.[e.rowLabelsKey]}catch{}const x=Object.hasOwn(v||{},e.defaultValueKey)?JSON.stringify(v[e.defaultValueKey]):"";let A;try{A=JSON.parse(typeof s=="string"?s:x)}catch{}const a=Array.from({length:V},(t,y)=>Object.fromEntries(c.map(m=>[m.valueKey,m.choicesSource==="itemSchema"?[...new Set($(k,y,m.targetProperty).filter(Boolean))]:[]])));let b=typeof s=="string"&&s!==x,p=!1,d=Array.from({length:V},(t,y)=>{const m=Object.fromEntries(c.map(f=>[f.valueKey,A?.[y]?.[f.targetProperty]]));return{label:D(L?.control||"text",J?.[y]??u[y]??""),draft:D(N?.control||"text",N?.valueShape==="scalar"?m[c[0].valueKey]:m),options:Object.fromEntries(c.filter(f=>f.controlOption).map(f=>[f.controlOption,a[y][f.valueKey]]))}}),I;i?.format==="fullmeta-configured-array-state/1"&&(d=structuredClone(i.rows),b=i.dirty,p=i.cleared);const q=document.createElement("div");l.append(q);const H=()=>({view:{table:e,rows:d},onCommand:Q}),Q=(t,y)=>{if(t.type==="array.clear")d=d.map(m=>({...m,draft:te(N?.control||"text")})),b=!0,p=!0;else if(t.type==="array.label")d=d.map((m,f)=>f===t.index?{...m,label:t.value}:m);else if(t.type==="array.value")d=d.map((m,f)=>f===t.index?{...m,draft:t.value}:m),b=!0,p=!1;else throw new Error("Unknown configured array command "+t.type);I.update(H()),(!y||y.type==="click")&&q.dispatchEvent(new Event("input",{bubbles:!0}))};I=W(q,ae,H());const U=()=>{const t={...g,[e.rowLabelsKey]:L?d.map(y=>F(L.control,y.label)):[]};for(const y of e.omitAnnotationKeysWhenSaving||[])delete t[y];return JSON.stringify(t)},z=()=>{if(!b)return x;if(p)return"";const t=N?d.map((y,m)=>{const f=F(N.control,y.draft),G=P(f)?f:c.length===1?{[c[0].valueKey]:f}:{};return{...P(A?.[m])?A[m]:{},...Object.fromEntries(c.map(T=>[T.targetProperty,G[T.valueKey]??(T.type==="boolean"?!1:"")]))}}):[];for(;t.length&&c.every(y=>ee(t.at(-1)[y.targetProperty]));)t.pop();return t.length?JSON.stringify(t):""},M=()=>({format:"fullmeta-configured-array-state/1",rows:structuredClone(d),dirty:b,cleared:p});return{annotationKey:w,handlesDefault:!0,usesPropertyLabel:!0,snapshotState:M,dispose(){I.dispose(),q.remove()},fields:[{label:h.annotationLabel||e.annotationLabel||"Array labels",keys:[w],type:"json",input:{get value(){return U()}},original:JSON.stringify(g),snapshot:U,snapshotState:M,validate(t){const y=t?.[e.rowLabelsKey];if(!Array.isArray(y)||y.length!==(L?d.length:0)||y.some(m=>typeof m!="string"||!m.trim()))throw new Error(e.labelsValidationMessage||"Every row needs a nonempty label.");O?.(t)}},{label:h.defaultLabel||e.defaultLabel||(h.annotationLabel||e.annotationLabel||"Array labels")+" default",keys:[e.defaultValueKey],type:"json",input:{get value(){return z()}},original:x,snapshot:z,snapshotState:M,validate(t){if(!Array.isArray(t)||t.length<E||t.length>S||t.length>(N?d.length:0)||t.some((y,m)=>!y||c.some(f=>!R(y[f.targetProperty],f,a[m][f.valueKey]))))throw new Error(e.defaultValidationMessage||"Complete the array default or clear it.")}}]}}export{ae as ConfiguredArrayDesignEditor,ne as ConfiguredVariantEditor,pe as renderConfiguredArrayDesignEditor};
+import React from "./react/react-runtime.js";
+import { mountReactComponent } from "./react/mount.js";
+import { QuantityValueControl } from "./quantity-value-control.js";
+import { SchemaDesignRowControl } from "./schema-design-row-controls.js";
+import {
+  isRecord,
+  interpolate,
+  valueAtPath,
+  configuredInitialValue,
+  itemSchemaPropertyChoices,
+  validDefaultFieldValue,
+  emptyDefaultFieldValue
+} from "./configured-array-model.js";
+const rowDraft = (kind, value) => kind === "quantityValue" ? { expression: typeof value?.expression === "string" ? value.expression : "", unit: typeof value?.unit === "string" ? value.unit : "" } : kind === "checkbox" ? value === true : kind === "number" ? typeof value === "number" && Number.isFinite(value) ? String(value) : "" : typeof value === "string" ? value : "";
+const rowRead = (kind, draft) => kind === "quantityValue" ? { ...draft } : kind === "number" ? draft === "" ? null : Number(draft) : draft;
+const rowEmpty = (kind) => rowDraft(kind, void 0);
+const complete = (kind, draft) => kind === "quantityValue" ? !!draft.expression.trim() : kind === "checkbox" || String(draft).trim() !== "" && (kind !== "number" || Number.isFinite(Number(draft)));
+function RowControl({ kind, draft, options = {}, onChange }) {
+  if (!["quantityValue", "checkbox", "text", "number"].includes(kind)) throw new Error("Unsupported schema design row control: " + kind);
+  return kind === "quantityValue" ? /* @__PURE__ */ React.createElement("div", { className: "setting-inline schema-design-quantity" }, /* @__PURE__ */ React.createElement(QuantityValueControl, { ...options, draft, onChange })) : /* @__PURE__ */ React.createElement(SchemaDesignRowControl, { ...options, kind, draft, onChange });
+}
+function ConfiguredArrayDesignEditor({ view, onCommand }) {
+  const { table, rows } = view;
+  return /* @__PURE__ */ React.createElement("section", { className: "sd-widget-detail" }, /* @__PURE__ */ React.createElement("h3", null, table.heading || "Values"), /* @__PURE__ */ React.createElement("table", { className: "schema-design-form", "aria-label": table.ariaLabel || table.heading || "Array values" }, /* @__PURE__ */ React.createElement("tbody", null, rows.map((row, index) => /* @__PURE__ */ React.createElement("tr", { key: index }, (table.columns || []).map((column, position) => {
+    const Cell = column.cell === "rowHeader" ? "th" : "td";
+    return /* @__PURE__ */ React.createElement(Cell, { key: position }, /* @__PURE__ */ React.createElement(
+      RowControl,
+      {
+        kind: column.control,
+        draft: column.source === "rowLabel" ? row.label : row.draft,
+        options: { ...column.source === "defaultValue" ? row.options : {}, label: interpolate(column.ariaLabelTemplate || (column.source === "rowLabel" ? "Item {index} label" : "Item {index} value"), { index: index + 1 }) },
+        onChange: (value, event) => onCommand({ type: column.source === "rowLabel" ? "array.label" : "array.value", index, value }, event)
+      }
+    ));
+  }))))), /* @__PURE__ */ React.createElement("button", { type: "button", className: "sd-widget-clear-default", onClick: (event) => onCommand({ type: "array.clear" }, event) }, table.clearDefault || "Clear default"));
+}
+function ConfiguredVariantEditor({ view, onCommand }) {
+  const { sourceFields, sourceDrafts, labels, variants, variant, variantIndex, rows, variantConfig, feedback } = view;
+  return /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement("section", { className: "sd-widget-detail" }, /* @__PURE__ */ React.createElement("h3", null, labels.componentsHeading || "Components"), sourceFields.map((field) => /* @__PURE__ */ React.createElement("label", { key: field.key }, field.label || field.key, /* @__PURE__ */ React.createElement(
+    RowControl,
+    {
+      kind: field.control,
+      draft: sourceDrafts[field.key],
+      options: { label: field.label || field.key },
+      onChange: (value, event) => onCommand({ type: "variant.source", key: field.key, value }, event)
+    }
+  )))), variants.length ? /* @__PURE__ */ React.createElement("section", { className: "sd-widget-detail", onInput: (event) => event.stopPropagation() }, /* @__PURE__ */ React.createElement("h3", null, labels.variantHeading || "Field defaults by variant"), /* @__PURE__ */ React.createElement("p", { className: "sd-note" }, labels.variantNote || "Each default is declared on this field in its source schema. Existing model values are unchanged."), /* @__PURE__ */ React.createElement("label", null, labels.variantSelector || "Variant", /* @__PURE__ */ React.createElement("select", { value: String(variantIndex), onChange: (event) => onCommand({ type: "variant.select", index: Number(event.target.value) }, event) }, variants.map((item, index) => /* @__PURE__ */ React.createElement("option", { key: index, value: String(index) }, valueAtPath(item, variantConfig.variantLabelPath) || String(index + 1))))), /* @__PURE__ */ React.createElement("table", { className: "schema-design-form", "aria-label": labels.variantTable || "Variant values" }, /* @__PURE__ */ React.createElement("tbody", null, rows.map((row, index) => /* @__PURE__ */ React.createElement("tr", { key: row.key }, /* @__PURE__ */ React.createElement("th", null, row.label), /* @__PURE__ */ React.createElement("td", null, /* @__PURE__ */ React.createElement(
+    RowControl,
+    {
+      kind: variantConfig.control,
+      draft: row.draft,
+      options: {
+        unitReadOnly: variantConfig.unitReadOnly === true,
+        label: interpolate(labels.variantComponentInitial || "Initial value", { variant: valueAtPath(variant, variantConfig.variantLabelPath) || "", component: row.label })
+      },
+      onChange: (value, event) => onCommand({ type: "variant.value", index, value }, event)
+    }
+  )))))), /* @__PURE__ */ React.createElement("button", { type: "button", onClick: (event) => onCommand({ type: "variant.apply" }, event) }, labels.applyVariant || "Apply variant values"), /* @__PURE__ */ React.createElement("button", { type: "button", onClick: (event) => onCommand({ type: "variant.save" }, event) }, labels.saveSource || "Save source document"), /* @__PURE__ */ React.createElement("p", { className: "sd-error", role: "status" }, feedback)) : null);
+}
+function mountVariantEditor(parent, { annotation, annotationKey, state, context, authoring, variantConfig, validate }) {
+  const sourceFields = Array.isArray(variantConfig.fields) ? variantConfig.fields : [];
+  let saved;
+  if (typeof state === "string") try {
+    saved = JSON.parse(state);
+  } catch {
+  }
+  let sourceDrafts = Object.fromEntries(sourceFields.map((field) => [field.key, rowDraft(field.control, saved?.[field.key] ?? annotation[field.key])])), variantIndex = 0, rows = [], feedback = "", mount;
+  const sourceValue = () => rowRead(sourceFields.find((field) => field.key === variantConfig.sourceKey)?.control || "text", sourceDrafts[variantConfig.sourceKey]) || "";
+  let variants = context?.schemaVariants?.(sourceValue()) || [];
+  const select = () => {
+    variantIndex = Math.min(Math.max(0, variantIndex), Math.max(0, variants.length - 1));
+    const variant = variants[variantIndex];
+    rows = (valueAtPath(variant, variantConfig.componentsPath) || []).map((component) => {
+      const key = valueAtPath(component, variantConfig.componentKeyPath);
+      return {
+        key,
+        label: valueAtPath(component, variantConfig.componentLabelPath) || "",
+        draft: rowDraft(variantConfig.control, configuredInitialValue(variant, component, key, variantConfig.initialValueFields, variantConfig.valueShape))
+      };
+    });
+    feedback = "";
+  };
+  select();
+  if (state?.format === "fullmeta-configured-variant-state/1") {
+    sourceDrafts = structuredClone(state.sourceDrafts);
+    variantIndex = state.variantIndex;
+    variants = context?.schemaVariants?.(sourceValue()) || [];
+    select();
+    if (Array.isArray(state.rows) && state.rows.length === rows.length) rows = structuredClone(state.rows);
+    feedback = state.feedback || "";
+  }
+  const host = document.createElement("div");
+  parent.append(host);
+  const labels = Object.fromEntries([.../* @__PURE__ */ new Set([
+    ...Object.keys(authoring.labels || {}),
+    ...Object.keys(variantConfig.copyKeys || {}),
+    "variantHeading",
+    "variantNote",
+    "variantSelector",
+    "variantTable",
+    "variantComponentInitial",
+    "applyVariant",
+    "saveSource",
+    "incompleteVariant"
+  ])].map((key) => [key, context?.schemaVariantCopy?.[variantConfig.copyKeys?.[key] || key] || authoring.labels?.[key]]));
+  const props = () => ({ view: { sourceFields, sourceDrafts, labels, variants, variant: variants[variantIndex], variantIndex, rows, variantConfig, feedback }, onCommand });
+  const onCommand = async (command, event) => {
+    try {
+      if (command.type === "variant.source") {
+        sourceDrafts = { ...sourceDrafts, [command.key]: command.value };
+        variants = context?.schemaVariants?.(sourceValue()) || [];
+        select();
+      } else if (command.type === "variant.select") {
+        variantIndex = command.index;
+        select();
+      } else if (command.type === "variant.value") rows = rows.map((row, index) => index === command.index ? { ...row, draft: command.value } : row);
+      else if (command.type === "variant.apply") {
+        if (rows.some((row) => !complete(variantConfig.control, row.draft))) throw new Error(labels.incompleteVariant || "Complete every component value.");
+        const values = Object.fromEntries(rows.map((row) => {
+          const value = rowRead(variantConfig.control, row.draft);
+          return [row.key, isRecord(value) ? value : { [variantConfig.initialValueFields[0].valueKey]: value }];
+        }));
+        await context?.applySchemaVariant?.(variants[variantIndex], values);
+      } else if (command.type === "variant.save") await context?.saveSchemaVariant?.(variants[variantIndex]);
+      else throw new Error("Unknown variant command " + command.type);
+      feedback = "";
+    } catch (error) {
+      feedback = error.message;
+    }
+    mount.update(props());
+    if (command.type === "variant.source" && (!event || event.type === "click")) host.dispatchEvent(new Event("input", { bubbles: true }));
+  };
+  mount = mountReactComponent(host, ConfiguredVariantEditor, props());
+  const snapshot = () => {
+    const next = { ...annotation };
+    for (const field of sourceFields) {
+      const value = rowRead(field.control, sourceDrafts[field.key]);
+      if (typeof value === "boolean") {
+        if (value || Object.hasOwn(annotation, field.key)) next[field.key] = value;
+        else delete next[field.key];
+      } else if (typeof value === "string") next[field.key] = value.trim();
+      else if (value == null) delete next[field.key];
+      else next[field.key] = value;
+    }
+    return JSON.stringify(next);
+  };
+  const snapshotState = () => ({ format: "fullmeta-configured-variant-state/1", sourceDrafts: structuredClone(sourceDrafts), variantIndex, rows: structuredClone(rows), feedback });
+  return {
+    annotationKey,
+    handlesDefault: true,
+    usesPropertyLabel: true,
+    snapshotState,
+    dispose() {
+      mount.dispose();
+      host.remove();
+    },
+    fields: [{
+      label: authoring.annotationLabel || "Widget settings",
+      keys: [annotationKey],
+      type: "json",
+      input: { get value() {
+        return snapshot();
+      } },
+      original: JSON.stringify(annotation),
+      snapshot,
+      snapshotState,
+      validate(value) {
+        if (typeof value[variantConfig.sourceKey] !== "string" || !value[variantConfig.sourceKey].trim()) throw new Error(variantConfig.sourceRequiredMessage || "Enter a source value.");
+        validate?.(value);
+      }
+    }]
+  };
+}
+function renderConfiguredArrayDesignEditor(parent, schema, { source, state, defaultState, context, configuration, validate } = {}) {
+  const authoring = configuration?.authoring || {}, annotationKey = configuration?.annotation || authoring.annotation, annotation = source?.[annotationKey] ?? schema?.[annotationKey];
+  if (!isRecord(annotation) || !annotationKey) return null;
+  if (authoring.variantEditor && typeof annotation[authoring.variantEditor.sourceKey] === "string")
+    return mountVariantEditor(parent, { annotation, annotationKey, state, context, authoring, variantConfig: authoring.variantEditor, validate });
+  const table = authoring.arrayTable;
+  if (!isRecord(table)) return null;
+  const rowLabels = annotation[table.rowLabelsKey];
+  if (!Array.isArray(rowLabels) || !rowLabels.length) return null;
+  const minimum = Number.isInteger(schema.minItems) ? schema.minItems : Number.isInteger(table.minimumItemsFallback) ? table.minimumItemsFallback : 1, maximum = Number.isInteger(schema.maxItems) ? schema.maxItems : rowLabels.length, editableMaximum = Number.isInteger(table.maximumEditableItems) ? table.maximumEditableItems : 32, count = maximum >= rowLabels.length && maximum <= editableMaximum ? maximum : rowLabels.length;
+  const fields = table.defaultValueFields, unsafe = (value2) => typeof value2 !== "string" || !value2 || ["__proto__", "constructor", "prototype"].includes(value2);
+  if (!Array.isArray(fields) || !fields.length || fields.some((field) => !isRecord(field) || unsafe(field.valueKey) || unsafe(field.targetProperty) || field.type !== void 0 && !["string", "boolean", "number"].includes(field.type) || field.choicesSource !== void 0 && field.choicesSource !== "itemSchema" || field.controlOption !== void 0 && unsafe(field.controlOption)))
+    throw new Error("The array default field mapping is invalid.");
+  if (new Set(fields.map((field) => field.valueKey)).size !== fields.length || new Set(fields.map((field) => field.targetProperty)).size !== fields.length)
+    throw new Error("The array default field mapping has duplicate keys.");
+  const defaultColumn = (table.columns || []).find((column) => column.source === "defaultValue"), labelColumn = (table.columns || []).find((column) => column.source === "rowLabel");
+  if (defaultColumn?.valueShape === "scalar" && fields.length !== 1) throw new Error("A scalar array default needs one value field.");
+  if ((table.columns || []).some((column) => !["defaultValue", "rowLabel"].includes(column.source))) throw new Error("Unsupported array column source.");
+  let savedLabels;
+  if (typeof state === "string") try {
+    savedLabels = JSON.parse(state)?.[table.rowLabelsKey];
+  } catch {
+  }
+  const original = Object.hasOwn(source || {}, table.defaultValueKey) ? JSON.stringify(source[table.defaultValueKey]) : "";
+  let defaults;
+  try {
+    defaults = JSON.parse(typeof defaultState === "string" ? defaultState : original);
+  } catch {
+  }
+  const choices = Array.from({ length: count }, (_, index) => Object.fromEntries(fields.map((field) => [field.valueKey, field.choicesSource === "itemSchema" ? [...new Set(itemSchemaPropertyChoices(context, index, field.targetProperty).filter(Boolean))] : []])));
+  let dirty = typeof defaultState === "string" && defaultState !== original, cleared = false, rows = Array.from({ length: count }, (_, index) => {
+    const initial = Object.fromEntries(fields.map((field) => [field.valueKey, defaults?.[index]?.[field.targetProperty]]));
+    return {
+      label: rowDraft(labelColumn?.control || "text", savedLabels?.[index] ?? rowLabels[index] ?? ""),
+      draft: rowDraft(defaultColumn?.control || "text", defaultColumn?.valueShape === "scalar" ? initial[fields[0].valueKey] : initial),
+      options: Object.fromEntries(fields.filter((field) => field.controlOption).map((field) => [field.controlOption, choices[index][field.valueKey]]))
+    };
+  }), mount;
+  if (state?.format === "fullmeta-configured-array-state/1") {
+    rows = structuredClone(state.rows);
+    dirty = state.dirty;
+    cleared = state.cleared;
+  }
+  const host = document.createElement("div");
+  parent.append(host);
+  const props = () => ({ view: { table, rows }, onCommand });
+  const onCommand = (command, event) => {
+    if (command.type === "array.clear") {
+      rows = rows.map((row) => ({ ...row, draft: rowEmpty(defaultColumn?.control || "text") }));
+      dirty = true;
+      cleared = true;
+    } else if (command.type === "array.label") rows = rows.map((row, index) => index === command.index ? { ...row, label: command.value } : row);
+    else if (command.type === "array.value") {
+      rows = rows.map((row, index) => index === command.index ? { ...row, draft: command.value } : row);
+      dirty = true;
+      cleared = false;
+    } else throw new Error("Unknown configured array command " + command.type);
+    mount.update(props());
+    if (!event || event.type === "click") host.dispatchEvent(new Event("input", { bubbles: true }));
+  };
+  mount = mountReactComponent(host, ConfiguredArrayDesignEditor, props());
+  const labels = () => {
+    const next = { ...annotation, [table.rowLabelsKey]: labelColumn ? rows.map((row) => rowRead(labelColumn.control, row.label)) : [] };
+    for (const key of table.omitAnnotationKeysWhenSaving || []) delete next[key];
+    return JSON.stringify(next);
+  };
+  const value = () => {
+    if (!dirty) return original;
+    if (cleared) return "";
+    const entries = defaultColumn ? rows.map((row, index) => {
+      const read = rowRead(defaultColumn.control, row.draft), value2 = isRecord(read) ? read : fields.length === 1 ? { [fields[0].valueKey]: read } : {};
+      return { ...isRecord(defaults?.[index]) ? defaults[index] : {}, ...Object.fromEntries(fields.map((field) => [field.targetProperty, value2[field.valueKey] ?? (field.type === "boolean" ? false : "")])) };
+    }) : [];
+    while (entries.length && fields.every((field) => emptyDefaultFieldValue(entries.at(-1)[field.targetProperty]))) entries.pop();
+    return entries.length ? JSON.stringify(entries) : "";
+  };
+  const snapshotState = () => ({ format: "fullmeta-configured-array-state/1", rows: structuredClone(rows), dirty, cleared });
+  return { annotationKey, handlesDefault: true, usesPropertyLabel: true, snapshotState, dispose() {
+    mount.dispose();
+    host.remove();
+  }, fields: [
+    {
+      label: authoring.annotationLabel || table.annotationLabel || "Array labels",
+      keys: [annotationKey],
+      type: "json",
+      input: { get value() {
+        return labels();
+      } },
+      original: JSON.stringify(annotation),
+      snapshot: labels,
+      snapshotState,
+      validate(value2) {
+        const names = value2?.[table.rowLabelsKey];
+        if (!Array.isArray(names) || names.length !== (labelColumn ? rows.length : 0) || names.some((label) => typeof label !== "string" || !label.trim())) throw new Error(table.labelsValidationMessage || "Every row needs a nonempty label.");
+        validate?.(value2);
+      }
+    },
+    {
+      label: authoring.defaultLabel || table.defaultLabel || (authoring.annotationLabel || table.annotationLabel || "Array labels") + " default",
+      keys: [table.defaultValueKey],
+      type: "json",
+      input: { get value() {
+        return value();
+      } },
+      original,
+      snapshot: value,
+      snapshotState,
+      validate(value2) {
+        if (!Array.isArray(value2) || value2.length < minimum || value2.length > maximum || value2.length > (defaultColumn ? rows.length : 0) || value2.some((entry, index) => !entry || fields.some((field) => !validDefaultFieldValue(entry[field.targetProperty], field, choices[index][field.valueKey]))))
+          throw new Error(table.defaultValidationMessage || "Complete the array default or clear it.");
+      }
+    }
+  ] };
+}
+export {
+  ConfiguredArrayDesignEditor,
+  ConfiguredVariantEditor,
+  renderConfiguredArrayDesignEditor
+};
 
 //# sourceMappingURL=configured-array-design-editor.js.map

@@ -1,4 +1,41 @@
 // Generated from widget.jsx by scripts/build-frontend.mjs.
-import{drawColorbar as R}from"./runtime.js";import s,{useCallback as m,useMemo as y,useRef as O,useState as j}from"../shared/react/react-runtime.js";import{mountReactComponent as k}from"../shared/react/mount.js";import{CanvasSurface as A}from"../scene-view/widget.js";import{drawColorbar as E}from"./runtime.js";function S({canvas:r,...t}){const o=r.getBoundingClientRect(),n=globalThis.devicePixelRatio||1;r.width=Math.round(o.width*n),r.height=Math.round(o.height*n);const a=r.getContext("2d");a&&(a.setTransform(n,0,0,n,0,0),a.clearRect(0,0,o.width,o.height),E({range:[0,1],...t,context:a,width:o.width,height:o.height}))}function $({label:r="",units:t="",width:o=120,height:n=360,style:a,className:p,onError:i,...l}){const[u,d]=j(""),c=O(null),g=c.current,h=Object.keys(l);(!g||h.length!==Object.keys(g).length||h.some(e=>!Object.is(l[e],g[e])))&&(c.current={...l});const C=y(()=>({range:[0,1],...c.current,label:r,units:t}),[c.current,r,t]),b=m(()=>d(""),[]),w=m(e=>{const x=e instanceof Error?e.message:String(e||"Unknown drawing error.");d(x),i?.(e)},[i]);return s.createElement("figure",{className:`colorbar ${p||""}`,"data-jsx-widget":"colorbar"},s.createElement(A,{draw:S,options:C,label:t?`${r} (${t})`:r||"Color scale",width:o,height:n,style:{width:o,...a},onDraw:b,onError:w}),u?s.createElement("p",{className:"colorbar-error",role:"alert"},"Color scale could not be drawn: ",u):null,r?s.createElement("figcaption",null,r,t?` (${t})`:""):null)}function f({view:r,onCommand:t,...o}){return s.createElement($,{...o,...r?.value&&!Array.isArray(r.value)?r.value:{},...r,range:r?.range||(Array.isArray(r?.value)?r.value:r?.value?.range)||o.range||[0,1]})}const B=(r,t)=>k(r,f,t);export{f as Colorbar,f as Widget,R as drawColorbar,B as mountWidget};
+import { drawColorbar } from "./runtime.js";
+import React, { useCallback, useMemo, useRef, useState } from "../shared/react/react-runtime.js";
+import { mountReactComponent } from "../shared/react/mount.js";
+import { CanvasSurface } from "../scene-view/widget.js";
+import { drawColorbar as drawColorbar2 } from "./runtime.js";
+function drawColorbarCanvas({ canvas, ...options }) {
+  const bounds = canvas.getBoundingClientRect(), ratio = globalThis.devicePixelRatio || 1;
+  canvas.width = Math.round(bounds.width * ratio);
+  canvas.height = Math.round(bounds.height * ratio);
+  const context = canvas.getContext("2d");
+  if (!context) return;
+  context.setTransform(ratio, 0, 0, ratio, 0, 0);
+  context.clearRect(0, 0, bounds.width, bounds.height);
+  drawColorbar2({ range: [0, 1], ...options, context, width: bounds.width, height: bounds.height });
+}
+function ColorbarSurface({ label = "", units = "", width = 120, height = 360, style, className, onError, ...options }) {
+  const [error, setError] = useState("");
+  const stableOptions = useRef(null), previous = stableOptions.current, keys = Object.keys(options);
+  if (!previous || keys.length !== Object.keys(previous).length || keys.some((key) => !Object.is(options[key], previous[key]))) stableOptions.current = { ...options };
+  const drawOptions = useMemo(() => ({ range: [0, 1], ...stableOptions.current, label, units }), [stableOptions.current, label, units]);
+  const clearError = useCallback(() => setError(""), []);
+  const reportError = useCallback((failure) => {
+    const message = failure instanceof Error ? failure.message : String(failure || "Unknown drawing error.");
+    setError(message);
+    onError?.(failure);
+  }, [onError]);
+  return /* @__PURE__ */ React.createElement("figure", { className: `colorbar ${className || ""}`, "data-jsx-widget": "colorbar" }, /* @__PURE__ */ React.createElement(CanvasSurface, { draw: drawColorbarCanvas, options: drawOptions, label: units ? `${label} (${units})` : label || "Color scale", width, height, style: { width, ...style }, onDraw: clearError, onError: reportError }), error ? /* @__PURE__ */ React.createElement("p", { className: "colorbar-error", role: "alert" }, "Color scale could not be drawn: ", error) : null, label ? /* @__PURE__ */ React.createElement("figcaption", null, label, units ? ` (${units})` : "") : null);
+}
+function Colorbar({ view, onCommand, ...props }) {
+  return /* @__PURE__ */ React.createElement(ColorbarSurface, { ...props, ...view?.value && !Array.isArray(view.value) ? view.value : {}, ...view, range: view?.range || (Array.isArray(view?.value) ? view.value : view?.value?.range) || props.range || [0, 1] });
+}
+const mountWidget = (container, props) => mountReactComponent(container, Colorbar, props);
+export {
+  Colorbar,
+  Colorbar as Widget,
+  drawColorbar,
+  mountWidget
+};
 
 //# sourceMappingURL=widget.js.map

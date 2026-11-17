@@ -1,4 +1,14 @@
 // Generated from widget.jsx by scripts/build-frontend.mjs.
-import{declaredDocumentWidgets as o,documentWidgetAtPath as u,documentValueAtPath as d}from"./registry.js";import{DocumentResources as c,DocumentResources as n,mountDocumentWidgetIndex as r,mountWidget as s}from"./resources.js";export{c as DocumentResources,n as Widget,o as declaredDocumentWidgets,d as documentValueAtPath,u as documentWidgetAtPath,r as mountDocumentWidgetIndex,s as mountWidget};
+import { declaredDocumentWidgets, documentWidgetAtPath, documentValueAtPath } from "./registry.js";
+import { DocumentResources, DocumentResources as DocumentResources2, mountDocumentWidgetIndex, mountWidget } from "./resources.js";
+export {
+  DocumentResources,
+  DocumentResources2 as Widget,
+  declaredDocumentWidgets,
+  documentValueAtPath,
+  documentWidgetAtPath,
+  mountDocumentWidgetIndex,
+  mountWidget
+};
 
 //# sourceMappingURL=widget.js.map

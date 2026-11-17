@@ -1,5 +1,154 @@
 // Generated from structured-value-editor.jsx by scripts/build-frontend.mjs.
-import r from"./react/react-runtime.js";import{mountReactComponent as $}from"./react/mount.js";const g=e=>e!==null&&typeof e=="object"&&!Array.isArray(e);function T(e){const u=new Set,i=a=>{if(!g(a)||u.has(a)||!["null","string","number","boolean","array","object"].includes(a.type))throw new Error("Unsupported structured draft state.");if(u.add(a),A(a),["string","number"].includes(a.type)&&typeof a.value!="string"&&!(a.type==="number"&&typeof a.value=="number"&&Number.isFinite(a.value)))throw new Error("A structured scalar draft needs raw text.");if(a.type==="boolean"&&typeof a.value!="boolean")throw new Error("A boolean draft needs a boolean value.");if(a.type==="array"){if(!Array.isArray(a.items))throw new Error("An array draft needs item drafts.");a.items.forEach(i)}if(a.type==="object"){if(!Array.isArray(a.entries))throw new Error("An object draft needs property drafts.");for(const c of a.entries){if(!g(c)||typeof c.key!="string")throw new Error("An object draft needs named property records.");i(c.value)}}u.delete(a)};return i(e),e}function E(e){if(e===null)return{type:"null"};if(Array.isArray(e))return{type:"array",items:e.map(E)};if(g(e))return{type:"object",entries:Object.entries(e).map(([u,i])=>({key:u,value:E(i)}))};if(typeof e=="string")return{type:"string",value:e};if(typeof e=="number"&&Number.isFinite(e))return{type:"number",value:String(e)};if(typeof e=="boolean")return{type:"boolean",value:e};throw new Error("Structured values must contain valid JSON data.")}function w(e){if(!g(e))throw new Error("A structured value needs a selected type.");if(A(e),e.ui?.batchText)throw new Error("Add or Clear pending structured batch text before applying this value.");if(e.type==="null")return null;if(e.type==="string")return String(e.value??"");if(e.type==="boolean")return e.value===!0;if(e.type==="number"){const u=String(e.value??"").trim();if(!u||!Number.isFinite(Number(u)))throw new Error("Enter a finite number.");return Number(u)}if(e.type==="array"){if(!Array.isArray(e.items))throw new Error("An array needs a list of items.");return e.items.map(w)}if(e.type==="object"){if(!Array.isArray(e.entries))throw new Error("An object needs a list of properties.");const u=new Set;return Object.fromEntries(e.entries.map(i=>{if(!g(i)||typeof i.key!="string"||i.pending&&!i.key.trim())throw new Error("Every object property needs a name.");if(u.has(i.key))throw new Error("Object property names must be unique.");return u.add(i.key),[i.key,w(i.value)]}))}throw new Error(`Unsupported structured value type: ${e.type}.`)}const x=e=>e==="object"?{type:e,entries:[]}:e==="array"?{type:e,items:[]}:e==="null"?{type:e}:e==="boolean"?{type:e,value:!1}:e==="number"?{type:e,value:"0"}:{type:"string",value:""};function A(e){if(e.ui!==void 0&&(!g(e.ui)||e.ui.batchOpen!==void 0&&typeof e.ui.batchOpen!="boolean"||e.ui.batchText!==void 0&&typeof e.ui.batchText!="string"||e.ui.batchError!==void 0&&typeof e.ui.batchError!="string"))throw new Error("Structured batch state needs an open flag and raw text diagnostics.")}function k({node:e,label:u,path:i=[],onChange:a,depth:c=0,fixedObjectKeysAtRoot:o=!1}){const[f,d]=r.useState(c<2),[h,y]=r.useState(c<2),{batchOpen:b=!1,batchText:m="",batchError:C=""}=e.ui||{},v=o&&i.length===0&&e.type==="object",p=(t,n={})=>a({...e,...t},n),j=(t,n={presentationOnly:!0})=>p({ui:{...e.ui,...t}},n),O=(t,n,l)=>e.type==="array"?p({items:e.items.map((s,N)=>N===t?n:s)},l):p({entries:e.entries.map((s,N)=>N===t?{...s,value:n}:s)},l),S=()=>{try{const t=m.split(/\r?\n/).map((l,s)=>({text:l.trim(),line:s+1})).filter(l=>l.text);if(!t.length)throw new Error(e.type==="object"?"Enter at least one property name.":"Enter at least one JSON item.");const n={...e.ui,batchText:"",batchError:"",batchOpen:!1};if(e.type==="object"){const l=new Set(e.entries.map(s=>s.key));for(const s of t){if(l.has(s.text))throw new Error(`The property \u201C${s.text}\u201D already exists in this group.`);l.add(s.text)}p({entries:[...e.entries,...t.map(s=>({key:s.text,value:x("string")}))],ui:n})}else{const l=t.map(s=>{try{return E(JSON.parse(s.text))}catch{throw new Error(`Line ${s.line} is not valid JSON. Quote text values, for example: "mesh".`)}});p({items:[...e.items,...l],ui:n})}}catch(t){j({batchError:t.message})}};return r.createElement("div",{className:"structured-value-node","data-structured-path":JSON.stringify(i)},r.createElement("div",{className:"structured-value-head"},r.createElement("span",{className:"structured-value-label"},u.split(" \xB7 ").at(-1)),r.createElement("select",{className:"structured-value-type","aria-label":`${u} value type`,value:e.type,disabled:!!m||v,title:v?"The map rule fields are fixed.":m?"Add or Clear pending batch text before changing the value type.":void 0,onChange:t=>a(x(t.target.value))},[["string","Text"],["number","Number"],["boolean","Yes / no"],["null","Null"],["object","Group"],["array","List"]].map(([t,n])=>r.createElement("option",{key:t,value:t},n)))),e.type==="string"?r.createElement("textarea",{className:"structured-value-text",rows:String(e.value||"").includes(`
-`)?3:1,"aria-label":u,value:e.value??"",onChange:t=>p({value:t.target.value})}):null,e.type==="number"?r.createElement("input",{className:"structured-value-text",type:"text",inputMode:"decimal","aria-label":u,value:e.value??"",onChange:t=>p({value:t.target.value})}):null,e.type==="boolean"?r.createElement("label",null,r.createElement("input",{type:"checkbox","aria-label":u,checked:e.value===!0,onChange:t=>p({value:t.target.checked})}),"Yes"):null,e.type==="null"?r.createElement("span",{className:"settings-empty"},"Null"):null,["object","array"].includes(e.type)?r.createElement("details",{className:"structured-value-children",open:f,onToggle:t=>{const n=t.currentTarget.open;d(n),n&&y(!0)}},r.createElement("summary",null,e.type==="object"?`${e.entries.length} properties`:`${e.items.length} items`),h?r.createElement(r.Fragment,null,r.createElement("div",{className:"structured-value-list"},(e.type==="object"?e.entries:e.items).map((t,n)=>r.createElement("div",{className:"structured-value-entry",key:n},e.type==="object"?v?r.createElement("span",{className:"structured-value-key-label"},t.key):r.createElement("input",{className:"structured-value-key","aria-label":`${u} property ${n+1} name`,value:t.key,onChange:l=>p({entries:e.entries.map((s,N)=>N===n?{...s,key:l.target.value,pending:!1}:s)})}):null,r.createElement(k,{node:e.type==="object"?t.value:t,label:`${u} \xB7 ${e.type==="object"?t.key||"New property":`item ${n+1}`}`,path:[...i,e.type==="object"?t.key:n],onChange:(l,s)=>O(n,l,s),depth:c+1,fixedObjectKeysAtRoot:o}),v?null:r.createElement("button",{type:"button","aria-label":e.type==="object"?`Remove property ${t.key}`:`Remove item ${n+1}`,onClick:()=>e.type==="object"?p({entries:e.entries.filter((l,s)=>s!==n)}):p({items:e.items.filter((l,s)=>s!==n)})},"Remove")))),v?null:r.createElement("button",{type:"button",className:"structured-value-add",onClick:()=>e.type==="object"?p({entries:[...e.entries,{key:"",pending:!0,value:x("string")}]}):p({items:[...e.items,x("string")]})},e.type==="object"?"Add property":"Add item"),v?null:r.createElement("div",{className:"structured-value-batch"},r.createElement("button",{type:"button",className:"structured-value-add","aria-expanded":b,onClick:()=>j({batchOpen:!b})},e.type==="object"?"Add several properties":"Add several items"),m&&!b?r.createElement("p",{role:"status"},"Unstaged batch text. Open Add several and Add or Clear it before applying."):null,b?r.createElement("div",{className:"structured-value-batch-panel"},r.createElement("span",null,e.type==="object"?"Enter one property name per line. New fields start as empty text values.":"Enter one JSON item per line. Items can be text, numbers, groups, or tuple arrays."),r.createElement("textarea",{className:"structured-value-text",rows:3,"aria-label":`${u} ${e.type==="object"?"property names":"items"} to add`,value:m,onChange:t=>j({batchText:t.target.value,batchError:""},{presentationOnly:!1})}),r.createElement("p",{className:"structured-value-error",role:"status"},C),r.createElement("button",{type:"button",className:"structured-value-add",onClick:S},e.type==="object"?"Add properties":"Add items"),r.createElement("button",{type:"button",className:"structured-value-add",onClick:()=>j({batchText:"",batchError:""},{presentationOnly:!1})},"Clear batch text")):null)):null):null)}function V({draft:e,label:u="Value",onDraftChange:i,error:a="",disabled:c=!1,fixedObjectKeysAtRoot:o=!1}){return r.createElement("fieldset",{className:"structured-value-editor",disabled:c},r.createElement(k,{node:e,label:u,onChange:i,fixedObjectKeysAtRoot:o}),r.createElement("p",{className:"structured-value-error",role:"status"},a))}function D({container:e,value:u,label:i="Value",onChange:a,onDraftChange:c}={}){if(!e||typeof e.replaceChildren!="function")throw new Error("Choose a container for the structured value editor.");let o=E(u),f="",d;const h=()=>({draft:o,label:i,error:f,onDraftChange(y,b={}){o=y,c?.(structuredClone(o),b);try{const m=w(o);f="",b.presentationOnly||a?.(structuredClone(m))}catch(m){f=m.message}d.inspect().mounted&&d.update(h())}});return d=$(e,V,h()),{snapshot:()=>structuredClone(w(o)),commit:()=>structuredClone(w(o)),draft:()=>structuredClone(o),restore(y){T(y),o=structuredClone(y);try{w(o),f=""}catch(b){f=b.message}d.update(h())},update(y){Object.hasOwn(y,"value")&&(o=E(y.value)),y.label!==void 0&&(i=y.label),d.update(h())},dispose:()=>d.dispose()}}export{V as StructuredValueEditor,D as mountStructuredValueEditor,w as readStructuredValueDraft,E as structuredValueDraft,T as validateStructuredValueDraftShape};
+import React from "./react/react-runtime.js";
+import { mountReactComponent } from "./react/mount.js";
+const record = (value) => value !== null && typeof value === "object" && !Array.isArray(value);
+function validateStructuredValueDraftShape(draft) {
+  const ancestors = /* @__PURE__ */ new Set();
+  const visit = (node) => {
+    if (!record(node) || ancestors.has(node) || !["null", "string", "number", "boolean", "array", "object"].includes(node.type)) throw new Error("Unsupported structured draft state.");
+    ancestors.add(node);
+    validateBatchUi(node);
+    if (["string", "number"].includes(node.type) && typeof node.value !== "string" && !(node.type === "number" && typeof node.value === "number" && Number.isFinite(node.value))) throw new Error("A structured scalar draft needs raw text.");
+    if (node.type === "boolean" && typeof node.value !== "boolean") throw new Error("A boolean draft needs a boolean value.");
+    if (node.type === "array") {
+      if (!Array.isArray(node.items)) throw new Error("An array draft needs item drafts.");
+      node.items.forEach(visit);
+    }
+    if (node.type === "object") {
+      if (!Array.isArray(node.entries)) throw new Error("An object draft needs property drafts.");
+      for (const entry of node.entries) {
+        if (!record(entry) || typeof entry.key !== "string") throw new Error("An object draft needs named property records.");
+        visit(entry.value);
+      }
+    }
+    ancestors.delete(node);
+  };
+  visit(draft);
+  return draft;
+}
+function structuredValueDraft(value) {
+  if (value === null) return { type: "null" };
+  if (Array.isArray(value)) return { type: "array", items: value.map(structuredValueDraft) };
+  if (record(value)) return { type: "object", entries: Object.entries(value).map(([key, value2]) => ({ key, value: structuredValueDraft(value2) })) };
+  if (typeof value === "string") return { type: "string", value };
+  if (typeof value === "number" && Number.isFinite(value)) return { type: "number", value: String(value) };
+  if (typeof value === "boolean") return { type: "boolean", value };
+  throw new Error("Structured values must contain valid JSON data.");
+}
+function readStructuredValueDraft(draft) {
+  if (!record(draft)) throw new Error("A structured value needs a selected type.");
+  validateBatchUi(draft);
+  if (draft.ui?.batchText) throw new Error("Add or Clear pending structured batch text before applying this value.");
+  if (draft.type === "null") return null;
+  if (draft.type === "string") return String(draft.value ?? "");
+  if (draft.type === "boolean") return draft.value === true;
+  if (draft.type === "number") {
+    const raw = String(draft.value ?? "").trim();
+    if (!raw || !Number.isFinite(Number(raw))) throw new Error("Enter a finite number.");
+    return Number(raw);
+  }
+  if (draft.type === "array") {
+    if (!Array.isArray(draft.items)) throw new Error("An array needs a list of items.");
+    return draft.items.map(readStructuredValueDraft);
+  }
+  if (draft.type === "object") {
+    if (!Array.isArray(draft.entries)) throw new Error("An object needs a list of properties.");
+    const names = /* @__PURE__ */ new Set();
+    return Object.fromEntries(draft.entries.map((entry) => {
+      if (!record(entry) || typeof entry.key !== "string" || entry.pending && !entry.key.trim()) throw new Error("Every object property needs a name.");
+      if (names.has(entry.key)) throw new Error("Object property names must be unique.");
+      names.add(entry.key);
+      return [entry.key, readStructuredValueDraft(entry.value)];
+    }));
+  }
+  throw new Error(`Unsupported structured value type: ${draft.type}.`);
+}
+const newNode = (type) => type === "object" ? { type, entries: [] } : type === "array" ? { type, items: [] } : type === "null" ? { type } : type === "boolean" ? { type, value: false } : type === "number" ? { type, value: "0" } : { type: "string", value: "" };
+function validateBatchUi(node) {
+  if (node.ui === void 0) return;
+  if (!record(node.ui) || node.ui.batchOpen !== void 0 && typeof node.ui.batchOpen !== "boolean" || node.ui.batchText !== void 0 && typeof node.ui.batchText !== "string" || node.ui.batchError !== void 0 && typeof node.ui.batchError !== "string") throw new Error("Structured batch state needs an open flag and raw text diagnostics.");
+}
+function ValueNode({ node, label, path = [], onChange, depth = 0, fixedObjectKeysAtRoot = false }) {
+  const [expanded, setExpanded] = React.useState(depth < 2);
+  const [visited, setVisited] = React.useState(depth < 2);
+  const { batchOpen = false, batchText: batch = "", batchError = "" } = node.ui || {};
+  const fixedKeys = fixedObjectKeysAtRoot && path.length === 0 && node.type === "object";
+  const update = (patch, metadata = {}) => onChange({ ...node, ...patch }, metadata);
+  const updateUi = (patch, metadata = { presentationOnly: true }) => update({ ui: { ...node.ui, ...patch } }, metadata);
+  const changeChild = (index, value, metadata) => node.type === "array" ? update({ items: node.items.map((item, i) => i === index ? value : item) }, metadata) : update({ entries: node.entries.map((item, i) => i === index ? { ...item, value } : item) }, metadata);
+  const addBatch = () => {
+    try {
+      const lines = batch.split(/\r?\n/).map((line, index) => ({ text: line.trim(), line: index + 1 })).filter((x) => x.text);
+      if (!lines.length) throw new Error(node.type === "object" ? "Enter at least one property name." : "Enter at least one JSON item.");
+      const ui = { ...node.ui, batchText: "", batchError: "", batchOpen: false };
+      if (node.type === "object") {
+        const names = new Set(node.entries.map((x) => x.key));
+        for (const line of lines) {
+          if (names.has(line.text)) throw new Error(`The property \u201C${line.text}\u201D already exists in this group.`);
+          names.add(line.text);
+        }
+        update({ entries: [...node.entries, ...lines.map((line) => ({ key: line.text, value: newNode("string") }))], ui });
+      } else {
+        const items = lines.map((line) => {
+          try {
+            return structuredValueDraft(JSON.parse(line.text));
+          } catch {
+            throw new Error(`Line ${line.line} is not valid JSON. Quote text values, for example: "mesh".`);
+          }
+        });
+        update({ items: [...node.items, ...items], ui });
+      }
+    } catch (error) {
+      updateUi({ batchError: error.message });
+    }
+  };
+  return /* @__PURE__ */ React.createElement("div", { className: "structured-value-node", "data-structured-path": JSON.stringify(path) }, /* @__PURE__ */ React.createElement("div", { className: "structured-value-head" }, /* @__PURE__ */ React.createElement("span", { className: "structured-value-label" }, label.split(" \xB7 ").at(-1)), /* @__PURE__ */ React.createElement("select", { className: "structured-value-type", "aria-label": `${label} value type`, value: node.type, disabled: Boolean(batch) || fixedKeys, title: fixedKeys ? "The map rule fields are fixed." : batch ? "Add or Clear pending batch text before changing the value type." : void 0, onChange: (event) => onChange(newNode(event.target.value)) }, [["string", "Text"], ["number", "Number"], ["boolean", "Yes / no"], ["null", "Null"], ["object", "Group"], ["array", "List"]].map(([value, text]) => /* @__PURE__ */ React.createElement("option", { key: value, value }, text)))), node.type === "string" ? /* @__PURE__ */ React.createElement("textarea", { className: "structured-value-text", rows: String(node.value || "").includes("\n") ? 3 : 1, "aria-label": label, value: node.value ?? "", onChange: (event) => update({ value: event.target.value }) }) : null, node.type === "number" ? /* @__PURE__ */ React.createElement("input", { className: "structured-value-text", type: "text", inputMode: "decimal", "aria-label": label, value: node.value ?? "", onChange: (event) => update({ value: event.target.value }) }) : null, node.type === "boolean" ? /* @__PURE__ */ React.createElement("label", null, /* @__PURE__ */ React.createElement("input", { type: "checkbox", "aria-label": label, checked: node.value === true, onChange: (event) => update({ value: event.target.checked }) }), "Yes") : null, node.type === "null" ? /* @__PURE__ */ React.createElement("span", { className: "settings-empty" }, "Null") : null, ["object", "array"].includes(node.type) ? /* @__PURE__ */ React.createElement("details", { className: "structured-value-children", open: expanded, onToggle: (event) => {
+    const open = event.currentTarget.open;
+    setExpanded(open);
+    if (open) setVisited(true);
+  } }, /* @__PURE__ */ React.createElement("summary", null, node.type === "object" ? `${node.entries.length} properties` : `${node.items.length} items`), visited ? /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement("div", { className: "structured-value-list" }, (node.type === "object" ? node.entries : node.items).map((entry, index) => /* @__PURE__ */ React.createElement("div", { className: "structured-value-entry", key: index }, node.type === "object" ? fixedKeys ? /* @__PURE__ */ React.createElement("span", { className: "structured-value-key-label" }, entry.key) : /* @__PURE__ */ React.createElement("input", { className: "structured-value-key", "aria-label": `${label} property ${index + 1} name`, value: entry.key, onChange: (event) => update({ entries: node.entries.map((item, i) => i === index ? { ...item, key: event.target.value, pending: false } : item) }) }) : null, /* @__PURE__ */ React.createElement(ValueNode, { node: node.type === "object" ? entry.value : entry, label: `${label} \xB7 ${node.type === "object" ? entry.key || "New property" : `item ${index + 1}`}`, path: [...path, node.type === "object" ? entry.key : index], onChange: (value, metadata) => changeChild(index, value, metadata), depth: depth + 1, fixedObjectKeysAtRoot }), fixedKeys ? null : /* @__PURE__ */ React.createElement("button", { type: "button", "aria-label": node.type === "object" ? `Remove property ${entry.key}` : `Remove item ${index + 1}`, onClick: () => node.type === "object" ? update({ entries: node.entries.filter((_, i) => i !== index) }) : update({ items: node.items.filter((_, i) => i !== index) }) }, "Remove")))), fixedKeys ? null : /* @__PURE__ */ React.createElement("button", { type: "button", className: "structured-value-add", onClick: () => node.type === "object" ? update({ entries: [...node.entries, { key: "", pending: true, value: newNode("string") }] }) : update({ items: [...node.items, newNode("string")] }) }, node.type === "object" ? "Add property" : "Add item"), fixedKeys ? null : /* @__PURE__ */ React.createElement("div", { className: "structured-value-batch" }, /* @__PURE__ */ React.createElement("button", { type: "button", className: "structured-value-add", "aria-expanded": batchOpen, onClick: () => updateUi({ batchOpen: !batchOpen }) }, node.type === "object" ? "Add several properties" : "Add several items"), batch && !batchOpen ? /* @__PURE__ */ React.createElement("p", { role: "status" }, "Unstaged batch text. Open Add several and Add or Clear it before applying.") : null, batchOpen ? /* @__PURE__ */ React.createElement("div", { className: "structured-value-batch-panel" }, /* @__PURE__ */ React.createElement("span", null, node.type === "object" ? "Enter one property name per line. New fields start as empty text values." : "Enter one JSON item per line. Items can be text, numbers, groups, or tuple arrays."), /* @__PURE__ */ React.createElement("textarea", { className: "structured-value-text", rows: 3, "aria-label": `${label} ${node.type === "object" ? "property names" : "items"} to add`, value: batch, onChange: (event) => updateUi({ batchText: event.target.value, batchError: "" }, { presentationOnly: false }) }), /* @__PURE__ */ React.createElement("p", { className: "structured-value-error", role: "status" }, batchError), /* @__PURE__ */ React.createElement("button", { type: "button", className: "structured-value-add", onClick: addBatch }, node.type === "object" ? "Add properties" : "Add items"), /* @__PURE__ */ React.createElement("button", { type: "button", className: "structured-value-add", onClick: () => updateUi({ batchText: "", batchError: "" }, { presentationOnly: false }) }, "Clear batch text")) : null)) : null) : null);
+}
+function StructuredValueEditor({ draft, label = "Value", onDraftChange, error = "", disabled = false, fixedObjectKeysAtRoot = false }) {
+  return /* @__PURE__ */ React.createElement("fieldset", { className: "structured-value-editor", disabled }, /* @__PURE__ */ React.createElement(ValueNode, { node: draft, label, onChange: onDraftChange, fixedObjectKeysAtRoot }), /* @__PURE__ */ React.createElement("p", { className: "structured-value-error", role: "status" }, error));
+}
+function mountStructuredValueEditor({ container, value, label = "Value", onChange, onDraftChange } = {}) {
+  if (!container || typeof container.replaceChildren !== "function") throw new Error("Choose a container for the structured value editor.");
+  let draft = structuredValueDraft(value), error = "", mount;
+  const props = () => ({ draft, label, error, onDraftChange(next, metadata = {}) {
+    draft = next;
+    onDraftChange?.(structuredClone(draft), metadata);
+    try {
+      const value2 = readStructuredValueDraft(draft);
+      error = "";
+      if (!metadata.presentationOnly) onChange?.(structuredClone(value2));
+    } catch (issue) {
+      error = issue.message;
+    }
+    if (mount.inspect().mounted) mount.update(props());
+  } });
+  mount = mountReactComponent(container, StructuredValueEditor, props());
+  return { snapshot: () => structuredClone(readStructuredValueDraft(draft)), commit: () => structuredClone(readStructuredValueDraft(draft)), draft: () => structuredClone(draft), restore(next) {
+    validateStructuredValueDraftShape(next);
+    draft = structuredClone(next);
+    try {
+      readStructuredValueDraft(draft);
+      error = "";
+    } catch (issue) {
+      error = issue.message;
+    }
+    mount.update(props());
+  }, update(next) {
+    if (Object.hasOwn(next, "value")) draft = structuredValueDraft(next.value);
+    if (next.label !== void 0) label = next.label;
+    mount.update(props());
+  }, dispose: () => mount.dispose() };
+}
+export {
+  StructuredValueEditor,
+  mountStructuredValueEditor,
+  readStructuredValueDraft,
+  structuredValueDraft,
+  validateStructuredValueDraftShape
+};
 
 //# sourceMappingURL=structured-value-editor.js.map

@@ -97,3 +97,44 @@ export function analyzeExpressionDefinitions(input) {
 export function evaluatePointwiseFields(input) {
   return coreRequest("evaluate_pointwise_fields", input);
 }
+
+// Trees use the same JSON representation returned by inspectExpression.
+export function parseExpression(expression) { return coreRequest("parse_expression", { expression }); }
+export function nodeSymbols(tree) { return coreRequest("node_symbols", { tree }); }
+export function nodeCalls(tree) { return coreRequest("node_calls", { tree }); }
+export function referencesAny(tree, names) { return coreRequest("references_any", { tree, names }); }
+export function hasVariableExponent(tree, names) { return coreRequest("has_variable_exponent", { tree, names }); }
+export function evaluateAst(tree, symbols = {}, definitions = [], stack = []) {
+  return coreRequest("evaluate_ast", { tree, symbols, definitions, stack });
+}
+export function evaluateFunction(name, args) { return coreRequest("evaluate_function", { name, args }); }
+export function dimensionFromJson(dimension) { return coreRequest("dimension_from_json", { dimension }); }
+export function inferQuantityDimensionWithPolicy(quantity, symbols, path, evaluationPolicy) {
+  return coreRequest("infer_quantity_dimension_with_policy", { quantity, symbols, path, evaluationPolicy });
+}
+export function symbolsFromPairs(pairs) { return coreRequest("symbols_from_pairs", { pairs }); }
+// Complex numbers are objects of the form { re, im }. Definitions are
+// [symbol, tree] pairs; symbols is a map of names to complex numbers.
+export function evaluateComplexCall(name, args) { return coreRequest("evaluate_complex_call", { name, args }); }
+export function evaluateComplexAst(tree, symbols = {}) { return coreRequest("evaluate_complex_ast", { tree, symbols }); }
+export function evaluateComplexDefinitions(definitions, symbols = {}) {
+  return coreRequest("evaluate_complex_definitions", { definitions, symbols });
+}
+export function validateEvaluationPolicy(evaluationPolicy) { return coreRequest("validate_evaluation_policy", { evaluationPolicy }); }
+export function parseEvaluationPolicy(evaluationPolicy) { return coreRequest("parse_evaluation_policy", { evaluationPolicy }); }
+
+// Handles belong to this WASM instance and remain live until explicitly released.
+export function compileExpression(expression, evaluationPolicy, path = "expression") {
+  return coreRequest("compile_expression", { expression, evaluationPolicy, path });
+}
+export function compileQuantity(quantity, evaluationPolicy, path = "quantity") {
+  return coreRequest("compile_quantity", { quantity, evaluationPolicy, path });
+}
+export function compiledUsesSymbol(handle, name) { return coreRequest("compiled_uses_symbol", { handle, name }); }
+export function evaluateCompiled(handle, symbols = {}, path = "expression") {
+  return coreRequest("evaluate_compiled", { handle, symbols, path });
+}
+export function evaluateCompiledBatch(handle, symbolTables, path = "expression") {
+  return coreRequest("evaluate_compiled_batch", { handle, symbolTables, path });
+}
+export function releaseCompiled(handle) { return coreRequest("release_compiled", { handle }); }

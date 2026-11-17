@@ -1,4 +1,384 @@
 // Generated from design-annotation.jsx by scripts/build-frontend.mjs.
-import e from"./react/react-runtime.js";import{mountReactComponent as U}from"./react/mount.js";import{StructuredValueEditor as B,structuredValueDraft as W,readStructuredValueDraft as M}from"./structured-value-editor.js";import{matchesDesignCondition as q,validateAnnotationFormValue as Y}from"./annotation-form-model.js";import{annotationRow as f,adoptAnnotationRows as z,createAnnotationControl as G,readAnnotationControl as j}from"./annotation-control-model.js";import{matchesDesignCondition as le}from"./annotation-form-model.js";function D({rows:n,label:i,onChange:g,addLabel:a="Add item",removeLabel:u="Remove",disabled:t=!1}){return e.createElement(e.Fragment,null,e.createElement("div",{className:"sd-annotation-row-list"},n.map((r,l)=>e.createElement("div",{className:"sd-annotation-row",key:r.id},e.createElement("input",{type:"text",value:r.value,disabled:t,"aria-label":i+" "+(l+1),onChange:o=>g(n.map(b=>b.id===r.id?{...b,value:o.target.value}:b),o)}),e.createElement("button",{type:"button",disabled:t,onClick:o=>g(n.filter(b=>b.id!==r.id),o)},u)))),e.createElement("button",{type:"button",disabled:t,onClick:r=>g([...n,f("")],r)},a))}function H({field:n,draft:i,onChange:g,disabled:a=!1,typed:u=!1,list:t=!1}){const r=(l,o,b)=>g({...i,rows:i.rows.map(v=>v.id===l?{...v,...o}:v)},b);return e.createElement(e.Fragment,null,e.createElement("div",{className:"sd-annotation-row-list"},i.rows.map(l=>e.createElement("div",{className:t?"sd-design-sibling":"sd-annotation-row"+(u?" sd-typed-map-row":""),key:l.id},e.createElement("input",{type:"text",value:l.key,disabled:a,placeholder:u?"Property":"Key","aria-label":n.label+(u?" property":" key"),onChange:o=>r(l.id,{key:o.target.value},o)}),t?e.createElement(D,{rows:l.items,label:n.label+" value",disabled:a,addLabel:"Add value",removeLabel:"Remove value",onChange:(o,b)=>r(l.id,{items:o},b)}):u?e.createElement(e.Fragment,null,e.createElement("select",{value:l.kind,disabled:a,"aria-label":n.label+" value type",onChange:o=>r(l.id,{kind:o.target.value,...["array","object"].includes(o.target.value)?{structured:W(o.target.value==="array"?[]:{})}:{}},o)},["string","number","boolean","null","array","object"].map(o=>e.createElement("option",{key:o,value:o},{string:"Text",number:"Number",boolean:"Boolean",null:"Null",array:"Array",object:"Object"}[o]))),l.kind==="boolean"?e.createElement("select",{value:String(l.boolean),disabled:a,"aria-label":n.label+" boolean value",onChange:o=>r(l.id,{boolean:o.target.value==="true"},o)},e.createElement("option",{value:"true"},"Yes"),e.createElement("option",{value:"false"},"No")):["array","object"].includes(l.kind)?e.createElement("div",{className:"sd-typed-map-structured-value"},e.createElement(B,{draft:l.structured,label:n.label+" value",disabled:a,onDraftChange:o=>r(l.id,{structured:o})})):l.kind==="null"?null:e.createElement("input",{type:"text",value:l.text,disabled:a,placeholder:"Value","aria-label":n.label+" value",onChange:o=>r(l.id,{text:o.target.value},o)})):e.createElement("input",{type:"text",value:l.text,disabled:a,placeholder:"Text","aria-label":n.label+" text",onChange:o=>r(l.id,{text:o.target.value},o)}),e.createElement("button",{type:"button",disabled:a,onClick:o=>g({...i,rows:i.rows.filter(b=>b.id!==l.id)},o)},t?"Remove key":"Remove")))),e.createElement("button",{type:"button",disabled:a,onClick:l=>{const o={id:f("").id,key:"",...t?{items:[]}:u?{kind:"string",text:"",boolean:!0,structured:W({})}:{text:""}};g({...i,rows:[...i.rows,o]},l)}},t?"Add key":u?"Add property":"Add entry"))}function Q({field:n,draft:i,onChange:g,disabled:a=!1}){const u=(t,r)=>g({...i,...t},r);return n.type==="json"?e.createElement(e.Fragment,null,e.createElement("label",{className:"sd-structured-value-toggle"},e.createElement("input",{type:"checkbox",checked:i.enabled,disabled:a,onChange:t=>u({enabled:t.target.checked},t)})," Set value"),i.enabled?e.createElement("div",{className:"sd-annotation-structured-value"},e.createElement(B,{draft:i.structured,label:n.label,disabled:a,onDraftChange:t=>u({structured:t})})):null):n.type==="source"?e.createElement(e.Fragment,null,e.createElement("span",null,n.scopeLabel||"Scope"),e.createElement("select",{value:i.scope,disabled:a,"aria-label":n.label+" scope",onChange:t=>u({scope:t.target.value},t)},[...new Set([...n.scopes||["root","document","component","engine","runtime"],...i.scope?[i.scope]:[]])].map(t=>e.createElement("option",{key:t,value:t},t))),e.createElement("span",null,n.pathLabel||"Path segments"),e.createElement(D,{rows:i.path,disabled:a,label:n.pathSegmentLabel||n.label+" path segment",addLabel:n.addPathLabel||"Add path segment",onChange:(t,r)=>u({path:t},r)}),(n.properties||[]).map(t=>{const r=(b,v)=>u({properties:{...i.properties,[t.key]:b}},v),l=i.properties[t.key],o=t.type==="schemaFilter"?e.createElement(e.Fragment,null,e.createElement("label",null,"Schema annotation names (comma-separated)",e.createElement("input",{type:"text",value:l.annotationKeys,disabled:a,"aria-label":n.label+" schema annotation names",onChange:b=>r({...l,annotationKeys:b.target.value},b)})),e.createElement("label",null,"Model value path",e.createElement("input",{type:"text",value:l.valuePath,disabled:a,placeholder:"section/property","aria-label":n.label+" filter value path",onChange:b=>r({...l,valuePath:b.target.value},b)}))):e.createElement("label",null,t.label,e.createElement("input",{type:t.type==="boolean"?"checkbox":"text",disabled:a,"aria-label":n.label+" "+t.label,...t.type==="boolean"?{checked:l===!0}:{value:l},onChange:b=>r(t.type==="boolean"?b.target.checked:b.target.value,b)}));return t.advanced?e.createElement("details",{key:t.key},e.createElement("summary",null,t.summary||t.label),o):e.createElement(e.Fragment,{key:t.key},o)})):n.type==="stringList"?e.createElement(D,{rows:i.rows,disabled:a,label:n.label+" item",addLabel:n.addLabel||"Add item",onChange:(t,r)=>u({rows:t},r)}):["stringMap","typedMap","stringListMap"].includes(n.type)?e.createElement(H,{field:n,draft:i,onChange:g,disabled:a,typed:n.type==="typedMap",list:n.type==="stringListMap"}):n.type==="initialChoice"?e.createElement(e.Fragment,null,e.createElement("label",null,"Matching property",e.createElement("input",{type:"text",value:i.property,disabled:a,"aria-label":n.label+" matching property",onChange:t=>u({property:t.target.value},t)})),e.createElement("div",{className:"sd-design-composite"},"Initial choices by value",e.createElement(H,{field:{...n,label:n.label+" values"},draft:i,onChange:g,disabled:a}))):n.type==="namedLabels"?e.createElement("div",{className:"sd-scan-setting-grid"},(n.entries||[]).map(([t,r])=>e.createElement("label",{key:t},r,e.createElement("input",{type:"text",value:i.values[t],disabled:a,"aria-label":r,onChange:l=>u({values:{...i.values,[t]:l.target.value}},l)})))):n.type==="siblings"?e.createElement(e.Fragment,null,e.createElement("div",{className:"sd-annotation-row-list"},i.rows.map(t=>e.createElement("div",{className:"sd-design-sibling",key:t.id},e.createElement("input",{type:"text",value:t.label,disabled:a,placeholder:"Display label (optional)","aria-label":"Sibling display label",onChange:r=>u({rows:i.rows.map(l=>l.id===t.id?{...l,label:r.target.value}:l)},r)}),e.createElement(D,{rows:t.path,label:"Sibling path segment",disabled:a,addLabel:"Add path segment",removeLabel:"Remove segment",onChange:(r,l)=>u({rows:i.rows.map(o=>o.id===t.id?{...o,path:r}:o)},l)}),e.createElement("button",{type:"button",disabled:a,onClick:r=>u({rows:i.rows.filter(l=>l.id!==t.id)},r)},"Remove sibling")))),e.createElement("button",{type:"button",disabled:a,onClick:t=>u({rows:[...i.rows,{id:f("").id,label:"",path:[f("")]}]},t)},"Add sibling")):n.type==="siblingCondition"?e.createElement(e.Fragment,null,e.createElement("label",null,"Sibling property",e.createElement("input",{type:"text",value:i.property,disabled:a,"aria-label":n.label+" sibling property",onChange:t=>u({property:t.target.value},t)})),e.createElement("label",null,"Value type",e.createElement("select",{value:i.kind,disabled:a,"aria-label":n.label+" value type",onChange:t=>u({kind:t.target.value},t)},["string","number","boolean","null"].map(t=>e.createElement("option",{key:t,value:t},{string:"Text",number:"Number",boolean:"Boolean",null:"Null"}[t])))),i.kind==="null"?null:i.kind==="boolean"?e.createElement("label",null,"Matching value",e.createElement("select",{value:String(i.boolean),disabled:a,"aria-label":n.label+" boolean value",onChange:t=>u({boolean:t.target.value==="true"},t)},e.createElement("option",{value:"true"},"Yes"),e.createElement("option",{value:"false"},"No"))):e.createElement("label",null,"Matching value",e.createElement("input",{type:"text",value:i.text,disabled:a,"aria-label":n.label+" matching value",onChange:t=>u({text:t.target.value},t)}))):n.type==="boolean"?e.createElement("input",{type:"checkbox",checked:i.value,disabled:a,"aria-label":n.label,onChange:t=>u({value:t.target.checked},t)}):n.options?e.createElement("select",{value:i.value,disabled:a,"aria-label":n.label,onChange:t=>u({value:t.target.value},t)},n.options.map(t=>e.createElement("option",{key:t,value:t},t||"Not specified"))):e.createElement("input",{type:"text",inputMode:n.type==="integer"?"numeric":void 0,value:i.value,disabled:a,"aria-label":n.label,onChange:t=>u({value:t.target.value},t)})}function X({view:n,onCommand:i}){const{fields:g,controls:a,current:u,schema:t,source:r,context:l,heading:o,label:b,groups:v=[],advancedHeading:E,note:O,disabled:T}=n,k={...u};for(const p of g)try{const d=j(p,a[p.key],M);k[p.key]=p.type==="boolean"?d.checked:d.text}catch{}const N=p=>{let d="";try{j(p,a[p.key],M)}catch(S){d=S.message}const m=["source","namedLabels","stringList","stringMap","typedMap","stringListMap","initialChoice","siblings","siblingCondition","json"].includes(p.type);return e.createElement(m?"div":"label",{key:p.key,className:m?"sd-design-composite":void 0,hidden:!q(k,p.visibleWhen,{schema:l?.schema||t,source:r,annotation:k})},p.label,e.createElement(Q,{field:p,draft:a[p.key],disabled:T,onChange:(S,A)=>i({type:"annotation.change",key:p.key,draft:S},A)}),d?e.createElement("p",{role:"alert",className:"sd-error"},d):null)},C=new Set(v.map(p=>p.key)),w=g.filter(p=>!p.advanced&&!C.has(p.group));return e.createElement("section",{className:"sd-widget-detail"},o&&o!==b?e.createElement("h3",null,o):null,w.length?e.createElement("div",{className:"sd-scan-setting-grid"},w.map(N)):null,v.map(p=>{const d=g.filter(m=>!m.advanced&&m.group===p.key);return d.length?e.createElement("section",{className:"sd-widget-detail",key:p.key},p.heading?e.createElement("h3",null,p.heading):null,e.createElement("div",{className:"sd-scan-setting-grid"},d.map(N))):null}),g.some(p=>p.advanced)?e.createElement("details",null,e.createElement("summary",null,E||"More widget settings"),e.createElement("div",{className:"sd-scan-setting-grid"},g.filter(p=>p.advanced).map(N))):null,O?e.createElement("p",{className:"sd-note"},O):null)}function te(n,i,{source:g,state:a,annotationKey:u,label:t,heading:r,fields:l=[],groups:o,advancedHeading:b,validate:v,ownedUiAnnotations:E=[],note:O,context:T}={}){if(!Object.hasOwn(g||{},u))return null;const k=g[u];if(!k||typeof k!="object"||Array.isArray(k))return null;const N=JSON.stringify(k);let C=k;const w=typeof a=="string"?a:a?.value;if(typeof w=="string")try{const s=JSON.parse(w);s&&typeof s=="object"&&!Array.isArray(s)&&(C=s)}catch{}a?.format==="fullmeta-annotation-form-state/1"&&a.current&&(C=structuredClone(a.current));const p=l.filter(s=>!s.showWhenPresent||Object.hasOwn(C,s.key));let d=Object.fromEntries(p.map(s=>[s.key,G(s,C[s.key],W)])),m=typeof w=="string"&&w!==N,x=new Set,S=!1,A;if(a?.format==="fullmeta-annotation-form-state/1"&&(d=structuredClone(a.controls),m=a.dirty,x=new Set(a.changed),z(d)),a?.legacyRaw){let s=0,y=0;for(const h of p){if(h.type==="typedMap")for(const c of d[h.key].rows){const J=a.legacyRaw.typedMap?.[s++];typeof J=="string"&&J!==c.text&&(c.text=J,m=!0,x.add(h.key))}if(h.type==="siblingCondition"){const c=a.legacyRaw.siblingMatches?.[y++];typeof c=="string"&&c!==d[h.key].text&&(d[h.key].text=c,m=!0,x.add(h.key))}}}const L=document.createElement("div");n.append(L);const F=()=>({view:{fields:p,controls:d,current:C,schema:i,source:g,context:T,heading:r,label:t,groups:o,advancedHeading:b,note:O,disabled:S},onCommand:K}),K=(s,y)=>{if(!S){if(s.type!=="annotation.change"||!Object.hasOwn(d,s.key))throw new Error("Unknown annotation form command.");d={...d,[s.key]:s.draft},m=!0,x.add(s.key),A.update(F()),(!y||y.type==="click")&&L.dispatchEvent(new Event("input",{bubbles:!0}))}};A=U(L,X,F());const P=p.map(s=>({field:s,input:{get checked(){return j(s,d[s.key],M).checked},get value(){return j(s,d[s.key],M).text},get entries(){return j(s,d[s.key],M).entries}}})),V=()=>{if(!m)return N;const s={...C};for(const{field:y,input:h}of P){if(!x.has(y.key))continue;if(y.type==="boolean"){h.checked?s[y.key]=!0:delete s[y.key];continue}const c=h.value.trim();if(!c)delete s[y.key];else if(y.type==="integer")s[y.key]=Number(c);else if(["json","source","namedLabels","stringList","stringMap","typedMap","stringListMap","initialChoice","siblings","siblingCondition"].includes(y.type))try{s[y.key]=JSON.parse(c)}catch{s[y.key]=c}else s[y.key]=c}return JSON.stringify(s)},I=()=>({format:"fullmeta-annotation-form-state/1",current:structuredClone(C),controls:structuredClone(d),dirty:m,changed:[...x]});return{annotationKey:u,ownedUiAnnotations:E,element:L,snapshotState:I,disable(s=!0){S=s,A.update(F())},dispose(){A.dispose(),L.remove()},fields:[{label:t,keys:[u],type:"json",input:{get value(){return V()}},original:N,snapshot:V,snapshotState:I,validateDraft(){m&&Y(JSON.parse(V()),{fields:l,controls:P,changed:x,validate:v})},validate(s){Y(s,{fields:l,controls:P,changed:x,validate:v})}}]}}export{Q as AnnotationControl,X as WidgetAnnotationEditor,le as matchesDesignCondition,te as renderWidgetAnnotationEditor};
+import React from "./react/react-runtime.js";
+import { mountReactComponent } from "./react/mount.js";
+import { StructuredValueEditor, structuredValueDraft, readStructuredValueDraft } from "./structured-value-editor.js";
+import { matchesDesignCondition, validateAnnotationFormValue } from "./annotation-form-model.js";
+import { annotationRow, adoptAnnotationRows, createAnnotationControl, readAnnotationControl } from "./annotation-control-model.js";
+import { matchesDesignCondition as matchesDesignCondition2 } from "./annotation-form-model.js";
+function StringRows({ rows, label, onChange, addLabel = "Add item", removeLabel = "Remove", disabled = false }) {
+  return /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement("div", { className: "sd-annotation-row-list" }, rows.map((row, index) => /* @__PURE__ */ React.createElement("div", { className: "sd-annotation-row", key: row.id }, /* @__PURE__ */ React.createElement(
+    "input",
+    {
+      type: "text",
+      value: row.value,
+      disabled,
+      "aria-label": label + " " + (index + 1),
+      onChange: (event) => onChange(rows.map((item) => item.id === row.id ? { ...item, value: event.target.value } : item), event)
+    }
+  ), /* @__PURE__ */ React.createElement("button", { type: "button", disabled, onClick: (event) => onChange(rows.filter((item) => item.id !== row.id), event) }, removeLabel)))), /* @__PURE__ */ React.createElement("button", { type: "button", disabled, onClick: (event) => onChange([...rows, annotationRow("")], event) }, addLabel));
+}
+function MapRows({ field, draft, onChange, disabled = false, typed = false, list = false }) {
+  const patch = (id, change, event) => onChange({ ...draft, rows: draft.rows.map((row) => row.id === id ? { ...row, ...change } : row) }, event);
+  return /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement("div", { className: "sd-annotation-row-list" }, draft.rows.map((row) => /* @__PURE__ */ React.createElement("div", { className: list ? "sd-design-sibling" : "sd-annotation-row" + (typed ? " sd-typed-map-row" : ""), key: row.id }, /* @__PURE__ */ React.createElement(
+    "input",
+    {
+      type: "text",
+      value: row.key,
+      disabled,
+      placeholder: typed ? "Property" : "Key",
+      "aria-label": field.label + (typed ? " property" : " key"),
+      onChange: (event) => patch(row.id, { key: event.target.value }, event)
+    }
+  ), list ? /* @__PURE__ */ React.createElement(
+    StringRows,
+    {
+      rows: row.items,
+      label: field.label + " value",
+      disabled,
+      addLabel: "Add value",
+      removeLabel: "Remove value",
+      onChange: (items, event) => patch(row.id, { items }, event)
+    }
+  ) : typed ? /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement("select", { value: row.kind, disabled, "aria-label": field.label + " value type", onChange: (event) => patch(
+    row.id,
+    { kind: event.target.value, ...["array", "object"].includes(event.target.value) ? { structured: structuredValueDraft(event.target.value === "array" ? [] : {}) } : {} },
+    event
+  ) }, ["string", "number", "boolean", "null", "array", "object"].map((kind) => /* @__PURE__ */ React.createElement("option", { key: kind, value: kind }, { string: "Text", number: "Number", boolean: "Boolean", null: "Null", array: "Array", object: "Object" }[kind]))), row.kind === "boolean" ? /* @__PURE__ */ React.createElement(
+    "select",
+    {
+      value: String(row.boolean),
+      disabled,
+      "aria-label": field.label + " boolean value",
+      onChange: (event) => patch(row.id, { boolean: event.target.value === "true" }, event)
+    },
+    /* @__PURE__ */ React.createElement("option", { value: "true" }, "Yes"),
+    /* @__PURE__ */ React.createElement("option", { value: "false" }, "No")
+  ) : ["array", "object"].includes(row.kind) ? /* @__PURE__ */ React.createElement("div", { className: "sd-typed-map-structured-value" }, /* @__PURE__ */ React.createElement(
+    StructuredValueEditor,
+    {
+      draft: row.structured,
+      label: field.label + " value",
+      disabled,
+      onDraftChange: (structured) => patch(row.id, { structured })
+    }
+  )) : row.kind === "null" ? null : /* @__PURE__ */ React.createElement(
+    "input",
+    {
+      type: "text",
+      value: row.text,
+      disabled,
+      placeholder: "Value",
+      "aria-label": field.label + " value",
+      onChange: (event) => patch(row.id, { text: event.target.value }, event)
+    }
+  )) : /* @__PURE__ */ React.createElement("input", { type: "text", value: row.text, disabled, placeholder: "Text", "aria-label": field.label + " text", onChange: (event) => patch(row.id, { text: event.target.value }, event) }), /* @__PURE__ */ React.createElement("button", { type: "button", disabled, onClick: (event) => onChange({ ...draft, rows: draft.rows.filter((item) => item.id !== row.id) }, event) }, list ? "Remove key" : "Remove")))), /* @__PURE__ */ React.createElement("button", { type: "button", disabled, onClick: (event) => {
+    const row = { id: annotationRow("").id, key: "", ...list ? { items: [] } : typed ? { kind: "string", text: "", boolean: true, structured: structuredValueDraft({}) } : { text: "" } };
+    onChange({ ...draft, rows: [...draft.rows, row] }, event);
+  } }, list ? "Add key" : typed ? "Add property" : "Add entry"));
+}
+function AnnotationControl({ field, draft, onChange, disabled = false }) {
+  const update = (change, event) => onChange({ ...draft, ...change }, event);
+  if (field.type === "json") return /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement("label", { className: "sd-structured-value-toggle" }, /* @__PURE__ */ React.createElement(
+    "input",
+    {
+      type: "checkbox",
+      checked: draft.enabled,
+      disabled,
+      onChange: (event) => update({ enabled: event.target.checked }, event)
+    }
+  ), " Set value"), draft.enabled ? /* @__PURE__ */ React.createElement("div", { className: "sd-annotation-structured-value" }, /* @__PURE__ */ React.createElement(StructuredValueEditor, { draft: draft.structured, label: field.label, disabled, onDraftChange: (structured) => update({ structured }) })) : null);
+  if (field.type === "source") return /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement("span", null, field.scopeLabel || "Scope"), /* @__PURE__ */ React.createElement("select", { value: draft.scope, disabled, "aria-label": field.label + " scope", onChange: (event) => update({ scope: event.target.value }, event) }, [.../* @__PURE__ */ new Set([...field.scopes || ["root", "document", "component", "engine", "runtime"], ...draft.scope ? [draft.scope] : []])].map((scope) => /* @__PURE__ */ React.createElement("option", { key: scope, value: scope }, scope))), /* @__PURE__ */ React.createElement("span", null, field.pathLabel || "Path segments"), /* @__PURE__ */ React.createElement(
+    StringRows,
+    {
+      rows: draft.path,
+      disabled,
+      label: field.pathSegmentLabel || field.label + " path segment",
+      addLabel: field.addPathLabel || "Add path segment",
+      onChange: (path, event) => update({ path }, event)
+    }
+  ), (field.properties || []).map((property) => {
+    const set = (value2, event) => update({ properties: { ...draft.properties, [property.key]: value2 } }, event), value = draft.properties[property.key];
+    const content = property.type === "schemaFilter" ? /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement("label", null, "Schema annotation names (comma-separated)", /* @__PURE__ */ React.createElement(
+      "input",
+      {
+        type: "text",
+        value: value.annotationKeys,
+        disabled,
+        "aria-label": field.label + " schema annotation names",
+        onChange: (event) => set({ ...value, annotationKeys: event.target.value }, event)
+      }
+    )), /* @__PURE__ */ React.createElement("label", null, "Model value path", /* @__PURE__ */ React.createElement(
+      "input",
+      {
+        type: "text",
+        value: value.valuePath,
+        disabled,
+        placeholder: "section/property",
+        "aria-label": field.label + " filter value path",
+        onChange: (event) => set({ ...value, valuePath: event.target.value }, event)
+      }
+    ))) : /* @__PURE__ */ React.createElement("label", null, property.label, /* @__PURE__ */ React.createElement(
+      "input",
+      {
+        type: property.type === "boolean" ? "checkbox" : "text",
+        disabled,
+        "aria-label": field.label + " " + property.label,
+        ...property.type === "boolean" ? { checked: value === true } : { value },
+        onChange: (event) => set(property.type === "boolean" ? event.target.checked : event.target.value, event)
+      }
+    ));
+    return property.advanced ? /* @__PURE__ */ React.createElement("details", { key: property.key }, /* @__PURE__ */ React.createElement("summary", null, property.summary || property.label), content) : /* @__PURE__ */ React.createElement(React.Fragment, { key: property.key }, content);
+  }));
+  if (field.type === "stringList") return /* @__PURE__ */ React.createElement(StringRows, { rows: draft.rows, disabled, label: field.label + " item", addLabel: field.addLabel || "Add item", onChange: (rows, event) => update({ rows }, event) });
+  if (["stringMap", "typedMap", "stringListMap"].includes(field.type)) return /* @__PURE__ */ React.createElement(MapRows, { ...{ field, draft, onChange, disabled }, typed: field.type === "typedMap", list: field.type === "stringListMap" });
+  if (field.type === "initialChoice") return /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement("label", null, "Matching property", /* @__PURE__ */ React.createElement(
+    "input",
+    {
+      type: "text",
+      value: draft.property,
+      disabled,
+      "aria-label": field.label + " matching property",
+      onChange: (event) => update({ property: event.target.value }, event)
+    }
+  )), /* @__PURE__ */ React.createElement("div", { className: "sd-design-composite" }, "Initial choices by value", /* @__PURE__ */ React.createElement(MapRows, { field: { ...field, label: field.label + " values" }, draft, onChange, disabled })));
+  if (field.type === "namedLabels") return /* @__PURE__ */ React.createElement("div", { className: "sd-scan-setting-grid" }, (field.entries || []).map(([key, title]) => /* @__PURE__ */ React.createElement("label", { key }, title, /* @__PURE__ */ React.createElement("input", { type: "text", value: draft.values[key], disabled, "aria-label": title, onChange: (event) => update({ values: { ...draft.values, [key]: event.target.value } }, event) }))));
+  if (field.type === "siblings") return /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement("div", { className: "sd-annotation-row-list" }, draft.rows.map((row) => /* @__PURE__ */ React.createElement("div", { className: "sd-design-sibling", key: row.id }, /* @__PURE__ */ React.createElement(
+    "input",
+    {
+      type: "text",
+      value: row.label,
+      disabled,
+      placeholder: "Display label (optional)",
+      "aria-label": "Sibling display label",
+      onChange: (event) => update({ rows: draft.rows.map((item) => item.id === row.id ? { ...item, label: event.target.value } : item) }, event)
+    }
+  ), /* @__PURE__ */ React.createElement(
+    StringRows,
+    {
+      rows: row.path,
+      label: "Sibling path segment",
+      disabled,
+      addLabel: "Add path segment",
+      removeLabel: "Remove segment",
+      onChange: (path, event) => update({ rows: draft.rows.map((item) => item.id === row.id ? { ...item, path } : item) }, event)
+    }
+  ), /* @__PURE__ */ React.createElement("button", { type: "button", disabled, onClick: (event) => update({ rows: draft.rows.filter((item) => item.id !== row.id) }, event) }, "Remove sibling")))), /* @__PURE__ */ React.createElement("button", { type: "button", disabled, onClick: (event) => update({ rows: [...draft.rows, { id: annotationRow("").id, label: "", path: [annotationRow("")] }] }, event) }, "Add sibling"));
+  if (field.type === "siblingCondition") return /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement("label", null, "Sibling property", /* @__PURE__ */ React.createElement(
+    "input",
+    {
+      type: "text",
+      value: draft.property,
+      disabled,
+      "aria-label": field.label + " sibling property",
+      onChange: (event) => update({ property: event.target.value }, event)
+    }
+  )), /* @__PURE__ */ React.createElement("label", null, "Value type", /* @__PURE__ */ React.createElement(
+    "select",
+    {
+      value: draft.kind,
+      disabled,
+      "aria-label": field.label + " value type",
+      onChange: (event) => update({ kind: event.target.value }, event)
+    },
+    ["string", "number", "boolean", "null"].map((kind) => /* @__PURE__ */ React.createElement("option", { key: kind, value: kind }, { string: "Text", number: "Number", boolean: "Boolean", null: "Null" }[kind]))
+  )), draft.kind === "null" ? null : draft.kind === "boolean" ? /* @__PURE__ */ React.createElement("label", null, "Matching value", /* @__PURE__ */ React.createElement(
+    "select",
+    {
+      value: String(draft.boolean),
+      disabled,
+      "aria-label": field.label + " boolean value",
+      onChange: (event) => update({ boolean: event.target.value === "true" }, event)
+    },
+    /* @__PURE__ */ React.createElement("option", { value: "true" }, "Yes"),
+    /* @__PURE__ */ React.createElement("option", { value: "false" }, "No")
+  )) : /* @__PURE__ */ React.createElement("label", null, "Matching value", /* @__PURE__ */ React.createElement("input", { type: "text", value: draft.text, disabled, "aria-label": field.label + " matching value", onChange: (event) => update({ text: event.target.value }, event) })));
+  if (field.type === "boolean") return /* @__PURE__ */ React.createElement("input", { type: "checkbox", checked: draft.value, disabled, "aria-label": field.label, onChange: (event) => update({ value: event.target.checked }, event) });
+  if (field.options) return /* @__PURE__ */ React.createElement("select", { value: draft.value, disabled, "aria-label": field.label, onChange: (event) => update({ value: event.target.value }, event) }, field.options.map((value) => /* @__PURE__ */ React.createElement("option", { key: value, value }, value || "Not specified")));
+  return /* @__PURE__ */ React.createElement(
+    "input",
+    {
+      type: "text",
+      inputMode: field.type === "integer" ? "numeric" : void 0,
+      value: draft.value,
+      disabled,
+      "aria-label": field.label,
+      onChange: (event) => update({ value: event.target.value }, event)
+    }
+  );
+}
+function WidgetAnnotationEditor({ view, onCommand }) {
+  const { fields, controls, current, schema, source, context, heading, label, groups = [], advancedHeading, note, disabled } = view;
+  const values = { ...current };
+  for (const field of fields) try {
+    const read = readAnnotationControl(field, controls[field.key], readStructuredValueDraft);
+    values[field.key] = field.type === "boolean" ? read.checked : read.text;
+  } catch {
+  }
+  const renderField = (field) => {
+    let error = "";
+    try {
+      readAnnotationControl(field, controls[field.key], readStructuredValueDraft);
+    } catch (failure) {
+      error = failure.message;
+    }
+    const composite = ["source", "namedLabels", "stringList", "stringMap", "typedMap", "stringListMap", "initialChoice", "siblings", "siblingCondition", "json"].includes(field.type), Tag = composite ? "div" : "label";
+    return /* @__PURE__ */ React.createElement(Tag, { key: field.key, className: composite ? "sd-design-composite" : void 0, hidden: !matchesDesignCondition(values, field.visibleWhen, { schema: context?.schema || schema, source, annotation: values }) }, field.label, /* @__PURE__ */ React.createElement(
+      AnnotationControl,
+      {
+        field,
+        draft: controls[field.key],
+        disabled,
+        onChange: (draft, event) => onCommand({ type: "annotation.change", key: field.key, draft }, event)
+      }
+    ), error ? /* @__PURE__ */ React.createElement("p", { role: "alert", className: "sd-error" }, error) : null);
+  };
+  const groupKeys = new Set(groups.map((group) => group.key)), main = fields.filter((field) => !field.advanced && !groupKeys.has(field.group));
+  return /* @__PURE__ */ React.createElement("section", { className: "sd-widget-detail" }, heading && heading !== label ? /* @__PURE__ */ React.createElement("h3", null, heading) : null, main.length ? /* @__PURE__ */ React.createElement("div", { className: "sd-scan-setting-grid" }, main.map(renderField)) : null, groups.map((group) => {
+    const entries = fields.filter((field) => !field.advanced && field.group === group.key);
+    return entries.length ? /* @__PURE__ */ React.createElement("section", { className: "sd-widget-detail", key: group.key }, group.heading ? /* @__PURE__ */ React.createElement("h3", null, group.heading) : null, /* @__PURE__ */ React.createElement("div", { className: "sd-scan-setting-grid" }, entries.map(renderField))) : null;
+  }), fields.some((field) => field.advanced) ? /* @__PURE__ */ React.createElement("details", null, /* @__PURE__ */ React.createElement("summary", null, advancedHeading || "More widget settings"), /* @__PURE__ */ React.createElement("div", { className: "sd-scan-setting-grid" }, fields.filter((field) => field.advanced).map(renderField))) : null, note ? /* @__PURE__ */ React.createElement("p", { className: "sd-note" }, note) : null);
+}
+function renderWidgetAnnotationEditor(parent, schema, {
+  source,
+  state,
+  annotationKey,
+  label,
+  heading,
+  fields = [],
+  groups,
+  advancedHeading,
+  validate,
+  ownedUiAnnotations = [],
+  note,
+  context
+} = {}) {
+  if (!Object.hasOwn(source || {}, annotationKey)) return null;
+  const annotation = source[annotationKey];
+  if (!annotation || typeof annotation !== "object" || Array.isArray(annotation)) return null;
+  const original = JSON.stringify(annotation);
+  let current = annotation;
+  const savedText = typeof state === "string" ? state : state?.value;
+  if (typeof savedText === "string") try {
+    const saved = JSON.parse(savedText);
+    if (saved && typeof saved === "object" && !Array.isArray(saved)) current = saved;
+  } catch {
+  }
+  if (state?.format === "fullmeta-annotation-form-state/1" && state.current) current = structuredClone(state.current);
+  const activeFields = fields.filter((field) => !field.showWhenPresent || Object.hasOwn(current, field.key));
+  let controls = Object.fromEntries(activeFields.map((field) => [field.key, createAnnotationControl(field, current[field.key], structuredValueDraft)]));
+  let dirty = typeof savedText === "string" && savedText !== original, changed = /* @__PURE__ */ new Set(), disabled = false, mount;
+  if (state?.format === "fullmeta-annotation-form-state/1") {
+    controls = structuredClone(state.controls);
+    dirty = state.dirty;
+    changed = new Set(state.changed);
+    adoptAnnotationRows(controls);
+  }
+  if (state?.legacyRaw) {
+    let typedIndex = 0, siblingIndex = 0;
+    for (const field of activeFields) {
+      if (field.type === "typedMap") for (const row of controls[field.key].rows) {
+        const raw = state.legacyRaw.typedMap?.[typedIndex++];
+        if (typeof raw === "string" && raw !== row.text) {
+          row.text = raw;
+          dirty = true;
+          changed.add(field.key);
+        }
+      }
+      if (field.type === "siblingCondition") {
+        const raw = state.legacyRaw.siblingMatches?.[siblingIndex++];
+        if (typeof raw === "string" && raw !== controls[field.key].text) {
+          controls[field.key].text = raw;
+          dirty = true;
+          changed.add(field.key);
+        }
+      }
+    }
+  }
+  const host = document.createElement("div");
+  parent.append(host);
+  const props = () => ({ view: { fields: activeFields, controls, current, schema, source, context, heading, label, groups, advancedHeading, note, disabled }, onCommand });
+  const onCommand = (command, event) => {
+    if (disabled) return;
+    if (command.type !== "annotation.change" || !Object.hasOwn(controls, command.key)) throw new Error("Unknown annotation form command.");
+    controls = { ...controls, [command.key]: command.draft };
+    dirty = true;
+    changed.add(command.key);
+    mount.update(props());
+    if (!event || event.type === "click") host.dispatchEvent(new Event("input", { bubbles: true }));
+  };
+  mount = mountReactComponent(host, WidgetAnnotationEditor, props());
+  const inputControls = activeFields.map((field) => ({ field, input: {
+    get checked() {
+      return readAnnotationControl(field, controls[field.key], readStructuredValueDraft).checked;
+    },
+    get value() {
+      return readAnnotationControl(field, controls[field.key], readStructuredValueDraft).text;
+    },
+    get entries() {
+      return readAnnotationControl(field, controls[field.key], readStructuredValueDraft).entries;
+    }
+  } }));
+  const snapshot = () => {
+    if (!dirty) return original;
+    const next = { ...current };
+    for (const { field, input } of inputControls) {
+      if (!changed.has(field.key)) continue;
+      if (field.type === "boolean") {
+        if (input.checked) next[field.key] = true;
+        else delete next[field.key];
+        continue;
+      }
+      const text = input.value.trim();
+      if (!text) delete next[field.key];
+      else if (field.type === "integer") next[field.key] = Number(text);
+      else if (["json", "source", "namedLabels", "stringList", "stringMap", "typedMap", "stringListMap", "initialChoice", "siblings", "siblingCondition"].includes(field.type)) {
+        try {
+          next[field.key] = JSON.parse(text);
+        } catch {
+          next[field.key] = text;
+        }
+      } else next[field.key] = text;
+    }
+    return JSON.stringify(next);
+  };
+  const snapshotState = () => ({ format: "fullmeta-annotation-form-state/1", current: structuredClone(current), controls: structuredClone(controls), dirty, changed: [...changed] });
+  return {
+    annotationKey,
+    ownedUiAnnotations,
+    element: host,
+    snapshotState,
+    disable(value = true) {
+      disabled = value;
+      mount.update(props());
+    },
+    dispose() {
+      mount.dispose();
+      host.remove();
+    },
+    fields: [{
+      label,
+      keys: [annotationKey],
+      type: "json",
+      input: { get value() {
+        return snapshot();
+      } },
+      original,
+      snapshot,
+      snapshotState,
+      validateDraft() {
+        if (dirty) validateAnnotationFormValue(JSON.parse(snapshot()), { fields, controls: inputControls, changed, validate });
+      },
+      validate(value) {
+        validateAnnotationFormValue(value, { fields, controls: inputControls, changed, validate });
+      }
+    }]
+  };
+}
+export {
+  AnnotationControl,
+  WidgetAnnotationEditor,
+  matchesDesignCondition2 as matchesDesignCondition,
+  renderWidgetAnnotationEditor
+};
 
 //# sourceMappingURL=design-annotation.js.map

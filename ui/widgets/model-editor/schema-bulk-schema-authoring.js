@@ -1,5 +1,164 @@
 // Generated from schema-bulk-schema-authoring.jsx by scripts/build-frontend.mjs.
-import a from"../shared/react/react-runtime.js";import{WorkspaceFileButton as z}from"../../workspace/file-picker.js";import{StructuredValueEditor as M,structuredValueDraft as F,readStructuredValueDraft as U}from"../shared/structured-value-editor.js";import{SchemaAuthoringPathPicker as _,schemaAuthoringPathEntries as G}from"../shared/schema-authoring-path-picker.js";import{nestedStructureTargets as H}from"./schema-nested-structure.js";import{createCandidateDialog as Q}from"./candidate-dialog.js";import{schemaWithAuthoringBatch as q,schemaAuthoringRowsFromText as X,pathFromText as C,pointer as y,types as Y,keywords as Z,modeFor as O,kindOf as R,normalizeRow as ee,beneath as te}from"./schema-bulk-schema-authoring.model.js";import{bulkState as ae,updateBulkState as B,BulkText as P,BulkSelect as g,BulkButton as m}from"./bulk-dialog-controls.js";import{schemaWithAuthoringBatch as ke,schemaAuthoringRowsFromText as we}from"./schema-bulk-schema-authoring.model.js";const E=r=>{const n=H(r);return n.some(u=>!u.path.length)||n.unshift({path:[],title:"Schema root",kind:R(r)}),n};function $(r,n=[]){const u=Array.isArray(n)?n.map(String):typeof n=="string"?C(n):Array.isArray(n?.path)?n.path.map(String):[],b=E(r).filter(h=>te(u,h.path.map(String))).sort((h,t)=>t.path.length-h.path.length)[0],p=y(b?.path||[]);return{target:p,mode:"structure",rows:[],structure:{operation:"add",path:p,relation:"properties",key:"",type:"object",title:"",required:"false"},constraint:{path:p,keyword:"minimum",operation:"set",valueDraft:F(0)},batch:{text:"",format:"json",mode:"append",batchPending:!1},message:"",picker:null}}function A(r,n,u){return q(r,u,{targetPath:n.target}),{...n,rows:u.map((b,p)=>ee(b,p+1)),message:`Staged ${u.length} rows. Preview the combined change before Apply.`}}function re(r,n){if(n.batch.batchPending)throw new Error("Load or Clear edited batch text before Preview.");if(!n.rows.length)throw new Error("Stage at least one structure or constraint row.");return q(r,n.rows,{targetPath:n.target})}const oe=r=>["uniqueItems","readOnly","writeOnly","deprecated"].includes(r)?!1:["required","enum"].includes(r)?[]:["title","description","$ref","pattern","format"].includes(r)?"":r==="additionalProperties"?!0:0;function ne({source:r,draft:n,onDraftChange:u,onOpenStructure:b,onOpenConstraints:p}){const h=a.useRef(null);if(!r)return h.current=null,null;const t=ae(n);h.current={source:r,state:t,onDraftChange:u};const s=e=>B(u,e),c=e=>s({...t,structure:{...t.structure,...e},message:""}),f=e=>s({...t,constraint:{...t.constraint,...e},message:""}),v=e=>{try{s(e())}catch(o){s({...t,message:o.message})}},j=()=>v(()=>{const e=t.structure,o=C(e.path);if(e.operation==="add"&&e.relation==="properties"&&!e.key)throw new Error("Enter a property key.");const d=e.operation==="add"?{op:"add",path:y([...o,e.relation,...e.relation==="properties"?[e.key]:[]]),value:{type:e.type,...e.title?{title:e.title}:{}},...e.relation==="properties"?{required:e.required==="true"}:{}}:e.operation==="type"?{op:"set",path:y([...o,"type"]),value:e.type}:{op:"required",path:y(o),value:e.required==="true"};return A(r,t,[...t.rows,d])}),V=()=>v(()=>{const e=t.constraint,o={op:e.operation,path:y([...C(e.path),e.keyword]),...e.operation==="set"?{value:U(e.valueDraft)}:{}};return A(r,t,[...t.rows,o])}),x=e=>{const o=X(e.batch.text,{format:e.batch.format}),d=A(r,e,e.batch.mode==="replace"?o:[...e.rows,...o]);return{...d,batch:{...d.batch,batchPending:!1}}},J=()=>v(()=>x(t)),L=async e=>{if(!e)return;const o=r,d=t.target;try{const w=(await e.text()).replace(/^\uFEFF/,""),i=h.current;if(!i||i.source!==o||i.state.target!==d)throw new Error("Import target changed while reading. Select the file again.");const T={...i.state,batch:{...i.state.batch,text:w,format:/\.tsv$/i.test(e.name)?"tsv":"json",batchPending:!0}};try{B(i.onDraftChange,x(T))}catch(W){B(i.onDraftChange,{...T,message:`Batch rejected; staged rows were preserved. ${W.message}`})}}catch(w){const i=h.current;i?.source===o&&B(i.onDraftChange,{...i.state,message:w.message})}},I=e=>{(t.rows.length||t.batch.batchPending)&&!globalThis.confirm("Discard staged rows and batch text before changing declarations?")||s({...$(r,C(e)),target:e})},D=e=>{(t.rows.length||t.batch.batchPending)&&!globalThis.confirm("Discard this staged batch and open the separate detailed tool?")||e?.(C(t.target))},l=t.structure,S=t.constraint,N=t.rows.filter(e=>O(e)==="structure").length;let k=null;if(t.picker){let e=r;try{e=q(r,t.rows,{targetPath:t.target}).document}catch{}const o=t.picker.query.toLowerCase(),d=G(e).filter(i=>!o||[i.title,i.schemaPointer,i.dataPointer||"",i.referencePath||""].join(" ").toLowerCase().includes(o)),w=d.find(i=>`${i.schemaPointer}
-${i.dataPointer??"(unbound)"}`===t.picker.selectedKey)||d[0]||null;k={title:"Schema authoring paths",query:t.picker.query,representation:"schemaPointer",visible:d,selected:w,status:t.picker.status||`${d.length} available paths.`}}const K=async e=>{if(e.type==="path.close")s({...t,picker:null});else if(e.type==="path.query")s({...t,picker:{...t.picker,query:e.value,selectedKey:"",status:""}});else if(e.type==="path.select")s({...t,picker:{...t.picker,selectedKey:e.key,status:""}});else if(e.type==="path.use"&&k.selected)s({...t,[t.picker.field]:{...t[t.picker.field],path:k.selected.schemaPointer},picker:null});else if(e.type==="path.copy"&&k.selected?.[e.key]!==null)try{await navigator.clipboard.writeText(k.selected[e.key]);const o=h.current;o?.source===r&&o.state.picker&&B(o.onDraftChange,{...o.state,picker:{...o.state.picker,status:`Copied ${e.label.toLowerCase()}.`}})}catch{s({...t,picker:{...t.picker,status:"Select and copy the path from its field."}})}};return a.createElement("section",null,a.createElement("p",null,"Stage structure and constraints together, Preview the complete candidate, then Apply atomically. Forms join the batch only when you choose Stage row. Save remains separate."),a.createElement("div",{className:"schema-bulk-toolbar"},a.createElement(g,{label:"Schema batch target",value:t.target,choices:E(r).map(e=>[y(e.path),`${y(e.path)} \xB7 ${e.kind} \xB7 ${e.title}`]),onChange:I}),a.createElement(g,{label:"Schema authoring mode",value:t.mode,choices:[["structure","Structure"],["constraints","Constraints"]],onChange:e=>s({...t,mode:e})})),a.createElement("p",{role:"status"},"Target ",t.target," \xB7 ",t.rows.length," staged rows (",N," structure, ",t.rows.length-N," constraints) \xB7 ",t.batch.batchPending?"Unloaded batch text; Load or Clear before Preview":t.rows.length?"Pending Preview":"No staged changes",". Preview applies both modes together."),t.mode==="structure"?a.createElement("section",{className:"schema-batch-mode"},a.createElement("h3",null,"Structure"),a.createElement("div",{className:"schema-batch-form"},a.createElement(g,{label:"Structure operation",value:l.operation,choices:[["add","Add schema"],["type","Set type"],["required","Set required status"]],onChange:e=>c({operation:e})}),a.createElement(P,{label:"Structure parent or declaration JSON Pointer",value:l.path,onChange:e=>c({path:e})}),a.createElement(m,{onClick:()=>s({...t,picker:{field:"structure",query:"",selectedKey:"",status:""}})},"Pick structure path\u2026"),a.createElement(g,{label:"Schema parent relation",value:l.relation,choices:[["properties","Object property"],["items","Array items"],["additionalProperties","Map values"]],disabled:l.operation!=="add",onChange:e=>c({relation:e})}),a.createElement(P,{label:"New schema field key",value:l.key,disabled:l.operation!=="add"||l.relation!=="properties",onChange:e=>c({key:e})}),a.createElement(g,{label:"New schema type",value:l.type,choices:Y,disabled:l.operation==="required",onChange:e=>c({type:e})}),a.createElement(P,{label:"New schema title",value:l.title,disabled:l.operation!=="add",onChange:e=>c({title:e})}),a.createElement(g,{label:"Schema field required status",value:l.required,choices:[["false","Optional"],["true","Required"]],disabled:l.operation==="type"||l.operation==="add"&&l.relation!=="properties",onChange:e=>c({required:e})})),a.createElement(m,{onClick:j},"Stage structure row")):a.createElement("section",{className:"schema-batch-mode"},a.createElement("h3",null,"Constraints"),a.createElement(P,{label:"Constraint declaration JSON Pointer",value:S.path,onChange:e=>f({path:e})}),a.createElement(m,{onClick:()=>s({...t,picker:{field:"constraint",query:"",selectedKey:"",status:""}})},"Pick constraint path\u2026"),a.createElement(g,{label:"Schema constraint keyword",value:S.keyword,choices:[...Z].filter(e=>e!=="type"),onChange:e=>f({keyword:e,valueDraft:F(oe(e))})}),a.createElement(g,{label:"Constraint operation",value:S.operation,choices:[["set","Set"],["remove","Remove keyword"]],onChange:e=>f({operation:e})}),S.operation==="set"?a.createElement(M,{draft:S.valueDraft,label:"Constraint value",onDraftChange:e=>f({valueDraft:e})}):null,a.createElement(m,{onClick:V},"Stage constraint row")),k?a.createElement("section",{className:"schema-authoring-path-dialog","aria-label":"Schema authoring paths"},a.createElement(_,{view:k,onCommand:K})):null,a.createElement("div",{className:"schema-batch-queue"},a.createElement("table",{className:"schema-structure-table schema-bulk-table"},a.createElement("thead",null,a.createElement("tr",null,["Row","Schema path","Operation","Native value","Actions"].map(e=>a.createElement("th",{key:e},e)))),a.createElement("tbody",null,t.rows.map((e,o)=>O(e)===t.mode?a.createElement("tr",{key:o},a.createElement("td",null,o+1),a.createElement("td",null,a.createElement("code",null,e.path)),a.createElement("td",null,e.op),a.createElement("td",null,a.createElement("code",null,e.op==="remove"?"(remove)":JSON.stringify(e.value))),a.createElement("td",null,a.createElement(m,{onClick:()=>s({...t,rows:t.rows.filter((d,w)=>w!==o),message:""})},"Remove staged row"))):null)))),a.createElement("details",{className:"schema-validation-batch-worksheet"},a.createElement("summary",null,"Import combined structure and constraint rows"),a.createElement("p",null,"JSON records use op, absolute schema Pointer path, native value, and optional required. TSV columns: Operation, Path, Value JSON, Required. Parents precede children."),a.createElement(P,{multiline:!0,label:"Schema authoring batch text",value:t.batch.text,onChange:e=>s({...t,batch:{...t.batch,text:e,batchPending:!!e.trim()},message:""})}),a.createElement(g,{label:"Schema batch text format",value:t.batch.format,choices:[["json","JSON"],["tsv","TSV"]],onChange:e=>s({...t,batch:{...t.batch,format:e,batchPending:!!t.batch.text.trim()}})}),a.createElement(g,{label:"Schema batch load operation",value:t.batch.mode,choices:[["append","Append rows"],["replace","Replace staged batch"]],onChange:e=>s({...t,batch:{...t.batch,mode:e,batchPending:!!t.batch.text.trim()}})}),a.createElement(z,{label:"Import schema authoring batch file",onFile:L}),a.createElement(m,{onClick:J},"Load batch rows"),a.createElement(m,{onClick:()=>{t.batch.batchPending&&!globalThis.confirm("Replace unloaded batch text with staged rows?")||s({...t,batch:{...t.batch,format:"json",text:JSON.stringify(t.rows,null,2),batchPending:!1}})}},"Show staged rows"),a.createElement(m,{onClick:()=>s({...t,batch:{...t.batch,text:"",batchPending:!1}})},"Clear batch text")),b?a.createElement(m,{onClick:()=>D(b)},"Detailed nested structure\u2026"):null,p?a.createElement(m,{onClick:()=>D(p)},"Detailed field constraints\u2026"):null,a.createElement(m,{onClick:()=>s({...t,rows:[],batch:{...t.batch,text:"",batchPending:!1},message:""})},"Clear staged batch"),t.message?a.createElement("p",{role:"status"},t.message):null)}function ge({getDocument:r,validateCandidate:n,applyCandidate:u,onOpenStructure:b,onOpenConstraints:p}){let h;const t=c=>f=>{h.close(),c(f)};return h=Q({title:"Bulk schema authoring",toolId:"bulkSchemaAuthoring",className:"schema-bulk-schema-dialog",getDocument:r,validateCandidate:n,applyCandidate:(c,f,v)=>{n(c,v),u(c,f,v)},initialDraft:$,buildCandidate:re,Editor:c=>a.createElement(ne,{...c,onOpenStructure:b?t(b):null,onOpenConstraints:p?t(p):null}),message:"Applied schema authoring rows. Candidate validation passed. Save the schema to keep the changes."}),h}export{ne as BulkSchemaAuthoringEditor,re as bulkSchemaAuthoringDialogCandidate,$ as bulkSchemaAuthoringDialogDraft,ge as createBulkSchemaAuthoringDialog,we as schemaAuthoringRowsFromText,ke as schemaWithAuthoringBatch,A as stageSchemaAuthoringRows};
+import React from "../shared/react/react-runtime.js";
+import { WorkspaceFileButton } from "../../workspace/file-picker.js";
+import { StructuredValueEditor, structuredValueDraft, readStructuredValueDraft } from "../shared/structured-value-editor.js";
+import { SchemaAuthoringPathPicker, schemaAuthoringPathEntries } from "../shared/schema-authoring-path-picker.js";
+import { nestedStructureTargets } from "./schema-nested-structure.js";
+import { createCandidateDialog } from "./candidate-dialog.js";
+import { schemaWithAuthoringBatch, schemaAuthoringRowsFromText, pathFromText, pointer, types, keywords, modeFor, kindOf, normalizeRow, beneath } from "./schema-bulk-schema-authoring.model.js";
+import { bulkState, updateBulkState, cleanBulkData, BulkText, BulkSelect, BulkButton } from "./bulk-dialog-controls.js";
+import { schemaWithAuthoringBatch as schemaWithAuthoringBatch2, schemaAuthoringRowsFromText as schemaAuthoringRowsFromText2 } from "./schema-bulk-schema-authoring.model.js";
+const targetsFor = (source) => {
+  const targets = nestedStructureTargets(source);
+  if (!targets.some((target) => !target.path.length)) targets.unshift({ path: [], title: "Schema root", kind: kindOf(source) });
+  return targets;
+};
+function bulkSchemaAuthoringDialogDraft(source, initialPath = []) {
+  const initial = Array.isArray(initialPath) ? initialPath.map(String) : typeof initialPath === "string" ? pathFromText(initialPath) : Array.isArray(initialPath?.path) ? initialPath.path.map(String) : [];
+  const selected = targetsFor(source).filter((entry) => beneath(initial, entry.path.map(String))).sort((left, right) => right.path.length - left.path.length)[0], target = pointer(selected?.path || []);
+  return {
+    target,
+    mode: "structure",
+    rows: [],
+    structure: { operation: "add", path: target, relation: "properties", key: "", type: "object", title: "", required: "false" },
+    constraint: { path: target, keyword: "minimum", operation: "set", valueDraft: structuredValueDraft(0) },
+    batch: { text: "", format: "json", mode: "append", batchPending: false },
+    message: "",
+    picker: null
+  };
+}
+function stageSchemaAuthoringRows(source, state, rows) {
+  schemaWithAuthoringBatch(source, rows, { targetPath: state.target });
+  return { ...state, rows: rows.map((row, index) => normalizeRow(row, index + 1)), message: `Staged ${rows.length} rows. Preview the combined change before Apply.` };
+}
+function bulkSchemaAuthoringDialogCandidate(source, state) {
+  if (state.batch.batchPending) throw new Error("Load or Clear edited batch text before Preview.");
+  if (!state.rows.length) throw new Error("Stage at least one structure or constraint row.");
+  return schemaWithAuthoringBatch(source, state.rows, { targetPath: state.target });
+}
+const defaultConstraintValue = (keyword) => ["uniqueItems", "readOnly", "writeOnly", "deprecated"].includes(keyword) ? false : ["required", "enum"].includes(keyword) ? [] : ["title", "description", "$ref", "pattern", "format"].includes(keyword) ? "" : keyword === "additionalProperties" ? true : 0;
+function BulkSchemaAuthoringEditor({ source, draft, onDraftChange, onOpenStructure, onOpenConstraints }) {
+  const latest = React.useRef(null);
+  if (!source) {
+    latest.current = null;
+    return null;
+  }
+  const state = bulkState(draft);
+  latest.current = { source, state, onDraftChange };
+  const change = (next) => updateBulkState(onDraftChange, next), setStructure = (patch) => change({ ...state, structure: { ...state.structure, ...patch }, message: "" }), setConstraint = (patch) => change({ ...state, constraint: { ...state.constraint, ...patch }, message: "" });
+  const attempt = (action) => {
+    try {
+      change(action());
+    } catch (error) {
+      change({ ...state, message: error.message });
+    }
+  };
+  const stageStructure = () => attempt(() => {
+    const form = state.structure, path = pathFromText(form.path);
+    if (form.operation === "add" && form.relation === "properties" && !form.key) throw new Error("Enter a property key.");
+    const row = form.operation === "add" ? { op: "add", path: pointer([...path, form.relation, ...form.relation === "properties" ? [form.key] : []]), value: { type: form.type, ...form.title ? { title: form.title } : {} }, ...form.relation === "properties" ? { required: form.required === "true" } : {} } : form.operation === "type" ? { op: "set", path: pointer([...path, "type"]), value: form.type } : { op: "required", path: pointer(path), value: form.required === "true" };
+    return stageSchemaAuthoringRows(source, state, [...state.rows, row]);
+  });
+  const stageConstraint = () => attempt(() => {
+    const form = state.constraint, row = { op: form.operation, path: pointer([...pathFromText(form.path), form.keyword]), ...form.operation === "set" ? { value: readStructuredValueDraft(form.valueDraft) } : {} };
+    return stageSchemaAuthoringRows(source, state, [...state.rows, row]);
+  });
+  const load = (next) => {
+    const rows = schemaAuthoringRowsFromText(next.batch.text, { format: next.batch.format });
+    const result = stageSchemaAuthoringRows(source, next, next.batch.mode === "replace" ? rows : [...next.rows, ...rows]);
+    return { ...result, batch: { ...result.batch, batchPending: false } };
+  };
+  const loadBatch = () => attempt(() => load(state));
+  const readFile = async (file) => {
+    if (!file) return;
+    const openedSource = source, openedTarget = state.target;
+    try {
+      const text = (await file.text()).replace(/^\uFEFF/, ""), current = latest.current;
+      if (!current || current.source !== openedSource || current.state.target !== openedTarget) throw new Error("Import target changed while reading. Select the file again.");
+      const next = { ...current.state, batch: { ...current.state.batch, text, format: /\.tsv$/i.test(file.name) ? "tsv" : "json", batchPending: true } };
+      try {
+        updateBulkState(current.onDraftChange, load(next));
+      } catch (error) {
+        updateBulkState(current.onDraftChange, { ...next, message: `Batch rejected; staged rows were preserved. ${error.message}` });
+      }
+    } catch (error) {
+      const current = latest.current;
+      if (current?.source === openedSource) updateBulkState(current.onDraftChange, { ...current.state, message: error.message });
+    }
+  };
+  const targetChange = (target) => {
+    if ((state.rows.length || state.batch.batchPending) && !globalThis.confirm("Discard staged rows and batch text before changing declarations?")) return;
+    change({ ...bulkSchemaAuthoringDialogDraft(source, pathFromText(target)), target });
+  };
+  const detailed = (callback) => {
+    if ((state.rows.length || state.batch.batchPending) && !globalThis.confirm("Discard this staged batch and open the separate detailed tool?")) return;
+    callback?.(pathFromText(state.target));
+  };
+  const structure = state.structure, constraint = state.constraint, structural = state.rows.filter((row) => modeFor(row) === "structure").length;
+  let pickerView = null;
+  if (state.picker) {
+    let document = source;
+    try {
+      document = schemaWithAuthoringBatch(source, state.rows, { targetPath: state.target }).document;
+    } catch {
+    }
+    const query = state.picker.query.toLowerCase(), visible = schemaAuthoringPathEntries(document).filter((entry) => !query || [entry.title, entry.schemaPointer, entry.dataPointer || "", entry.referencePath || ""].join(" ").toLowerCase().includes(query));
+    const selected = visible.find((entry) => `${entry.schemaPointer}
+${entry.dataPointer ?? "(unbound)"}` === state.picker.selectedKey) || visible[0] || null;
+    pickerView = { title: "Schema authoring paths", query: state.picker.query, representation: "schemaPointer", visible, selected, status: state.picker.status || `${visible.length} available paths.` };
+  }
+  const pickerCommand = async (command) => {
+    if (command.type === "path.close") change({ ...state, picker: null });
+    else if (command.type === "path.query") change({ ...state, picker: { ...state.picker, query: command.value, selectedKey: "", status: "" } });
+    else if (command.type === "path.select") change({ ...state, picker: { ...state.picker, selectedKey: command.key, status: "" } });
+    else if (command.type === "path.use" && pickerView.selected) change({ ...state, [state.picker.field]: { ...state[state.picker.field], path: pickerView.selected.schemaPointer }, picker: null });
+    else if (command.type === "path.copy" && pickerView.selected?.[command.key] !== null) {
+      try {
+        await navigator.clipboard.writeText(pickerView.selected[command.key]);
+        const current = latest.current;
+        if (current?.source === source && current.state.picker) updateBulkState(current.onDraftChange, { ...current.state, picker: { ...current.state.picker, status: `Copied ${command.label.toLowerCase()}.` } });
+      } catch {
+        change({ ...state, picker: { ...state.picker, status: "Select and copy the path from its field." } });
+      }
+    }
+  };
+  return /* @__PURE__ */ React.createElement("section", null, /* @__PURE__ */ React.createElement("p", null, "Stage structure and constraints together, Preview the complete candidate, then Apply atomically. Forms join the batch only when you choose Stage row. Save remains separate."), /* @__PURE__ */ React.createElement("div", { className: "schema-bulk-toolbar" }, /* @__PURE__ */ React.createElement(BulkSelect, { label: "Schema batch target", value: state.target, choices: targetsFor(source).map((entry) => [pointer(entry.path), `${pointer(entry.path)} \xB7 ${entry.kind} \xB7 ${entry.title}`]), onChange: targetChange }), /* @__PURE__ */ React.createElement(BulkSelect, { label: "Schema authoring mode", value: state.mode, choices: [["structure", "Structure"], ["constraints", "Constraints"]], onChange: (mode) => change({ ...state, mode }) })), /* @__PURE__ */ React.createElement("p", { role: "status" }, "Target ", state.target, " \xB7 ", state.rows.length, " staged rows (", structural, " structure, ", state.rows.length - structural, " constraints) \xB7 ", state.batch.batchPending ? "Unloaded batch text; Load or Clear before Preview" : state.rows.length ? "Pending Preview" : "No staged changes", ". Preview applies both modes together."), state.mode === "structure" ? /* @__PURE__ */ React.createElement("section", { className: "schema-batch-mode" }, /* @__PURE__ */ React.createElement("h3", null, "Structure"), /* @__PURE__ */ React.createElement("div", { className: "schema-batch-form" }, /* @__PURE__ */ React.createElement(BulkSelect, { label: "Structure operation", value: structure.operation, choices: [["add", "Add schema"], ["type", "Set type"], ["required", "Set required status"]], onChange: (operation) => setStructure({ operation }) }), /* @__PURE__ */ React.createElement(BulkText, { label: "Structure parent or declaration JSON Pointer", value: structure.path, onChange: (path) => setStructure({ path }) }), /* @__PURE__ */ React.createElement(BulkButton, { onClick: () => change({ ...state, picker: { field: "structure", query: "", selectedKey: "", status: "" } }) }, "Pick structure path\u2026"), /* @__PURE__ */ React.createElement(BulkSelect, { label: "Schema parent relation", value: structure.relation, choices: [["properties", "Object property"], ["items", "Array items"], ["additionalProperties", "Map values"]], disabled: structure.operation !== "add", onChange: (relation) => setStructure({ relation }) }), /* @__PURE__ */ React.createElement(BulkText, { label: "New schema field key", value: structure.key, disabled: structure.operation !== "add" || structure.relation !== "properties", onChange: (key) => setStructure({ key }) }), /* @__PURE__ */ React.createElement(BulkSelect, { label: "New schema type", value: structure.type, choices: types, disabled: structure.operation === "required", onChange: (type) => setStructure({ type }) }), /* @__PURE__ */ React.createElement(BulkText, { label: "New schema title", value: structure.title, disabled: structure.operation !== "add", onChange: (title) => setStructure({ title }) }), /* @__PURE__ */ React.createElement(BulkSelect, { label: "Schema field required status", value: structure.required, choices: [["false", "Optional"], ["true", "Required"]], disabled: structure.operation === "type" || structure.operation === "add" && structure.relation !== "properties", onChange: (required) => setStructure({ required }) })), /* @__PURE__ */ React.createElement(BulkButton, { onClick: stageStructure }, "Stage structure row")) : /* @__PURE__ */ React.createElement("section", { className: "schema-batch-mode" }, /* @__PURE__ */ React.createElement("h3", null, "Constraints"), /* @__PURE__ */ React.createElement(BulkText, { label: "Constraint declaration JSON Pointer", value: constraint.path, onChange: (path) => setConstraint({ path }) }), /* @__PURE__ */ React.createElement(BulkButton, { onClick: () => change({ ...state, picker: { field: "constraint", query: "", selectedKey: "", status: "" } }) }, "Pick constraint path\u2026"), /* @__PURE__ */ React.createElement(BulkSelect, { label: "Schema constraint keyword", value: constraint.keyword, choices: [...keywords].filter((key) => key !== "type"), onChange: (keyword) => setConstraint({ keyword, valueDraft: structuredValueDraft(defaultConstraintValue(keyword)) }) }), /* @__PURE__ */ React.createElement(BulkSelect, { label: "Constraint operation", value: constraint.operation, choices: [["set", "Set"], ["remove", "Remove keyword"]], onChange: (operation) => setConstraint({ operation }) }), constraint.operation === "set" ? /* @__PURE__ */ React.createElement(StructuredValueEditor, { draft: constraint.valueDraft, label: "Constraint value", onDraftChange: (valueDraft) => setConstraint({ valueDraft }) }) : null, /* @__PURE__ */ React.createElement(BulkButton, { onClick: stageConstraint }, "Stage constraint row")), pickerView ? /* @__PURE__ */ React.createElement("section", { className: "schema-authoring-path-dialog", "aria-label": "Schema authoring paths" }, /* @__PURE__ */ React.createElement(SchemaAuthoringPathPicker, { view: pickerView, onCommand: pickerCommand })) : null, /* @__PURE__ */ React.createElement("div", { className: "schema-batch-queue" }, /* @__PURE__ */ React.createElement("table", { className: "schema-structure-table schema-bulk-table" }, /* @__PURE__ */ React.createElement("thead", null, /* @__PURE__ */ React.createElement("tr", null, ["Row", "Schema path", "Operation", "Native value", "Actions"].map((label) => /* @__PURE__ */ React.createElement("th", { key: label }, label)))), /* @__PURE__ */ React.createElement("tbody", null, state.rows.map((row, index) => modeFor(row) === state.mode ? /* @__PURE__ */ React.createElement("tr", { key: index }, /* @__PURE__ */ React.createElement("td", null, index + 1), /* @__PURE__ */ React.createElement("td", null, /* @__PURE__ */ React.createElement("code", null, row.path)), /* @__PURE__ */ React.createElement("td", null, row.op), /* @__PURE__ */ React.createElement("td", null, /* @__PURE__ */ React.createElement("code", null, row.op === "remove" ? "(remove)" : JSON.stringify(row.value))), /* @__PURE__ */ React.createElement("td", null, /* @__PURE__ */ React.createElement(BulkButton, { onClick: () => change({ ...state, rows: state.rows.filter((_, at) => at !== index), message: "" }) }, "Remove staged row"))) : null)))), /* @__PURE__ */ React.createElement("details", { className: "schema-validation-batch-worksheet" }, /* @__PURE__ */ React.createElement("summary", null, "Import combined structure and constraint rows"), /* @__PURE__ */ React.createElement("p", null, "JSON records use op, absolute schema Pointer path, native value, and optional required. TSV columns: Operation, Path, Value JSON, Required. Parents precede children."), /* @__PURE__ */ React.createElement(BulkText, { multiline: true, label: "Schema authoring batch text", value: state.batch.text, onChange: (text) => change({ ...state, batch: { ...state.batch, text, batchPending: Boolean(text.trim()) }, message: "" }) }), /* @__PURE__ */ React.createElement(BulkSelect, { label: "Schema batch text format", value: state.batch.format, choices: [["json", "JSON"], ["tsv", "TSV"]], onChange: (format) => change({ ...state, batch: { ...state.batch, format, batchPending: Boolean(state.batch.text.trim()) } }) }), /* @__PURE__ */ React.createElement(BulkSelect, { label: "Schema batch load operation", value: state.batch.mode, choices: [["append", "Append rows"], ["replace", "Replace staged batch"]], onChange: (mode) => change({ ...state, batch: { ...state.batch, mode, batchPending: Boolean(state.batch.text.trim()) } }) }), /* @__PURE__ */ React.createElement(WorkspaceFileButton, { label: "Import schema authoring batch file", onFile: readFile }), /* @__PURE__ */ React.createElement(BulkButton, { onClick: loadBatch }, "Load batch rows"), /* @__PURE__ */ React.createElement(BulkButton, { onClick: () => {
+    if (state.batch.batchPending && !globalThis.confirm("Replace unloaded batch text with staged rows?")) return;
+    change({ ...state, batch: { ...state.batch, format: "json", text: JSON.stringify(state.rows, null, 2), batchPending: false } });
+  } }, "Show staged rows"), /* @__PURE__ */ React.createElement(BulkButton, { onClick: () => change({ ...state, batch: { ...state.batch, text: "", batchPending: false } }) }, "Clear batch text")), onOpenStructure ? /* @__PURE__ */ React.createElement(BulkButton, { onClick: () => detailed(onOpenStructure) }, "Detailed nested structure\u2026") : null, onOpenConstraints ? /* @__PURE__ */ React.createElement(BulkButton, { onClick: () => detailed(onOpenConstraints) }, "Detailed field constraints\u2026") : null, /* @__PURE__ */ React.createElement(BulkButton, { onClick: () => change({ ...state, rows: [], batch: { ...state.batch, text: "", batchPending: false }, message: "" }) }, "Clear staged batch"), state.message ? /* @__PURE__ */ React.createElement("p", { role: "status" }, state.message) : null);
+}
+function createBulkSchemaAuthoringDialog({ getDocument, validateCandidate, applyCandidate, onOpenStructure, onOpenConstraints }) {
+  let api;
+  const advanced = (callback) => (path) => {
+    api.close();
+    callback(path);
+  };
+  const Editor = (props) => /* @__PURE__ */ React.createElement(BulkSchemaAuthoringEditor, { ...props, onOpenStructure: onOpenStructure ? advanced(onOpenStructure) : null, onOpenConstraints: onOpenConstraints ? advanced(onOpenConstraints) : null });
+  api = createCandidateDialog({
+    title: "Bulk schema authoring",
+    toolId: "bulkSchemaAuthoring",
+    className: "schema-bulk-schema-dialog",
+    getDocument,
+    validateCandidate,
+    applyCandidate: (candidate, message, options) => {
+      validateCandidate(candidate, options);
+      applyCandidate(candidate, message, options);
+    },
+    initialDraft: bulkSchemaAuthoringDialogDraft,
+    buildCandidate: bulkSchemaAuthoringDialogCandidate,
+    Editor,
+    message: "Applied schema authoring rows. Candidate validation passed. Save the schema to keep the changes."
+  });
+  return api;
+}
+export {
+  BulkSchemaAuthoringEditor,
+  bulkSchemaAuthoringDialogCandidate,
+  bulkSchemaAuthoringDialogDraft,
+  createBulkSchemaAuthoringDialog,
+  schemaAuthoringRowsFromText2 as schemaAuthoringRowsFromText,
+  schemaWithAuthoringBatch2 as schemaWithAuthoringBatch,
+  stageSchemaAuthoringRows
+};
 
 //# sourceMappingURL=schema-bulk-schema-authoring.js.map

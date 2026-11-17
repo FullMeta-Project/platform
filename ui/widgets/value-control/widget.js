@@ -1,4 +1,140 @@
 // Generated from widget.jsx by scripts/build-frontend.mjs.
-import r,{renderWidgetMarkup as I}from"../shared/react/react-runtime.js";import{mountReactComponent as P}from"../shared/react/mount.js";import{valueControlDesignLabel as Y,renderValueControlDesignEditor as Z}from"./design-editor.js";import{validateValueControlAnnotation as R}from"./fullmeta-ui-valueControl-1.schema.js";function U({label:a,description:e,children:d}){return r.createElement("tr",null,r.createElement("td",null,a),r.createElement("td",null,d,e?r.createElement("div",{className:"settings-empty"},e):null))}function w(a,e){if(a===e)return!0;if(Array.isArray(a)||Array.isArray(e))return Array.isArray(a)&&Array.isArray(e)&&a.length===e.length&&a.every((u,i)=>w(u,e[i]));if(!a||!e||typeof a!="object"||typeof e!="object")return!1;const d=Object.keys(a);return d.length===Object.keys(e).length&&d.every(u=>Object.hasOwn(e,u)&&w(a[u],e[u]))}function J({label:a,value:e,rawValue:d,path:u=[],schema:i={},context:C={},ui:s={},onChange:B,onCommand:x,disabled:V=!1,legacyMarkup:k=!1}){const $=d===void 0?C.readDraft?.(u):d,b=$===void 0?e:$,A=(n,l,t,g={})=>x?x({type:"field.change",path:u,value:n,rawValue:Object.hasOwn(g,"rawValue")?g.rawValue:t?.target?.type==="checkbox"?t.target.checked:t?.target?.value??n,valueType:l,action:s.onChangeAction},t):(B||C.onChange)?.({path:u,value:n,type:l,action:s.onChangeAction},t),h={"data-setting-path":JSON.stringify(u),...C.rootSettingPath?{"data-setting-root-path":"true"}:{},"aria-label":a,disabled:V};if(u.at(-1)==="type"&&(Object.hasOwn(i,"const")||i.enum?.length===1))return null;let y;if(Object.hasOwn(i,"const")||i.readOnly===!0||s.readOnly===!0)y=r.createElement("span",{className:"settings-generated-id"},String((Object.hasOwn(i,"const")?i.const:e)??""));else if(Array.isArray(i.enum)||s.choiceSource){let n=null,l="";if(s.choiceSource)try{n=C.choiceOptions?.(s.choiceSource,{label:a,value:e,path:u,schema:i}),Array.isArray(n)||(l="Choices are unavailable: the source did not return a list.")}catch(o){l=`Choices are unavailable: ${o?.message||"the source failed."}`}const t=Array.isArray(n)?n:Array.isArray(i.enum)?i.enum:[],g=o=>!!s.choiceSource&&o!==null&&!Array.isArray(o)&&typeof o=="object"&&Object.hasOwn(o,"value"),m=o=>g(o)?o.value:o,E=o=>{const c=m(o);return String(g(o)?o.label??s.choiceLabels?.[String(c)]??String(c):s.choiceLabels?.[String(c)]??String(c))},j=t.map(E),N=t.findIndex(o=>w(m(o),b)),v=N>=0?m(t[N]):b,L=v===null?"null":Array.isArray(v)?"array":typeof v,T=N>=0?`choice-${N}`:b===void 0?"":"choice-unavailable";y=r.createElement(r.Fragment,null,r.createElement("select",{...h,disabled:V||!!l,"data-setting-type":L||"string","data-setting-choice-value":"true","data-schema-change-action":s.onChangeAction,value:T,onChange:o=>{const c=/^choice-(\d+)$/.exec(o.target.value),f=c?Number(c[1]):-1;if(f<0||f>=t.length)return;const p=m(t[f]),S=p===null?"null":Array.isArray(p)?"array":typeof p;A(p,S,o,{rawValue:p})}},T==="choice-unavailable"?r.createElement("option",{value:"choice-unavailable"},"Unknown (",JSON.stringify(b),")"):null,t.map((o,c)=>{const f=m(o),p=j[c],S=j.filter(O=>O===p).length>1,D=f===null?"null":Array.isArray(f)?"array":typeof f,W=S&&t.some((O,F)=>F!==c&&j[F]===p&&(m(O)===null?"null":Array.isArray(m(O))?"array":typeof m(O))===D),M=S?`${p} (${D}${W?`: ${JSON.stringify(f)}`:""})`:p;return r.createElement("option",{key:c,value:`choice-${c}`},M)})),l?r.createElement("span",{role:"alert"},l):s.choiceSource&&t.length===0?r.createElement("span",{role:"status"},"No choices are available."):null)}else if(Array.isArray(e)&&!e.length)y=r.createElement("span",{className:"settings-empty"},"Empty array");else if(Array.isArray(e)&&e.every(n=>n===null||["string","number","boolean"].includes(typeof n))){const n=e.every(t=>typeof t=="number"&&Number.isFinite(t)),l=e.every(t=>typeof t=="string"&&t.length>0&&t===t.trim()&&!t.includes(","));if(!n&&!l)y=r.createElement("span",{className:"settings-empty",role:"status"},JSON.stringify(e)," \xB7 This array cannot be edited safely in the comma-separated control.");else{const t=n?"array-number":"array-string";y=r.createElement("input",{...h,"data-setting-type":t,value:d===void 0?e.join(", "):d,onChange:g=>A(g.target.value,t,g)})}}else if(typeof e=="boolean")y=r.createElement("input",{...h,type:"checkbox","data-setting-type":"boolean",checked:!!b,onChange:n=>A(n.target.checked,"boolean",n)});else if(typeof e=="number"||i.type==="number"||i.type==="integer")y=r.createElement("input",{...h,type:k?"number":"text",inputMode:k?void 0:"decimal",step:"any","data-setting-type":"number",min:Number.isFinite(i.minimum)?i.minimum:void 0,max:Number.isFinite(i.maximum)?i.maximum:void 0,value:b??"",onChange:n=>A(n.target.value.trim()!==""&&Number.isFinite(Number(n.target.value))?Number(n.target.value):n.target.value,"number",n)});else if(typeof e=="string"){const n={...h,"data-setting-type":"string",placeholder:s.placeholder,value:b,onChange:l=>A(l.target.value,"string",l)};y=s.multiline?r.createElement("textarea",{...n}):r.createElement("input",{...n,type:"text"})}else y=r.createElement("span",{className:"settings-empty"},"No editable value");return r.createElement(U,{label:a,description:i.description},y)}function q(a){return r.createElement(J,{...a,...a.view})}const H=a=>I(r.createElement(J,{...a,legacyMarkup:!0})),K=(a,e)=>P(a,q,e);export{J as ValueControl,q as Widget,K as mountWidget,H as renderValueControl,Z as renderValueControlDesignEditor,R as validateValueControlAnnotation,Y as valueControlDesignLabel};
+import React, { renderWidgetMarkup } from "../shared/react/react-runtime.js";
+import { mountReactComponent } from "../shared/react/mount.js";
+import { valueControlDesignLabel, renderValueControlDesignEditor } from "./design-editor.js";
+import { validateValueControlAnnotation } from "./fullmeta-ui-valueControl-1.schema.js";
+function SettingRow({ label, description, children }) {
+  return /* @__PURE__ */ React.createElement("tr", null, /* @__PURE__ */ React.createElement("td", null, label), /* @__PURE__ */ React.createElement("td", null, children, description ? /* @__PURE__ */ React.createElement("div", { className: "settings-empty" }, description) : null));
+}
+function sameChoice(left, right) {
+  if (left === right) return true;
+  if (Array.isArray(left) || Array.isArray(right)) return Array.isArray(left) && Array.isArray(right) && left.length === right.length && left.every((item, index) => sameChoice(item, right[index]));
+  if (!left || !right || typeof left !== "object" || typeof right !== "object") return false;
+  const keys = Object.keys(left);
+  return keys.length === Object.keys(right).length && keys.every((key) => Object.hasOwn(right, key) && sameChoice(left[key], right[key]));
+}
+function ValueControl({ label, value, rawValue, path = [], schema = {}, context = {}, ui = {}, onChange, onCommand, disabled = false, legacyMarkup = false }) {
+  const pending = rawValue === void 0 ? context.readDraft?.(path) : rawValue;
+  const inputValue = pending === void 0 ? value : pending;
+  const emit = (next, type, event, options = {}) => onCommand ? onCommand({
+    type: "field.change",
+    path,
+    value: next,
+    rawValue: Object.hasOwn(options, "rawValue") ? options.rawValue : event?.target?.type === "checkbox" ? event.target.checked : event?.target?.value ?? next,
+    valueType: type,
+    action: ui.onChangeAction
+  }, event) : (onChange || context.onChange)?.({ path, value: next, type, action: ui.onChangeAction }, event);
+  const attributes = { "data-setting-path": JSON.stringify(path), ...context.rootSettingPath ? { "data-setting-root-path": "true" } : {}, "aria-label": label, disabled };
+  if (path.at(-1) === "type" && (Object.hasOwn(schema, "const") || schema.enum?.length === 1)) return null;
+  let control;
+  if (Object.hasOwn(schema, "const") || schema.readOnly === true || ui.readOnly === true)
+    control = /* @__PURE__ */ React.createElement("span", { className: "settings-generated-id" }, String((Object.hasOwn(schema, "const") ? schema.const : value) ?? ""));
+  else if (Array.isArray(schema.enum) || ui.choiceSource) {
+    let source = null, sourceError = "";
+    if (ui.choiceSource) {
+      try {
+        source = context.choiceOptions?.(ui.choiceSource, { label, value, path, schema });
+        if (!Array.isArray(source)) sourceError = "Choices are unavailable: the source did not return a list.";
+      } catch (error) {
+        sourceError = `Choices are unavailable: ${error?.message || "the source failed."}`;
+      }
+    }
+    const choices = Array.isArray(source) ? source : Array.isArray(schema.enum) ? schema.enum : [];
+    const isChoiceRecord = (choice) => Boolean(ui.choiceSource) && choice !== null && !Array.isArray(choice) && typeof choice === "object" && Object.hasOwn(choice, "value");
+    const optionValue = (choice) => isChoiceRecord(choice) ? choice.value : choice;
+    const optionCaption = (choice) => {
+      const itemValue = optionValue(choice);
+      return String(isChoiceRecord(choice) ? choice.label ?? ui.choiceLabels?.[String(itemValue)] ?? String(itemValue) : ui.choiceLabels?.[String(itemValue)] ?? String(itemValue));
+    };
+    const captions = choices.map(optionCaption);
+    const selectedIndex = choices.findIndex((choice) => sameChoice(optionValue(choice), inputValue));
+    const selectedValue = selectedIndex >= 0 ? optionValue(choices[selectedIndex]) : inputValue;
+    const selectedType = selectedValue === null ? "null" : Array.isArray(selectedValue) ? "array" : typeof selectedValue;
+    const selectedOption = selectedIndex >= 0 ? `choice-${selectedIndex}` : inputValue === void 0 ? "" : "choice-unavailable";
+    control = /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement(
+      "select",
+      {
+        ...attributes,
+        disabled: disabled || Boolean(sourceError),
+        "data-setting-type": selectedType || "string",
+        "data-setting-choice-value": "true",
+        "data-schema-change-action": ui.onChangeAction,
+        value: selectedOption,
+        onChange: (event) => {
+          const match = /^choice-(\d+)$/.exec(event.target.value), index = match ? Number(match[1]) : -1;
+          if (index < 0 || index >= choices.length) return;
+          const next = optionValue(choices[index]), nextType = next === null ? "null" : Array.isArray(next) ? "array" : typeof next;
+          emit(next, nextType, event, { rawValue: next });
+        }
+      },
+      selectedOption === "choice-unavailable" ? /* @__PURE__ */ React.createElement("option", { value: "choice-unavailable" }, "Unknown (", JSON.stringify(inputValue), ")") : null,
+      choices.map((choice, index) => {
+        const itemValue = optionValue(choice), caption = captions[index];
+        const duplicate = captions.filter((other) => other === caption).length > 1;
+        const type = itemValue === null ? "null" : Array.isArray(itemValue) ? "array" : typeof itemValue;
+        const sameTypeDuplicate = duplicate && choices.some((other, otherIndex) => otherIndex !== index && captions[otherIndex] === caption && (optionValue(other) === null ? "null" : Array.isArray(optionValue(other)) ? "array" : typeof optionValue(other)) === type);
+        const label2 = duplicate ? `${caption} (${type}${sameTypeDuplicate ? `: ${JSON.stringify(itemValue)}` : ""})` : caption;
+        return /* @__PURE__ */ React.createElement("option", { key: index, value: `choice-${index}` }, label2);
+      })
+    ), sourceError ? /* @__PURE__ */ React.createElement("span", { role: "alert" }, sourceError) : ui.choiceSource && choices.length === 0 ? /* @__PURE__ */ React.createElement("span", { role: "status" }, "No choices are available.") : null);
+  } else if (Array.isArray(value) && !value.length) control = /* @__PURE__ */ React.createElement("span", { className: "settings-empty" }, "Empty array");
+  else if (Array.isArray(value) && value.every((entry) => entry === null || ["string", "number", "boolean"].includes(typeof entry))) {
+    const numbers = value.every((entry) => typeof entry === "number" && Number.isFinite(entry));
+    const strings = value.every((entry) => typeof entry === "string" && entry.length > 0 && entry === entry.trim() && !entry.includes(","));
+    if (!numbers && !strings) control = /* @__PURE__ */ React.createElement("span", { className: "settings-empty", role: "status" }, JSON.stringify(value), " \xB7 This array cannot be edited safely in the comma-separated control.");
+    else {
+      const type = numbers ? "array-number" : "array-string";
+      control = /* @__PURE__ */ React.createElement("input", { ...attributes, "data-setting-type": type, value: rawValue === void 0 ? value.join(", ") : rawValue, onChange: (event) => emit(event.target.value, type, event) });
+    }
+  } else if (typeof value === "boolean") control = /* @__PURE__ */ React.createElement(
+    "input",
+    {
+      ...attributes,
+      type: "checkbox",
+      "data-setting-type": "boolean",
+      checked: Boolean(inputValue),
+      onChange: (event) => emit(event.target.checked, "boolean", event)
+    }
+  );
+  else if (typeof value === "number" || schema.type === "number" || schema.type === "integer") control = /* @__PURE__ */ React.createElement(
+    "input",
+    {
+      ...attributes,
+      type: legacyMarkup ? "number" : "text",
+      inputMode: legacyMarkup ? void 0 : "decimal",
+      step: "any",
+      "data-setting-type": "number",
+      min: Number.isFinite(schema.minimum) ? schema.minimum : void 0,
+      max: Number.isFinite(schema.maximum) ? schema.maximum : void 0,
+      value: inputValue ?? "",
+      onChange: (event) => emit(event.target.value.trim() !== "" && Number.isFinite(Number(event.target.value)) ? Number(event.target.value) : event.target.value, "number", event)
+    }
+  );
+  else if (typeof value === "string") {
+    const props = {
+      ...attributes,
+      "data-setting-type": "string",
+      placeholder: ui.placeholder,
+      value: inputValue,
+      onChange: (event) => emit(event.target.value, "string", event)
+    };
+    control = ui.multiline ? /* @__PURE__ */ React.createElement("textarea", { ...props }) : /* @__PURE__ */ React.createElement("input", { ...props, type: "text" });
+  } else control = /* @__PURE__ */ React.createElement("span", { className: "settings-empty" }, "No editable value");
+  return /* @__PURE__ */ React.createElement(SettingRow, { label, description: schema.description }, control);
+}
+function Widget(props) {
+  return /* @__PURE__ */ React.createElement(ValueControl, { ...props, ...props.view });
+}
+const renderValueControl = (props) => renderWidgetMarkup(/* @__PURE__ */ React.createElement(ValueControl, { ...props, legacyMarkup: true }));
+const mountWidget = (container, props) => mountReactComponent(container, Widget, props);
+export {
+  ValueControl,
+  Widget,
+  mountWidget,
+  renderValueControl,
+  renderValueControlDesignEditor,
+  validateValueControlAnnotation,
+  valueControlDesignLabel
+};
 
 //# sourceMappingURL=widget.js.map

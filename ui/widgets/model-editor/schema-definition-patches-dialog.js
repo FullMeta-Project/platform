@@ -1,4 +1,25 @@
 // Generated from schema-definition-patches-dialog.jsx by scripts/build-frontend.mjs.
-import r from"../shared/react/react-runtime.js";import{createCandidateDialog as c,CandidateRows as l}from"./candidate-dialog.js";import{schemaWithDefinitionPatches as h,availableDefinitions as s,valueTypes as d}from"./schema-definition-patches.js";function p({draft:a,onDraftChange:i,source:t}){const e=s(t);return r.createElement("section",null,r.createElement("p",null,"Set or remove explicit paths. Unrelated declaration data is preserved. Paths are relative to the selected schema owner."),r.createElement(l,{draft:a,label:"Typed definition patches",onDraftChange:i,template:{definition:e[0]||"#",operation:"set",path:"",fact:"string",value:""},columns:[{name:"definition",label:"Schema owner",choices:e},{name:"operation",choices:["set","remove"]},{name:"path",label:"Relative path"},{name:"fact",label:"Value type",choices:d.map(([o,n])=>({value:o,label:n}))},{name:"value"}]}))}function v(a){return c({...a,title:"Definition patches",toolId:"definitionPatches",Editor:p,initialDraft(i,t){const e=s(i);if(!e.length)throw new Error("This schema has no reusable definitions to patch.");const o=Array.isArray(t)?t:t.path||[],n="#/"+o.join("/");return[{definition:e.includes(n)?n:e[0],operation:"set",path:"",fact:"string",value:""}]},buildCandidate(i,t){const e=h(i,t,a.generatedOwnerAtPath);return{candidate:e.document,changes:e.changes}}})}export{p as DefinitionPatchesEditor,v as createDefinitionPatchesDialog};
+import React from "../shared/react/react-runtime.js";
+import { createCandidateDialog, CandidateRows } from "./candidate-dialog.js";
+import { schemaWithDefinitionPatches, availableDefinitions, valueTypes } from "./schema-definition-patches.js";
+function DefinitionPatchesEditor({ draft, onDraftChange, source }) {
+  const definitions = availableDefinitions(source);
+  return /* @__PURE__ */ React.createElement("section", null, /* @__PURE__ */ React.createElement("p", null, "Set or remove explicit paths. Unrelated declaration data is preserved. Paths are relative to the selected schema owner."), /* @__PURE__ */ React.createElement(CandidateRows, { draft, label: "Typed definition patches", onDraftChange, template: { definition: definitions[0] || "#", operation: "set", path: "", fact: "string", value: "" }, columns: [{ name: "definition", label: "Schema owner", choices: definitions }, { name: "operation", choices: ["set", "remove"] }, { name: "path", label: "Relative path" }, { name: "fact", label: "Value type", choices: valueTypes.map(([value, label]) => ({ value, label })) }, { name: "value" }] }));
+}
+function createDefinitionPatchesDialog(options) {
+  return createCandidateDialog({ ...options, title: "Definition patches", toolId: "definitionPatches", Editor: DefinitionPatchesEditor, initialDraft(source, context) {
+    const definitions = availableDefinitions(source);
+    if (!definitions.length) throw new Error("This schema has no reusable definitions to patch.");
+    const path = Array.isArray(context) ? context : context.path || [], pointer = "#/" + path.join("/");
+    return [{ definition: definitions.includes(pointer) ? pointer : definitions[0], operation: "set", path: "", fact: "string", value: "" }];
+  }, buildCandidate(source, edits) {
+    const result = schemaWithDefinitionPatches(source, edits, options.generatedOwnerAtPath);
+    return { candidate: result.document, changes: result.changes };
+  } });
+}
+export {
+  DefinitionPatchesEditor,
+  createDefinitionPatchesDialog
+};
 
 //# sourceMappingURL=schema-definition-patches-dialog.js.map

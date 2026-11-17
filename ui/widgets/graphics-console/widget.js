@@ -1,4 +1,62 @@
 // Generated from widget.jsx by scripts/build-frontend.mjs.
-import r from"../shared/react/react-runtime.js";import{mountReactComponent as l}from"../shared/react/mount.js";import{GraphicsContext as n}from"./context-view.js";import{GraphicsContext as x,mountGraphicsContextView as G}from"./context-view.js";import{graphicsPathMatches as b,graphicsSelectionRule as y,graphicsSceneForSelection as I,graphicsWidgetForLayer as S,graphicsLayerForRole as w,graphicsLayerInput as D,graphicsTabForRole as E,graphicsBindingValue as F,graphicsSceneInputs as O,graphicsFocusTargets as P,graphicsConsoleIssues as W}from"./contract.js";import{mergeGraphicsConsoleDraft as L,mountGraphicsConsoleDesignEditor as j}from"./design-editor.js";import{renderGraphicsConsoleAuthoring as A}from"./graphics-console-authoring.js";import{mergeGraphicsInterfacesDraft as V,mountGraphicsInterfacesDesignEditor as B,validateGraphicsInterfacesEditorState as M}from"./interfaces-editor.js";import{drawGraphicsConsoleOverview as q,graphicsConsoleOverviewTooltipAt as z,graphicsConsoleOverviewWidget as H}from"./overview.js";import{genericGraphicsWidgets as K,drawPlot1d as Q,drawPlot2d as R,drawPlot3d as U,drawScalarPlot as X,plot1dColors as Y,plot1dColor as Z}from"./graphics-registry.js";import{createGraphicsLayerRegistry as $}from"./layer-registry.js";import{GraphicsConsoleDesignEditor as oe}from"./design-editor.js";import{GraphicsInterfacesEditor as te}from"./interfaces-editor.js";import{GraphicsConsoleAuthoring as ae}from"./graphics-console-authoring.js";function c({view:e,context:s,onCommand:i}){const o=e?.definition||e?.value||e;if(!o?.scenes)return r.createElement(n,{context:s,view:e});const a=e?.selectedSceneId||o.defaultScene||Object.keys(o.scenes)[0];return r.createElement("section",{className:"graphics-console","data-jsx-widget":"graphics-console"},r.createElement("h3",null,e?.label||o.label||"Graphics console"),r.createElement("nav",{"aria-label":"Graphics scenes"},Object.entries(o.scenes).map(([t,p])=>r.createElement("button",{type:"button",key:t,"aria-pressed":a===t,onClick:()=>i?.({type:"widget.action",widget:"graphicsConsole",path:e?.path||[],action:"selectScene",args:{id:t}})},p.label||t))),r.createElement(n,{context:{label:e?.label||o.label||"Graphics console",sceneId:a,scene:o.scenes[a]}}))}const m=(e,s)=>l(e,c,s);export{c as GraphicsConsole,ae as GraphicsConsoleAuthoring,oe as GraphicsConsoleDesignEditor,x as GraphicsContext,te as GraphicsInterfacesEditor,c as Widget,$ as createGraphicsLayerRegistry,q as drawGraphicsConsoleOverview,Q as drawPlot1d,R as drawPlot2d,U as drawPlot3d,X as drawScalarPlot,K as genericGraphicsWidgets,F as graphicsBindingValue,W as graphicsConsoleIssues,z as graphicsConsoleOverviewTooltipAt,H as graphicsConsoleOverviewWidget,P as graphicsFocusTargets,w as graphicsLayerForRole,D as graphicsLayerInput,b as graphicsPathMatches,I as graphicsSceneForSelection,O as graphicsSceneInputs,y as graphicsSelectionRule,E as graphicsTabForRole,S as graphicsWidgetForLayer,L as mergeGraphicsConsoleDraft,V as mergeGraphicsInterfacesDraft,j as mountGraphicsConsoleDesignEditor,G as mountGraphicsContextView,B as mountGraphicsInterfacesDesignEditor,m as mountWidget,Z as plot1dColor,Y as plot1dColors,A as renderGraphicsConsoleAuthoring,M as validateGraphicsInterfacesEditorState};
+import React from "../shared/react/react-runtime.js";
+import { mountReactComponent } from "../shared/react/mount.js";
+import { GraphicsContext } from "./context-view.js";
+import { GraphicsContext as GraphicsContext2, mountGraphicsContextView } from "./context-view.js";
+import { graphicsPathMatches, graphicsSelectionRule, graphicsSceneForSelection, graphicsWidgetForLayer, graphicsLayerForRole, graphicsLayerInput, graphicsTabForRole, graphicsBindingValue, graphicsSceneInputs, graphicsFocusTargets, graphicsConsoleIssues } from "./contract.js";
+import { mergeGraphicsConsoleDraft, mountGraphicsConsoleDesignEditor } from "./design-editor.js";
+import { renderGraphicsConsoleAuthoring } from "./graphics-console-authoring.js";
+import { mergeGraphicsInterfacesDraft, mountGraphicsInterfacesDesignEditor, validateGraphicsInterfacesEditorState } from "./interfaces-editor.js";
+import { drawGraphicsConsoleOverview, graphicsConsoleOverviewTooltipAt, graphicsConsoleOverviewWidget } from "./overview.js";
+import { genericGraphicsWidgets, drawPlot1d, drawPlot2d, drawPlot3d, drawScalarPlot, plot1dColors, plot1dColor } from "./graphics-registry.js";
+import { createGraphicsLayerRegistry } from "./layer-registry.js";
+import { GraphicsConsoleDesignEditor } from "./design-editor.js";
+import { GraphicsInterfacesEditor } from "./interfaces-editor.js";
+import { GraphicsConsoleAuthoring } from "./graphics-console-authoring.js";
+function GraphicsConsole({ view, context, onCommand }) {
+  const definition = view?.definition || view?.value || view;
+  if (!definition?.scenes) return /* @__PURE__ */ React.createElement(GraphicsContext, { context, view });
+  const selected = view?.selectedSceneId || definition.defaultScene || Object.keys(definition.scenes)[0];
+  return /* @__PURE__ */ React.createElement("section", { className: "graphics-console", "data-jsx-widget": "graphics-console" }, /* @__PURE__ */ React.createElement("h3", null, view?.label || definition.label || "Graphics console"), /* @__PURE__ */ React.createElement("nav", { "aria-label": "Graphics scenes" }, Object.entries(definition.scenes).map(([id, scene]) => /* @__PURE__ */ React.createElement("button", { type: "button", key: id, "aria-pressed": selected === id, onClick: () => onCommand?.({ type: "widget.action", widget: "graphicsConsole", path: view?.path || [], action: "selectScene", args: { id } }) }, scene.label || id))), /* @__PURE__ */ React.createElement(GraphicsContext, { context: { label: view?.label || definition.label || "Graphics console", sceneId: selected, scene: definition.scenes[selected] } }));
+}
+const mountWidget = (container, props) => mountReactComponent(container, GraphicsConsole, props);
+export {
+  GraphicsConsole,
+  GraphicsConsoleAuthoring,
+  GraphicsConsoleDesignEditor,
+  GraphicsContext2 as GraphicsContext,
+  GraphicsInterfacesEditor,
+  GraphicsConsole as Widget,
+  createGraphicsLayerRegistry,
+  drawGraphicsConsoleOverview,
+  drawPlot1d,
+  drawPlot2d,
+  drawPlot3d,
+  drawScalarPlot,
+  genericGraphicsWidgets,
+  graphicsBindingValue,
+  graphicsConsoleIssues,
+  graphicsConsoleOverviewTooltipAt,
+  graphicsConsoleOverviewWidget,
+  graphicsFocusTargets,
+  graphicsLayerForRole,
+  graphicsLayerInput,
+  graphicsPathMatches,
+  graphicsSceneForSelection,
+  graphicsSceneInputs,
+  graphicsSelectionRule,
+  graphicsTabForRole,
+  graphicsWidgetForLayer,
+  mergeGraphicsConsoleDraft,
+  mergeGraphicsInterfacesDraft,
+  mountGraphicsConsoleDesignEditor,
+  mountGraphicsContextView,
+  mountGraphicsInterfacesDesignEditor,
+  mountWidget,
+  plot1dColor,
+  plot1dColors,
+  renderGraphicsConsoleAuthoring,
+  validateGraphicsInterfacesEditorState
+};
 
 //# sourceMappingURL=widget.js.map

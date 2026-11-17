@@ -1,4 +1,73 @@
 // Generated from widget.jsx by scripts/build-frontend.mjs.
-import e,{renderWidgetMarkup as f}from"../shared/react/react-runtime.js";import{mountReactComponent as c}from"../shared/react/mount.js";import{quantityDesignLabel as C,renderQuantityDesignEditor as S}from"./design-editor.js";import{validateQuantityAnnotation as W}from"./fullmeta-ui-quantity-1.schema.js";function m({value:t,path:r=[],schema:a={},context:i={},label:y,onChange:l,onCommand:u,disabled:d=!1}){const o=i.resolveSchema?.(i.schemaProperty?.(a,t,"unit"))||{},p=i.unitChoices?.(a,o,t)||(Array.isArray(o.enum)?o.enum:i.defaultUnits||[]),g=i.compatibleUnits?.(t||"1",p)||p,s=t!=null&&(!p.includes(t)||!g.includes(t));return e.createElement("select",{"data-setting-path":JSON.stringify([...r,"unit"]),"data-setting-type":"string","aria-label":y+" unit",value:t??"",disabled:d,onChange:n=>u?u({type:"field.change",path:[...r,"unit"],value:n.target.value,rawValue:n.target.value,valueType:"string"},n):(l||i.onChange)?.({path:[...r,"unit"],value:n.target.value,type:"string"},n)},s?e.createElement("option",{value:t},"Unavailable (",t,")"):null,g.filter(n=>!s||n!==t).map(n=>e.createElement("option",{key:n,value:n},n)))}function x({label:t,value:r,path:a=[],schema:i={},context:y={},ui:l={},onChange:u,onCommand:d,disabled:o=!1}){const p=r?.expression??"",g=r?.unit??l.defaultUnit??"1",s=i.readOnly===!0||l.readOnly===!0;return e.createElement("tr",null,e.createElement("td",null,t),e.createElement("td",null,e.createElement("div",{className:"setting-inline"},e.createElement("input",{type:"text",value:p,"aria-label":t+" expression",placeholder:l.placeholder,readOnly:s,disabled:o,"aria-readonly":s?"true":void 0,...s?{}:{"data-setting-path":JSON.stringify([...a,"expression"]),"data-setting-type":"string"},onChange:n=>d?d({type:"field.change",path:[...a,"expression"],value:n.target.value,rawValue:n.target.value,valueType:"string"},n):(u||y.onChange)?.({path:[...a,"expression"],value:n.target.value,type:"string"},n)}),s||l.unitReadOnly?e.createElement("span",{className:"setting-unit-value"},g):e.createElement(m,{value:g,path:a,schema:i,context:y,label:t,onChange:u,onCommand:d,disabled:o})),i.description?e.createElement("div",{className:"settings-empty"},i.description):null))}function h(t){return e.createElement(x,{...t,...t.view})}const Q=t=>f(e.createElement(x,{...t})),U=t=>f(e.createElement(m,{...t})),b=(t,r)=>c(t,h,r);export{x as Quantity,m as QuantityUnitControl,h as Widget,b as mountWidget,C as quantityDesignLabel,Q as renderQuantity,S as renderQuantityDesignEditor,U as renderQuantityUnitControl,W as validateQuantityAnnotation};
+import React, { renderWidgetMarkup } from "../shared/react/react-runtime.js";
+import { mountReactComponent } from "../shared/react/mount.js";
+import { quantityDesignLabel, renderQuantityDesignEditor } from "./design-editor.js";
+import { validateQuantityAnnotation } from "./fullmeta-ui-quantity-1.schema.js";
+function QuantityUnitControl({ value, path = [], schema = {}, context = {}, label, onChange, onCommand, disabled = false }) {
+  const unitSchema = context.resolveSchema?.(context.schemaProperty?.(schema, value, "unit")) || {};
+  const allowed = context.unitChoices?.(schema, unitSchema, value) || (Array.isArray(unitSchema.enum) ? unitSchema.enum : context.defaultUnits || []);
+  const units = context.compatibleUnits?.(value || "1", allowed) || allowed;
+  const unavailable = value !== void 0 && value !== null && (!allowed.includes(value) || !units.includes(value));
+  return /* @__PURE__ */ React.createElement(
+    "select",
+    {
+      "data-setting-path": JSON.stringify([...path, "unit"]),
+      "data-setting-type": "string",
+      "aria-label": label + " unit",
+      value: value ?? "",
+      disabled,
+      onChange: (event) => onCommand ? onCommand({
+        type: "field.change",
+        path: [...path, "unit"],
+        value: event.target.value,
+        rawValue: event.target.value,
+        valueType: "string"
+      }, event) : (onChange || context.onChange)?.({ path: [...path, "unit"], value: event.target.value, type: "string" }, event)
+    },
+    unavailable ? /* @__PURE__ */ React.createElement("option", { value }, "Unavailable (", value, ")") : null,
+    units.filter((unit) => !unavailable || unit !== value).map((unit) => /* @__PURE__ */ React.createElement("option", { key: unit, value: unit }, unit))
+  );
+}
+function Quantity({ label, value, path = [], schema = {}, context = {}, ui = {}, onChange, onCommand, disabled = false }) {
+  const expression = value?.expression ?? "", unit = value?.unit ?? ui.defaultUnit ?? "1";
+  const readOnly = schema.readOnly === true || ui.readOnly === true;
+  return /* @__PURE__ */ React.createElement("tr", null, /* @__PURE__ */ React.createElement("td", null, label), /* @__PURE__ */ React.createElement("td", null, /* @__PURE__ */ React.createElement("div", { className: "setting-inline" }, /* @__PURE__ */ React.createElement(
+    "input",
+    {
+      type: "text",
+      value: expression,
+      "aria-label": label + " expression",
+      placeholder: ui.placeholder,
+      readOnly,
+      disabled,
+      "aria-readonly": readOnly ? "true" : void 0,
+      ...!readOnly ? { "data-setting-path": JSON.stringify([...path, "expression"]), "data-setting-type": "string" } : {},
+      onChange: (event) => onCommand ? onCommand({
+        type: "field.change",
+        path: [...path, "expression"],
+        value: event.target.value,
+        rawValue: event.target.value,
+        valueType: "string"
+      }, event) : (onChange || context.onChange)?.({ path: [...path, "expression"], value: event.target.value, type: "string" }, event)
+    }
+  ), readOnly || ui.unitReadOnly ? /* @__PURE__ */ React.createElement("span", { className: "setting-unit-value" }, unit) : /* @__PURE__ */ React.createElement(QuantityUnitControl, { ...{ value: unit, path, schema, context, label, onChange, onCommand, disabled } })), schema.description ? /* @__PURE__ */ React.createElement("div", { className: "settings-empty" }, schema.description) : null));
+}
+function Widget(props) {
+  return /* @__PURE__ */ React.createElement(Quantity, { ...props, ...props.view });
+}
+const renderQuantity = (props) => renderWidgetMarkup(/* @__PURE__ */ React.createElement(Quantity, { ...props }));
+const renderQuantityUnitControl = (props) => renderWidgetMarkup(/* @__PURE__ */ React.createElement(QuantityUnitControl, { ...props }));
+const mountWidget = (container, props) => mountReactComponent(container, Widget, props);
+export {
+  Quantity,
+  QuantityUnitControl,
+  Widget,
+  mountWidget,
+  quantityDesignLabel,
+  renderQuantity,
+  renderQuantityDesignEditor,
+  renderQuantityUnitControl,
+  validateQuantityAnnotation
+};
 
 //# sourceMappingURL=widget.js.map

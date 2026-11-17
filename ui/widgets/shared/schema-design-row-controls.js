@@ -1,4 +1,57 @@
 // Generated from schema-design-row-controls.jsx by scripts/build-frontend.mjs.
-import a from"./react/react-runtime.js";import{mountReactComponent as s}from"./react/mount.js";import{createQuantityValueControl as b}from"./quantity-value-control.js";function i({kind:e,draft:t,label:r="",onChange:c,disabled:o=!1}){return a.createElement("input",{type:e==="checkbox"?"checkbox":e==="number"?"number":"text","aria-label":r||void 0,disabled:o,...e==="checkbox"?{checked:t===!0}:{value:t},onChange:n=>c(e==="checkbox"?n.target.checked:n.target.value,n)})}function d(e,t={}){if(e==="quantityValue"){const u=b(t);return{element:u.element,read:u.value,clear:u.clear,isComplete:()=>!!u.value().expression.trim(),snapshot:u.snapshot,dispose:u.dispose}}if(!["checkbox","text","number"].includes(e))throw new Error("Unsupported schema design row control: "+e);let r=e==="checkbox"?t.value===!0:e==="number"?typeof t.value=="number"&&Number.isFinite(t.value)?String(t.value):"":typeof t.value=="string"?t.value:"",c;const o=document.createElement("span"),n=()=>({kind:e,draft:r,label:t.label,onChange(u,l){r=u,c.update(n()),t.onInput?.(l)}});return c=s(o,i,n()),{element:o,read:()=>e==="checkbox"?r===!0:e==="number"?r===""?null:Number(r):r,clear(){r=e==="checkbox"?!1:"",c.update(n()),t.onInput?.(),o.dispatchEvent(new Event("input",{bubbles:!0}))},isComplete:()=>e==="checkbox"||String(r).trim()!==""&&(e!=="number"||Number.isFinite(Number(r))),snapshot:()=>r,dispose:()=>c.dispose()}}export{i as SchemaDesignRowControl,d as createSchemaDesignRowControl};
+import React from "./react/react-runtime.js";
+import { mountReactComponent } from "./react/mount.js";
+import { createQuantityValueControl } from "./quantity-value-control.js";
+function SchemaDesignRowControl({ kind, draft, label = "", onChange, disabled = false }) {
+  return /* @__PURE__ */ React.createElement(
+    "input",
+    {
+      type: kind === "checkbox" ? "checkbox" : kind === "number" ? "number" : "text",
+      "aria-label": label || void 0,
+      disabled,
+      ...kind === "checkbox" ? { checked: draft === true } : { value: draft },
+      onChange: (event) => onChange(kind === "checkbox" ? event.target.checked : event.target.value, event)
+    }
+  );
+}
+function createSchemaDesignRowControl(name, options = {}) {
+  if (name === "quantityValue") {
+    const quantity = createQuantityValueControl(options);
+    return {
+      element: quantity.element,
+      read: quantity.value,
+      clear: quantity.clear,
+      isComplete: () => !!quantity.value().expression.trim(),
+      snapshot: quantity.snapshot,
+      dispose: quantity.dispose
+    };
+  }
+  if (!["checkbox", "text", "number"].includes(name)) throw new Error("Unsupported schema design row control: " + name);
+  let draft = name === "checkbox" ? options.value === true : name === "number" ? typeof options.value === "number" && Number.isFinite(options.value) ? String(options.value) : "" : typeof options.value === "string" ? options.value : "", mount;
+  const element = document.createElement("span");
+  const props = () => ({ kind: name, draft, label: options.label, onChange(next, event) {
+    draft = next;
+    mount.update(props());
+    options.onInput?.(event);
+  } });
+  mount = mountReactComponent(element, SchemaDesignRowControl, props());
+  return {
+    element,
+    read: () => name === "checkbox" ? draft === true : name === "number" ? draft === "" ? null : Number(draft) : draft,
+    clear() {
+      draft = name === "checkbox" ? false : "";
+      mount.update(props());
+      options.onInput?.();
+      element.dispatchEvent(new Event("input", { bubbles: true }));
+    },
+    isComplete: () => name === "checkbox" || String(draft).trim() !== "" && (name !== "number" || Number.isFinite(Number(draft))),
+    snapshot: () => draft,
+    dispose: () => mount.dispose()
+  };
+}
+export {
+  SchemaDesignRowControl,
+  createSchemaDesignRowControl
+};
 
 //# sourceMappingURL=schema-design-row-controls.js.map

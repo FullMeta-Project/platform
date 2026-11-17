@@ -1,4 +1,50 @@
 // Generated from launcher-views.jsx by scripts/build-frontend.mjs.
-import r,{useLayoutEffect as m,useRef as i}from"../widgets/shared/react/react-runtime.js";import{mountReactComponent as s}from"../widgets/shared/react/mount.js";function h({entry:e,onCreate:t,onExamples:p,onDelete:n,onControls:a}){const o=i(null),c=i(null),l=i(null),d=i(null);return m(()=>(a?.(e.id,{card:o.current,edit:c.current,delete:l.current,create:d.current}),()=>a?.(e.id,null))),r.createElement("article",{ref:o,className:"profile-card","data-application-id":e.id},r.createElement("h2",null,e.title),r.createElement("p",{className:e.error?"launcher-status error":void 0},e.error||e.description),e.tags?.length?r.createElement("div",{className:"profile-meta"},e.tags.map((u,f)=>r.createElement("span",{key:f,className:"tag"},u))):null,r.createElement("div",{className:"card-actions"},e.create?.kind==="link"?r.createElement("a",{ref:d,className:"button primary","data-create-project":"",href:e.create.href,title:e.create.title},"Create Project"):e.create?.kind==="button"?r.createElement("button",{ref:d,className:"primary",type:"button","data-create-project":"",onClick:u=>t?.(e.id,u.currentTarget)},"Create Project"):null,e.exampleCount?r.createElement("button",{type:"button",onClick:()=>p?.(e.id)},"Examples (",e.exampleCount,")"):null,r.createElement("a",{ref:c,className:"button",href:e.editHref},"Edit app"),r.createElement("button",{ref:l,className:"delete-project",type:"button",onClick:u=>n?.(e.id,o.current,u.currentTarget)},"Delete app")))}const N=r.memo(h);function b({entries:e=[],onCreate:t,onExamples:p,onDelete:n,onControls:a}){return r.createElement(r.Fragment,null,e.map(o=>r.createElement(N,{key:o.id,entry:o,onCreate:t,onExamples:p,onDelete:n,onControls:a})))}function j({entry:e,onOpen:t,onDelete:p,onControls:n}){const a=i(null),o=i(null),c=i(null);return m(()=>(n?.(e.id,{card:a.current,open:o.current,delete:c.current}),()=>n?.(e.id,null))),r.createElement("article",{ref:a,className:"project-card","data-project-id":e.id},r.createElement("h3",null,e.title),r.createElement("div",{className:"profile-meta"},e.applications.map(l=>r.createElement("span",{key:l.id,className:"tag"},l.label))),r.createElement("p",{className:"project-path"},r.createElement("code",null,e.path)),r.createElement("div",{className:"card-actions"},r.createElement("a",{ref:o,className:"button primary",href:e.href,onClick:l=>t?.(e.id,l.currentTarget,l)},"Open project"),r.createElement("button",{ref:c,className:"delete-project",type:"button",onClick:l=>p?.(e.id,a.current,l.currentTarget)},"Delete project")))}function C({entries:e=[],emptyMessage:t="No projects yet.",onOpen:p,onDelete:n,onControls:a}){return e.length?r.createElement(r.Fragment,null,e.map(o=>r.createElement(j,{key:o.id,entry:o,onOpen:p,onDelete:n,onControls:a}))):r.createElement("p",{className:"empty"},t)}function k({entries:e=[]}){return r.createElement(r.Fragment,null,e.map(t=>r.createElement("li",{key:t.file},r.createElement("a",{className:"project-model-choice",href:t.href},r.createElement("span",{className:"project-model-filename"},t.file),r.createElement("span",{className:"tag"},t.applicationLabel)))))}function x({choices:e=[]}){return r.createElement(r.Fragment,null,e.map(t=>r.createElement("option",{key:t.value,value:t.value},t.label)))}const L=(e,t)=>s(e,b,t),P=(e,t)=>s(e,C,t),A=(e,t)=>s(e,k,t),D=(e,t)=>s(e,x,t);export{N as ApplicationCard,b as LauncherApplications,C as LauncherProjects,x as LauncherSelectOptions,j as ProjectCard,k as ProjectModelChoices,L as mountLauncherApplications,P as mountLauncherProjects,D as mountLauncherSelectOptions,A as mountProjectModelChoices};
+import React, { useLayoutEffect, useRef } from "../widgets/shared/react/react-runtime.js";
+import { mountReactComponent } from "../widgets/shared/react/mount.js";
+function ApplicationCardView({ entry, onCreate, onExamples, onDelete, onControls }) {
+  const card = useRef(null), edit = useRef(null), remove = useRef(null), create = useRef(null);
+  useLayoutEffect(() => {
+    onControls?.(entry.id, { card: card.current, edit: edit.current, delete: remove.current, create: create.current });
+    return () => onControls?.(entry.id, null);
+  });
+  return /* @__PURE__ */ React.createElement("article", { ref: card, className: "profile-card", "data-application-id": entry.id }, /* @__PURE__ */ React.createElement("h2", null, entry.title), /* @__PURE__ */ React.createElement("p", { className: entry.error ? "launcher-status error" : void 0 }, entry.error || entry.description), entry.tags?.length ? /* @__PURE__ */ React.createElement("div", { className: "profile-meta" }, entry.tags.map((tag, index) => /* @__PURE__ */ React.createElement("span", { key: index, className: "tag" }, tag))) : null, /* @__PURE__ */ React.createElement("div", { className: "card-actions" }, entry.create?.kind === "link" ? /* @__PURE__ */ React.createElement("a", { ref: create, className: "button primary", "data-create-project": "", href: entry.create.href, title: entry.create.title }, "Create Project") : entry.create?.kind === "button" ? /* @__PURE__ */ React.createElement("button", { ref: create, className: "primary", type: "button", "data-create-project": "", onClick: (event) => onCreate?.(entry.id, event.currentTarget) }, "Create Project") : null, entry.exampleCount ? /* @__PURE__ */ React.createElement("button", { type: "button", onClick: () => onExamples?.(entry.id) }, "Examples (", entry.exampleCount, ")") : null, /* @__PURE__ */ React.createElement("a", { ref: edit, className: "button", href: entry.editHref }, "Edit app"), /* @__PURE__ */ React.createElement("button", { ref: remove, className: "delete-project", type: "button", onClick: (event) => onDelete?.(entry.id, card.current, event.currentTarget) }, "Delete app")));
+}
+const ApplicationCard = React.memo(ApplicationCardView);
+function LauncherApplications({ entries = [], onCreate, onExamples, onDelete, onControls }) {
+  return /* @__PURE__ */ React.createElement(React.Fragment, null, entries.map((entry) => /* @__PURE__ */ React.createElement(ApplicationCard, { key: entry.id, entry, onCreate, onExamples, onDelete, onControls })));
+}
+function ProjectCard({ entry, onOpen, onDelete, onControls }) {
+  const card = useRef(null), open = useRef(null), remove = useRef(null);
+  useLayoutEffect(() => {
+    onControls?.(entry.id, { card: card.current, open: open.current, delete: remove.current });
+    return () => onControls?.(entry.id, null);
+  });
+  return /* @__PURE__ */ React.createElement("article", { ref: card, className: "project-card", "data-project-id": entry.id }, /* @__PURE__ */ React.createElement("h3", null, entry.title), /* @__PURE__ */ React.createElement("div", { className: "profile-meta" }, entry.applications.map((application) => /* @__PURE__ */ React.createElement("span", { key: application.id, className: "tag" }, application.label))), /* @__PURE__ */ React.createElement("p", { className: "project-path" }, /* @__PURE__ */ React.createElement("code", null, entry.path)), /* @__PURE__ */ React.createElement("div", { className: "card-actions" }, /* @__PURE__ */ React.createElement("a", { ref: open, className: "button primary", href: entry.href, onClick: (event) => onOpen?.(entry.id, event.currentTarget, event) }, "Open project"), /* @__PURE__ */ React.createElement("button", { ref: remove, className: "delete-project", type: "button", onClick: (event) => onDelete?.(entry.id, card.current, event.currentTarget) }, "Delete project")));
+}
+function LauncherProjects({ entries = [], emptyMessage = "No projects yet.", onOpen, onDelete, onControls }) {
+  return entries.length ? /* @__PURE__ */ React.createElement(React.Fragment, null, entries.map((entry) => /* @__PURE__ */ React.createElement(ProjectCard, { key: entry.id, entry, onOpen, onDelete, onControls }))) : /* @__PURE__ */ React.createElement("p", { className: "empty" }, emptyMessage);
+}
+function ProjectModelChoices({ entries = [] }) {
+  return /* @__PURE__ */ React.createElement(React.Fragment, null, entries.map((entry) => /* @__PURE__ */ React.createElement("li", { key: entry.file }, /* @__PURE__ */ React.createElement("a", { className: "project-model-choice", href: entry.href }, /* @__PURE__ */ React.createElement("span", { className: "project-model-filename" }, entry.file), /* @__PURE__ */ React.createElement("span", { className: "tag" }, entry.applicationLabel)))));
+}
+function LauncherSelectOptions({ choices = [] }) {
+  return /* @__PURE__ */ React.createElement(React.Fragment, null, choices.map((choice) => /* @__PURE__ */ React.createElement("option", { key: choice.value, value: choice.value }, choice.label)));
+}
+const mountLauncherApplications = (container, props) => mountReactComponent(container, LauncherApplications, props);
+const mountLauncherProjects = (container, props) => mountReactComponent(container, LauncherProjects, props);
+const mountProjectModelChoices = (container, props) => mountReactComponent(container, ProjectModelChoices, props);
+const mountLauncherSelectOptions = (container, props) => mountReactComponent(container, LauncherSelectOptions, props);
+export {
+  ApplicationCard,
+  LauncherApplications,
+  LauncherProjects,
+  LauncherSelectOptions,
+  ProjectCard,
+  ProjectModelChoices,
+  mountLauncherApplications,
+  mountLauncherProjects,
+  mountLauncherSelectOptions,
+  mountProjectModelChoices
+};
 
 //# sourceMappingURL=launcher-views.js.map

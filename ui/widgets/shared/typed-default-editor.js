@@ -1,4 +1,96 @@
 // Generated from typed-default-editor.jsx by scripts/build-frontend.mjs.
-import l from"./react/react-runtime.js";import{mountReactComponent as L}from"./react/mount.js";import{annotationRow as I,adoptAnnotationRows as C}from"./annotation-control-model.js";const D=["string","number","integer","boolean","null"],A=["string","number","integer","boolean"];function E({view:w,onCommand:d}){const{configuration:r,schema:g,enabled:y,type:v,arrayType:p,choices:b,choiceIndex:s,raw:h,rows:a}=w,c=(e,o)=>d({type:"default.change",patch:e},o),i=(e,o,n,m)=>m==="null"?l.createElement("span",null,r.nullLabel||"Null"):m==="boolean"?l.createElement("select",{value:String(e),"aria-label":o,onChange:u=>n(u.target.value==="true",u)},l.createElement("option",{value:"true"},r.yesLabel||"Yes"),l.createElement("option",{value:"false"},r.noLabel||"No")):l.createElement("input",{type:"text",inputMode:["number","integer"].includes(m)?"decimal":void 0,value:e,"aria-label":o,onChange:u=>n(u.target.value,u)});return l.createElement("section",{className:"sd-widget-detail"},l.createElement("h3",null,r.heading||"Default value"),l.createElement("label",null,l.createElement("input",{type:"checkbox",checked:y,onChange:e=>c({enabled:e.target.checked},e)})," ",r.declareLabel||"Declare a default"),l.createElement("label",{hidden:!y},v==="array"?r.arrayLabel||"Values":r.valueLabel||"Value",b?l.createElement("select",{value:String(s),"aria-label":r.ariaLabel||"Default value",onChange:e=>c({choiceIndex:Number(e.target.value)},e)},b.map((e,o)=>l.createElement("option",{key:o,value:String(o)},e===null?r.nullLabel||"Null":String(e)))):v==="array"?l.createElement("div",{className:"sd-annotation-row-list"},l.createElement("div",{className:"sd-annotation-row-list"},a.map((e,o)=>l.createElement("div",{className:"sd-annotation-row",key:e.id},i(e.value,(r.itemAriaLabel||"Default item")+" "+(o+1),(n,m)=>c({rows:a.map(u=>u.id===e.id?{...u,value:n}:u)},m),p),l.createElement("button",{type:"button",hidden:a.length<=(g.minItems||0),onClick:n=>c({rows:a.filter(m=>m.id!==e.id)},n)},r.removeItemLabel||"Remove")))),l.createElement("button",{type:"button",hidden:Number.isInteger(g.maxItems)&&a.length>=g.maxItems,onClick:e=>c({rows:[...a,{...I(""),value:p==="boolean"?!0:""}]},e)},r.addItemLabel||"Add value")):i(h,r.ariaLabel||"Default value",(e,o)=>c({raw:e},o),v)))}function M(w,d,r,g,y){if(y?.control!=="jsonSchemaTyped")return null;const v=y.key||"default",p=Array.isArray(d.enum)&&d.enum.every(t=>t===null||["string","number","boolean"].includes(typeof t))?d.enum:null,b=d.type==="array"&&A.includes(d.items?.type)?d.items.type:null,s=D.includes(d.type)?d.type:b?"array":p?.length?p[0]===null?"null":typeof p[0]:null;if(!s)return null;const h=Object.hasOwn(r,v)?JSON.stringify(r[v]):"",a=g&&typeof g=="object"?g:{value:g},c=typeof a.value=="string"?a.value:h;let i;try{i=JSON.parse(c)}catch{i=r[v]}const e=p?p.some(t=>Object.is(t,i))||i===void 0?p:[...p,i]:null;let o=typeof a.value=="string"&&a.value!==h,n={configuration:y,schema:d,enabled:c!=="",type:s,arrayType:b,choices:e,choiceIndex:e?Math.max(0,e.findIndex(t=>Object.is(t,i))):0,raw:s==="boolean"?i!==!1:i==null?"":String(i),rows:(Array.isArray(i)?i:[]).map(t=>({...I(""),value:b==="boolean"?t!==!1:String(t)}))},m;Array.isArray(a.numericTexts)&&(s==="array"&&["number","integer"].includes(b)?n.rows.forEach((t,f)=>{typeof a.numericTexts[f]=="string"&&(t.value=a.numericTexts[f])}):["number","integer"].includes(s)&&typeof a.numericTexts[0]=="string"&&(n.raw=a.numericTexts[0])),a.format==="fullmeta-typed-default-state/1"&&(n={...n,...structuredClone(a.view)},o=a.dirty,C(n.rows));const u=document.createElement("div");w.append(u);const x=(t,f)=>{n={...n,...t.patch},o=!0,m.update({view:n,onCommand:x}),(!f||f.type==="click")&&u.dispatchEvent(new Event("input",{bubbles:!0}))};m=L(u,E,{view:n,onCommand:x});const N=(t,f)=>f==="boolean"?t===!0:f==="null"?null:["number","integer"].includes(f)?Number(t):t,T=()=>o?n.enabled?JSON.stringify(e?e[n.choiceIndex]:s==="array"?n.rows.map(t=>N(t.value,b)):N(n.raw,s)):"":h,S=()=>e?[]:s==="array"&&["number","integer"].includes(b)?n.rows.map(t=>String(t.value)):["number","integer"].includes(s)?[String(n.raw)]:[];return{label:y.label||"Default value",keys:[v],type:"json",input:{get value(){return T()}},original:h,snapshot:()=>({value:T(),numericTexts:S()}),snapshotState:()=>({format:"fullmeta-typed-default-state/1",view:structuredClone(n),dirty:o}),dispose(){m.dispose(),u.remove()},validateDraft(){if(n.enabled){if(S().some(t=>!t.trim()||!Number.isFinite(Number(t))))throw new Error(y.numberMessage||"Enter a finite number for every default value.");if(s==="array"&&b==="integer"&&n.rows.some(t=>!Number.isInteger(Number(t.value))))throw new Error(y.arrayMessage||"Default values must match the array declaration.")}}}}export{E as TypedDefaultEditor,M as renderTypedDefaultEditor};
+import React from "./react/react-runtime.js";
+import { mountReactComponent } from "./react/mount.js";
+import { annotationRow, adoptAnnotationRows } from "./annotation-control-model.js";
+const scalarTypes = ["string", "number", "integer", "boolean", "null"], arrayTypes = ["string", "number", "integer", "boolean"];
+function TypedDefaultEditor({ view, onCommand }) {
+  const { configuration: copy, schema, enabled, type, arrayType, choices, choiceIndex, raw, rows } = view;
+  const change = (patch, event) => onCommand({ type: "default.change", patch }, event);
+  const scalar = (value, label, update, kind) => kind === "null" ? /* @__PURE__ */ React.createElement("span", null, copy.nullLabel || "Null") : kind === "boolean" ? /* @__PURE__ */ React.createElement("select", { value: String(value), "aria-label": label, onChange: (event) => update(event.target.value === "true", event) }, /* @__PURE__ */ React.createElement("option", { value: "true" }, copy.yesLabel || "Yes"), /* @__PURE__ */ React.createElement("option", { value: "false" }, copy.noLabel || "No")) : /* @__PURE__ */ React.createElement("input", { type: "text", inputMode: ["number", "integer"].includes(kind) ? "decimal" : void 0, value, "aria-label": label, onChange: (event) => update(event.target.value, event) });
+  return /* @__PURE__ */ React.createElement("section", { className: "sd-widget-detail" }, /* @__PURE__ */ React.createElement("h3", null, copy.heading || "Default value"), /* @__PURE__ */ React.createElement("label", null, /* @__PURE__ */ React.createElement("input", { type: "checkbox", checked: enabled, onChange: (event) => change({ enabled: event.target.checked }, event) }), " ", copy.declareLabel || "Declare a default"), /* @__PURE__ */ React.createElement("label", { hidden: !enabled }, type === "array" ? copy.arrayLabel || "Values" : copy.valueLabel || "Value", choices ? /* @__PURE__ */ React.createElement("select", { value: String(choiceIndex), "aria-label": copy.ariaLabel || "Default value", onChange: (event) => change({ choiceIndex: Number(event.target.value) }, event) }, choices.map((value, index) => /* @__PURE__ */ React.createElement("option", { key: index, value: String(index) }, value === null ? copy.nullLabel || "Null" : String(value)))) : type === "array" ? /* @__PURE__ */ React.createElement("div", { className: "sd-annotation-row-list" }, /* @__PURE__ */ React.createElement("div", { className: "sd-annotation-row-list" }, rows.map((row, index) => /* @__PURE__ */ React.createElement("div", { className: "sd-annotation-row", key: row.id }, scalar(row.value, (copy.itemAriaLabel || "Default item") + " " + (index + 1), (value, event) => change({ rows: rows.map((item) => item.id === row.id ? { ...item, value } : item) }, event), arrayType), /* @__PURE__ */ React.createElement("button", { type: "button", hidden: rows.length <= (schema.minItems || 0), onClick: (event) => change({ rows: rows.filter((item) => item.id !== row.id) }, event) }, copy.removeItemLabel || "Remove")))), /* @__PURE__ */ React.createElement(
+    "button",
+    {
+      type: "button",
+      hidden: Number.isInteger(schema.maxItems) && rows.length >= schema.maxItems,
+      onClick: (event) => change({ rows: [...rows, { ...annotationRow(""), value: arrayType === "boolean" ? true : "" }] }, event)
+    },
+    copy.addItemLabel || "Add value"
+  )) : scalar(raw, copy.ariaLabel || "Default value", (value, event) => change({ raw: value }, event), type)));
+}
+function renderTypedDefaultEditor(parent, schema, source, state, configuration) {
+  if (configuration?.control !== "jsonSchemaTyped") return null;
+  const key = configuration.key || "default", allowed = Array.isArray(schema.enum) && schema.enum.every((value2) => value2 === null || ["string", "number", "boolean"].includes(typeof value2)) ? schema.enum : null;
+  const arrayType = schema.type === "array" && arrayTypes.includes(schema.items?.type) ? schema.items.type : null;
+  const type = scalarTypes.includes(schema.type) ? schema.type : arrayType ? "array" : allowed?.length ? allowed[0] === null ? "null" : typeof allowed[0] : null;
+  if (!type) return null;
+  const original = Object.hasOwn(source, key) ? JSON.stringify(source[key]) : "", saved = state && typeof state === "object" ? state : { value: state };
+  const rawText = typeof saved.value === "string" ? saved.value : original;
+  let current;
+  try {
+    current = JSON.parse(rawText);
+  } catch {
+    current = source[key];
+  }
+  const choices = allowed ? allowed.some((choice) => Object.is(choice, current)) || current === void 0 ? allowed : [...allowed, current] : null;
+  let dirty = typeof saved.value === "string" && saved.value !== original;
+  let view = {
+    configuration,
+    schema,
+    enabled: rawText !== "",
+    type,
+    arrayType,
+    choices,
+    choiceIndex: choices ? Math.max(0, choices.findIndex((choice) => Object.is(choice, current))) : 0,
+    raw: type === "boolean" ? current !== false : current == null ? "" : String(current),
+    rows: (Array.isArray(current) ? current : []).map((value2) => ({ ...annotationRow(""), value: arrayType === "boolean" ? value2 !== false : String(value2) }))
+  }, mount;
+  if (Array.isArray(saved.numericTexts)) {
+    if (type === "array" && ["number", "integer"].includes(arrayType)) view.rows.forEach((row, index) => {
+      if (typeof saved.numericTexts[index] === "string") row.value = saved.numericTexts[index];
+    });
+    else if (["number", "integer"].includes(type) && typeof saved.numericTexts[0] === "string") view.raw = saved.numericTexts[0];
+  }
+  if (saved.format === "fullmeta-typed-default-state/1") {
+    view = { ...view, ...structuredClone(saved.view) };
+    dirty = saved.dirty;
+    adoptAnnotationRows(view.rows);
+  }
+  const host = document.createElement("div");
+  parent.append(host);
+  const onCommand = (command, event) => {
+    view = { ...view, ...command.patch };
+    dirty = true;
+    mount.update({ view, onCommand });
+    if (!event || event.type === "click") host.dispatchEvent(new Event("input", { bubbles: true }));
+  };
+  mount = mountReactComponent(host, TypedDefaultEditor, { view, onCommand });
+  const read = (value2, kind) => kind === "boolean" ? value2 === true : kind === "null" ? null : ["number", "integer"].includes(kind) ? Number(value2) : value2;
+  const value = () => !dirty ? original : view.enabled ? JSON.stringify(choices ? choices[view.choiceIndex] : type === "array" ? view.rows.map((row) => read(row.value, arrayType)) : read(view.raw, type)) : "";
+  const numericTexts = () => choices ? [] : type === "array" && ["number", "integer"].includes(arrayType) ? view.rows.map((row) => String(row.value)) : ["number", "integer"].includes(type) ? [String(view.raw)] : [];
+  return {
+    label: configuration.label || "Default value",
+    keys: [key],
+    type: "json",
+    input: { get value() {
+      return value();
+    } },
+    original,
+    snapshot: () => ({ value: value(), numericTexts: numericTexts() }),
+    snapshotState: () => ({ format: "fullmeta-typed-default-state/1", view: structuredClone(view), dirty }),
+    dispose() {
+      mount.dispose();
+      host.remove();
+    },
+    validateDraft() {
+      if (!view.enabled) return;
+      if (numericTexts().some((text) => !text.trim() || !Number.isFinite(Number(text)))) throw new Error(configuration.numberMessage || "Enter a finite number for every default value.");
+      if (type === "array" && arrayType === "integer" && view.rows.some((row) => !Number.isInteger(Number(row.value)))) throw new Error(configuration.arrayMessage || "Default values must match the array declaration.");
+    }
+  };
+}
+export {
+  TypedDefaultEditor,
+  renderTypedDefaultEditor
+};
 
 //# sourceMappingURL=typed-default-editor.js.map

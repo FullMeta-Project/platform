@@ -1,4 +1,100 @@
 // Generated from designer.jsx by scripts/build-frontend.mjs.
-import i from"../shared/react/react-runtime.js";import{mountReactComponent as g}from"../shared/react/mount.js";import{discoverPrograms as b,semanticAssertions as k,countRules as S,pathsRelated as C}from"./program-projection.js";import{semanticAssertions as P}from"./program-projection.js";const w=e=>"#/"+e.map(r=>String(r).replace(/~/g,"~0").replace(/\//g,"~1")).join("/"),V=(e,r)=>r.replace(/^#\/?/,"").split("/").filter(Boolean).map(t=>t.replace(/~1/g,"/").replace(/~0/g,"~")).reduce((t,d)=>t?.[d],e),A=new WeakMap;function x(e){const r=e?.declaration;if(!r||typeof r!="object")return k(e);let t=A.get(r);return t||(t=k(e),A.set(r,t)),t}function L(e){const r=[],t=(d,p,n)=>(d||[]).forEach((s,f)=>{const c=[...p,f];r.push({pointer:w(c),label:s.message||s.let||s.check||`Rule ${f+1}`,depth:n}),s.rules&&t(s.rules,[...c,"rules"],n+1);for(const u of["then","else"])s[u]&&t(s[u],[...c,u],n+1)});return t(e.declaration.rules,[e.key,"rules"],0),r}function N({program:e,model:r,commands:t}){const[d,p]=i.useState(!1),n=d?L(e):[];return i.createElement("details",{onToggle:s=>p(s.currentTarget.open)},i.createElement("summary",{onClick:()=>t.select(e.file,e.pointer),"aria-current":r.selected?.file===e.file&&r.selected?.pointer===e.pointer},e.label," \xB7 ",e.declaration.rules.length," top-level rules"),n.map(s=>i.createElement("div",{key:s.pointer,className:"vp-tree-row",style:{paddingLeft:`${s.depth}em`}},i.createElement("button",{type:"button",className:"vp-tree-select","aria-current":r.selected?.file===e.file&&r.selected?.pointer===s.pointer,onClick:()=>t.select(e.file,s.pointer)},s.label))))}function D({model:e,commands:r}){return i.createElement("div",{className:"vp-tree"},e.programs.filter(t=>!e.search||JSON.stringify(t.declaration).toLowerCase().includes(e.search.toLowerCase())||t.label.toLowerCase().includes(e.search.toLowerCase())).map(t=>i.createElement(N,{key:`${t.file}|${t.pointer}`,program:t,model:e,commands:r})))}function E({model:e}){return e.draft?i.createElement("section",{className:"vp-editor"},i.createElement("h3",null,e.selected.label),i.createElement("p",null,e.derived?"Derived rules are read only. Edit the declarative records in Validation requirements.":"Existing native rules are preserved and read only here. Use Validation requirements for declarative authoring."),i.createElement("pre",null,JSON.stringify(e.value,null,2))):i.createElement("p",null,"Select a validation program or rule to inspect its declaration.")}function $({treeParent:e=null,settingsParent:r,onApply:t=()=>{},onSelection:d=()=>{}}){let p=[],n={programs:[],selected:null,search:"",draft:null,value:null,derived:!1,error:""},s,f;const c=()=>{s?.update({model:n,commands:h}),f?.update({model:n,commands:h})},u=(a,l)=>{const o=n.programs.find(v=>v.file===a&&(l===v.pointer||l.startsWith(v.pointer+"/")));if(!o)return!1;const y=V(o.source.value,l);if(y===void 0)return!1;const m={file:a,pointer:l,label:l===o.pointer?o.label:"Validation rule",kind:"validation",programKey:o.key};return n={...n,selected:m,value:y,draft:!0,derived:Object.hasOwn(o.declaration,"declarative"),error:""},d(m),c(),!0},h={select:u};return e&&(s=g(e,D,{model:n,commands:h})),r&&(f=g(r,E,{model:n,commands:h})),{update(a){p=a||[],n.programs=b(p);const l=n.selected;l&&!u(l.file,l.pointer)?(n={...n,selected:null,draft:null,value:null,derived:!1,error:""},d(null),c()):l||(n.value=null,n.draft=null,c())},render:c,renderTree(a=""){return n.search=String(a),c(),n.programs.reduce((l,o)=>l+S(o.declaration.rules),0)},rulesForBinding(a,l=p){if(!Array.isArray(a))return[];const o=a.map(String);return b(l).flatMap(y=>x(y).filter(m=>m.readPaths.some(v=>C(o,v))))},listPrograms(a=p){return b(a).map(l=>({file:l.file,pointer:l.pointer,key:l.key,label:l.label,topLevelRules:l.declaration.rules.length,ruleCount:S(l.declaration.rules)}))},revealSelected(){e?.querySelector('[aria-current="true"]')?.scrollIntoView?.({block:"center"})},selectAt:u,selectProgramAt:u,selectRuleAt:u,dispose(){s?.dispose(),f?.dispose()}}}export{E as ValidationDesignerSettings,D as ValidationDesignerTree,$ as createValidationProgramDesigner,P as semanticAssertions};
+import React from "../shared/react/react-runtime.js";
+import { mountReactComponent } from "../shared/react/mount.js";
+import { discoverPrograms, semanticAssertions, countRules, pathsRelated } from "./program-projection.js";
+import { semanticAssertions as semanticAssertions2 } from "./program-projection.js";
+const pointer = (parts) => "#/" + parts.map((part) => String(part).replace(/~/g, "~0").replace(/\//g, "~1")).join("/");
+const get = (value, target) => target.replace(/^#\/?/, "").split("/").filter(Boolean).map((part) => part.replace(/~1/g, "/").replace(/~0/g, "~")).reduce((at, part) => at?.[part], value);
+const assertionCache = /* @__PURE__ */ new WeakMap();
+function cachedAssertions(program) {
+  const declaration = program?.declaration;
+  if (!declaration || typeof declaration !== "object") return semanticAssertions(program);
+  let assertions = assertionCache.get(declaration);
+  if (!assertions) {
+    assertions = semanticAssertions(program);
+    assertionCache.set(declaration, assertions);
+  }
+  return assertions;
+}
+function ruleRows(program) {
+  const rows = [];
+  const walk = (rules, path, depth) => (rules || []).forEach((rule, index) => {
+    const current = [...path, index];
+    rows.push({ pointer: pointer(current), label: rule.message || rule.let || rule.check || `Rule ${index + 1}`, depth });
+    if (rule.rules) walk(rule.rules, [...current, "rules"], depth + 1);
+    for (const key of ["then", "else"]) if (rule[key]) walk(rule[key], [...current, key], depth + 1);
+  });
+  walk(program.declaration.rules, [program.key, "rules"], 0);
+  return rows;
+}
+function ValidationProgramSection({ program, model, commands }) {
+  const [expanded, setExpanded] = React.useState(false);
+  const rows = expanded ? ruleRows(program) : [];
+  return /* @__PURE__ */ React.createElement("details", { onToggle: (event) => setExpanded(event.currentTarget.open) }, /* @__PURE__ */ React.createElement("summary", { onClick: () => commands.select(program.file, program.pointer), "aria-current": model.selected?.file === program.file && model.selected?.pointer === program.pointer }, program.label, " \xB7 ", program.declaration.rules.length, " top-level rules"), rows.map((row) => /* @__PURE__ */ React.createElement("div", { key: row.pointer, className: "vp-tree-row", style: { paddingLeft: `${row.depth}em` } }, /* @__PURE__ */ React.createElement("button", { type: "button", className: "vp-tree-select", "aria-current": model.selected?.file === program.file && model.selected?.pointer === row.pointer, onClick: () => commands.select(program.file, row.pointer) }, row.label))));
+}
+function ValidationDesignerTree({ model, commands }) {
+  return /* @__PURE__ */ React.createElement("div", { className: "vp-tree" }, model.programs.filter((program) => !model.search || JSON.stringify(program.declaration).toLowerCase().includes(model.search.toLowerCase()) || program.label.toLowerCase().includes(model.search.toLowerCase())).map((program) => /* @__PURE__ */ React.createElement(ValidationProgramSection, { key: `${program.file}|${program.pointer}`, program, model, commands })));
+}
+function ValidationDesignerSettings({ model }) {
+  return model.draft ? /* @__PURE__ */ React.createElement("section", { className: "vp-editor" }, /* @__PURE__ */ React.createElement("h3", null, model.selected.label), /* @__PURE__ */ React.createElement("p", null, model.derived ? "Derived rules are read only. Edit the declarative records in Validation requirements." : "Existing native rules are preserved and read only here. Use Validation requirements for declarative authoring."), /* @__PURE__ */ React.createElement("pre", null, JSON.stringify(model.value, null, 2))) : /* @__PURE__ */ React.createElement("p", null, "Select a validation program or rule to inspect its declaration.");
+}
+function createValidationProgramDesigner({ treeParent = null, settingsParent, onApply = () => {
+}, onSelection = () => {
+} }) {
+  let sources = [], model = { programs: [], selected: null, search: "", draft: null, value: null, derived: false, error: "" }, treeMount, settingsMount;
+  const render = () => {
+    treeMount?.update({ model, commands });
+    settingsMount?.update({ model, commands });
+  };
+  const selectAt = (file, target) => {
+    const program = model.programs.find((program2) => program2.file === file && (target === program2.pointer || target.startsWith(program2.pointer + "/")));
+    if (!program) return false;
+    const value = get(program.source.value, target);
+    if (value === void 0) return false;
+    const selected = { file, pointer: target, label: target === program.pointer ? program.label : "Validation rule", kind: "validation", programKey: program.key };
+    model = { ...model, selected, value, draft: true, derived: Object.hasOwn(program.declaration, "declarative"), error: "" };
+    onSelection(selected);
+    render();
+    return true;
+  };
+  const commands = { select: selectAt };
+  if (treeParent) treeMount = mountReactComponent(treeParent, ValidationDesignerTree, { model, commands });
+  if (settingsParent) settingsMount = mountReactComponent(settingsParent, ValidationDesignerSettings, { model, commands });
+  return { update(next) {
+    sources = next || [];
+    model.programs = discoverPrograms(sources);
+    const selected = model.selected;
+    if (selected && !selectAt(selected.file, selected.pointer)) {
+      model = { ...model, selected: null, draft: null, value: null, derived: false, error: "" };
+      onSelection(null);
+      render();
+    } else if (!selected) {
+      model.value = null;
+      model.draft = null;
+      render();
+    }
+  }, render, renderTree(search = "") {
+    model.search = String(search);
+    render();
+    return model.programs.reduce((sum, program) => sum + countRules(program.declaration.rules), 0);
+  }, rulesForBinding(binding, input = sources) {
+    if (!Array.isArray(binding)) return [];
+    const target = binding.map(String);
+    return discoverPrograms(input).flatMap((program) => cachedAssertions(program).filter((rule) => rule.readPaths.some((path) => pathsRelated(target, path))));
+  }, listPrograms(input = sources) {
+    return discoverPrograms(input).map((program) => ({ file: program.file, pointer: program.pointer, key: program.key, label: program.label, topLevelRules: program.declaration.rules.length, ruleCount: countRules(program.declaration.rules) }));
+  }, revealSelected() {
+    treeParent?.querySelector('[aria-current="true"]')?.scrollIntoView?.({ block: "center" });
+  }, selectAt, selectProgramAt: selectAt, selectRuleAt: selectAt, dispose() {
+    treeMount?.dispose();
+    settingsMount?.dispose();
+  } };
+}
+export {
+  ValidationDesignerSettings,
+  ValidationDesignerTree,
+  createValidationProgramDesigner,
+  semanticAssertions2 as semanticAssertions
+};
 
 //# sourceMappingURL=designer.js.map

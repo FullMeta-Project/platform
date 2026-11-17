@@ -1,5 +1,5 @@
 import { applicationProjectStorage } from "../project-storage.js";
-import { normalizeNativeApiContract, nativeOperationActionContract } from '../runtime/native-operations.js';
+import { normalizeNativeApiContract, nativeOperationActionContract, loadNativeOperationRegistry } from '../runtime/native-operations.js';
 
 import { schemaWidget } from "../../ui/widgets/shared/schema-widget.js";
 import { graphicsConsoleIssues } from "../../ui/widgets/graphics-console/widget.js";
@@ -150,6 +150,7 @@ async function withReactProviders(value){
 }
 export async function loadApplicationPackage(applicationId, options = {}) {
   if (isSchemaDocument(options.model)) {
+    if (options.modelLocation) await loadNativeOperationRegistry(options.model, new URL(options.modelLocation, new URL('../../..', import.meta.url)));
     const { createSchemaDocumentPackage } = await import("../../ui/widgets/model-editor/widget.js");
     return withReactProviders(createSchemaDocumentPackage(options));
   }
@@ -208,6 +209,8 @@ export async function loadApplicationPackage(applicationId, options = {}) {
   if (!applicationPackage || applicationPackage.id !== applicationId) {
     throw new Error(`Application package "${applicationId}" has an invalid package contract.`);
   }
+  const operationDigest = await loadNativeOperationRegistry(applicationPackage.modelSchema, new URL(applicationPackage.schemaPath, new URL('../../..', import.meta.url)));
+  applicationPackage.nativeOperationsDigest = operationDigest;
   applicationPackage.applicationRegistration = registration;
   applicationPackage.widgetCatalog = await loadWidgetCatalogs({
     schema: applicationPackage.modelSchema,
@@ -241,7 +244,7 @@ export async function loadApplicationPackage(applicationId, options = {}) {
     throw new Error(`Application package "${applicationId}" model schema has no runtime declaration.`);
   }
   applicationPackage.projectStorage = applicationProjectStorage(applicationPackage.modelSchema["x-fullmeta-runtime"]?.storage);
-  const editorApiContracts = Object.fromEntries(Object.entries(applicationPackage.modelSchema["x-fullmeta-runtime"]?.editorApi || {}).map(([name, contract]) => [name, normalizeNativeApiContract(contract)]));
+  const editorApiContracts = Object.fromEntries(Object.entries(applicationPackage.modelSchema["x-fullmeta-runtime"]?.editorApi || {}).map(([name, contract]) => [name, normalizeNativeApiContract(contract, operationDigest)]));
   const externalPrograms = applicationPackage.modelSchema["x-fullmeta-runtime"]?.externalPrograms || {};
   const editorApi = Object.fromEntries(Object.entries(editorApiContracts).map(([name, contract]) =>
     [name, typeof contract === 'string' ? contract : contract?.route]));

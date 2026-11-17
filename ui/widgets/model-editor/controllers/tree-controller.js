@@ -1,4 +1,110 @@
 // Generated from tree-controller.jsx by scripts/build-frontend.mjs.
-import{validateTreeAnnotationCandidate as f,applicationTreeBehavior as S,schemaAuthoringTreePreview as v,treeIconSource as A,treeIconForDeclaration as P,treeIconForPath as M,createModelTreeItem as D,treeSectionIconSvg as w,appendTreeSectionIcon as y,schemaTreeButtonForSelection as F,updateTreeSelection as R,treeUiSetting as B,configureTreeRoot as O,configureTreeSectionCollapse as E,treeItemPath as j,treeArrayPathForItem as N,configureTreeItemDragging as V,clearTreeDropIndicators as W,reorderTreeItem as L,moveSpecialTreeItem as k,treeDropPlan as J,renderTree as H,selectItem as U,showModelOverview as $,treeActionPlans as q,modelAfterTreeDeletion as G,deleteTreeItem as X,startInlineTreeRename as Y,startRenameTreeItem as z,startDeclaredTreeInlineEdit as K,closeTreeMenu as Q,treeInsertionForAction as Z,toggleTreeItemEnabled as _,treeActionAvailability as s,performTreeInsertionAction as C,performDeclaredTreeAction as x,clearTreeDropTargetIndicators as ee,setTreeWidth as re}from"./tree-controller-actions.js";import c from"../../shared/react/react-runtime.js";import{changeTreeRename as le,commitTreeRename as ae,cancelTreeRename as te}from"./tree-controller-actions.js";import{renderOwnedView as ie,joinView as ne}from"../../../runtime/owned-view.js";import"../schema-form.js";import"../../shared/react/collection-controls.js";function de(e,i,r){const l=r.dataset.modelPath?JSON.parse(r.dataset.modelPath):null,T=r.dataset.arrayPath?JSON.parse(r.dataset.arrayPath):null;if(i.preventDefault(),e.closeTreeMenu(),r.disabled||r.getAttribute("aria-disabled")==="true"){e.setStatus(r.getAttribute("aria-description")||r.title||"This tree item is unavailable for actions.","error");return}let m;try{m=e.applyCurrentSettingsDraft({refresh:!1,announce:!0})}catch{return}m&&!l&&e.renderTree();const n=e.treeActionPlans(),d=n.menuTarget(l,T);if(!d)return;const t=e.activeApplicationPackage?.kind==="schemaDocument"?{...d,schemaProjection:e.schemaProjectionForTreeButton.get(r)||null}:d,{arrayPath:p}=t;if(l&&n.selectItemOnContextMenu){const a=e.activeComponentId();e.selectedPath=l,e.selectedCollection=null;const u=e.valueAt(l);e.selectedLabel=t.selectionLabel||e.displayItemName(u,p),e.settingsDraft=e.cloneJson(u),e.settingsDraftDirty=!1,e.reactTreeState=e.reduceTreeViewState(e.reactTreeState,{type:"select",id:r.dataset.treeNodeId,path:l}),e.updateTreeSelection(r),e.clearPreviewForComponentChange(a,e.activeComponentId()),e.$("#selection-title").textContent=e.selectedLabel,e.$("#selection-path").textContent=l.join(" \u203A "),e.renderSettingsTable(),e.updateApplySettingsVisibility(),e.updateModelEditState(),e.updateSelectionActionVisibility(),e.updateWorkflowPanels(),e.showGraphicsForSelection(l,u,{defaultScene:!0})}e.contextTarget=t;const o=n.menuEntries(t).map(a=>a.separator?c.createElement(c.Fragment,null,c.createElement("div",{className:"context-separator"})):a.available===!1?e.menuButton(a.label,a.action):e.availableMenuButton(a.label,a.action));if(!o.length)return;ie(e.contextMenu,ne(o,"")),e.contextMenu.classList.remove("hidden");const b=e.contextMenu.offsetWidth,h=e.contextMenu.offsetHeight,I=Math.max(8,Math.min(i.clientX,window.innerWidth-b-8)),g=Math.max(8,Math.min(i.clientY,window.innerHeight-h-8));e.contextMenu.style.left=I+"px",e.contextMenu.style.top=g+"px",e.contextMenu.querySelector("button:not(:disabled)")?.focus()}function fe(e){return{validateTreeAnnotationCandidate:f.bind(null,e),applicationTreeBehavior:S.bind(null,e),schemaAuthoringTreePreview:v.bind(null,e),treeIconSource:A.bind(null,e),treeIconForDeclaration:P.bind(null,e),treeIconForPath:M.bind(null,e),createModelTreeItem:D.bind(null,e),treeSectionIconSvg:w.bind(null,e),appendTreeSectionIcon:y.bind(null,e),schemaTreeButtonForSelection:F.bind(null,e),updateTreeSelection:R.bind(null,e),treeUiSetting:B.bind(null,e),configureTreeRoot:O.bind(null,e),configureTreeSectionCollapse:E.bind(null,e),treeItemPath:j.bind(null,e),treeArrayPathForItem:N.bind(null,e),configureTreeItemDragging:V.bind(null,e),clearTreeDropIndicators:W.bind(null,e),reorderTreeItem:L.bind(null,e),moveSpecialTreeItem:k.bind(null,e),treeDropPlan:J.bind(null,e),renderTree:H.bind(null,e),selectItem:U.bind(null,e),showModelOverview:$.bind(null,e),treeActionPlans:q.bind(null,e),modelAfterTreeDeletion:G.bind(null,e),deleteTreeItem:X.bind(null,e),startInlineTreeRename:Y.bind(null,e),startRenameTreeItem:z.bind(null,e),changeTreeRename:le.bind(null,e),commitTreeRename:ae.bind(null,e),cancelTreeRename:te.bind(null,e),startDeclaredTreeInlineEdit:K.bind(null,e),closeTreeMenu:Q.bind(null,e),treeInsertionForAction:Z.bind(null,e),toggleTreeItemEnabled:_.bind(null,e),treeActionAvailability:s.bind(null,e),performTreeInsertionAction:C.bind(null,e),performDeclaredTreeAction:x.bind(null,e),openTreeMenu:de.bind(null,e),clearTreeDropTargetIndicators:ee.bind(null,e),setTreeWidth:re.bind(null,e)}}export{fe as createController};
+import { validateTreeAnnotationCandidate, applicationTreeBehavior, schemaAuthoringTreePreview, treeIconSource, treeIconForDeclaration, treeIconForPath, createModelTreeItem, treeSectionIconSvg, appendTreeSectionIcon, schemaTreeButtonForSelection, updateTreeSelection, treeUiSetting, configureTreeRoot, configureTreeSectionCollapse, treeItemPath, treeArrayPathForItem, configureTreeItemDragging, clearTreeDropIndicators, reorderTreeItem, moveSpecialTreeItem, treeDropPlan, renderTree, selectItem, showModelOverview, treeActionPlans, modelAfterTreeDeletion, deleteTreeItem, startInlineTreeRename, startRenameTreeItem, startDeclaredTreeInlineEdit, closeTreeMenu, treeInsertionForAction, toggleTreeItemEnabled, treeActionAvailability, performTreeInsertionAction, performDeclaredTreeAction, clearTreeDropTargetIndicators, setTreeWidth } from "./tree-controller-actions.js";
+import React from "../../shared/react/react-runtime.js";
+import { changeTreeRename, commitTreeRename, cancelTreeRename } from "./tree-controller-actions.js";
+import { renderOwnedView, joinView } from "../../../runtime/owned-view.js";
+import { SchemaField, SchemaObject, SchemaStructure } from "../schema-form.js";
+import { RowMoveControls } from "../../shared/react/collection-controls.js";
+function openTreeMenu(sessionContext, event, node) {
+  const itemPath = node.dataset.modelPath ? JSON.parse(node.dataset.modelPath) : null;
+  const nodeArrayPath = node.dataset.arrayPath ? JSON.parse(node.dataset.arrayPath) : null;
+  event.preventDefault();
+  sessionContext.closeTreeMenu();
+  if (node.disabled || node.getAttribute("aria-disabled") === "true") {
+    sessionContext.setStatus(node.getAttribute("aria-description") || node.title || "This tree item is unavailable for actions.", "error");
+    return;
+  }
+  let appliedPendingSettings;
+  try {
+    appliedPendingSettings = sessionContext.applyCurrentSettingsDraft({ refresh: false, announce: true });
+  } catch {
+    return;
+  }
+  if (appliedPendingSettings && !itemPath) sessionContext.renderTree();
+  const plan = sessionContext.treeActionPlans(), menuTarget = plan.menuTarget(itemPath, nodeArrayPath);
+  if (!menuTarget) return;
+  const target = sessionContext.activeApplicationPackage?.kind === "schemaDocument" ? { ...menuTarget, schemaProjection: sessionContext.schemaProjectionForTreeButton.get(node) || null } : menuTarget;
+  const { arrayPath } = target;
+  if (itemPath && plan.selectItemOnContextMenu) {
+    const previousComponentId = sessionContext.activeComponentId();
+    sessionContext.selectedPath = itemPath;
+    sessionContext.selectedCollection = null;
+    const item = sessionContext.valueAt(itemPath);
+    sessionContext.selectedLabel = target.selectionLabel || sessionContext.displayItemName(item, arrayPath);
+    sessionContext.settingsDraft = sessionContext.cloneJson(item);
+    sessionContext.settingsDraftDirty = false;
+    sessionContext.reactTreeState = sessionContext.reduceTreeViewState(sessionContext.reactTreeState, { type: "select", id: node.dataset.treeNodeId, path: itemPath });
+    sessionContext.updateTreeSelection(node);
+    sessionContext.clearPreviewForComponentChange(previousComponentId, sessionContext.activeComponentId());
+    sessionContext.$("#selection-title").textContent = sessionContext.selectedLabel;
+    sessionContext.$("#selection-path").textContent = itemPath.join(" \u203A ");
+    sessionContext.renderSettingsTable();
+    sessionContext.updateApplySettingsVisibility();
+    sessionContext.updateModelEditState();
+    sessionContext.updateSelectionActionVisibility();
+    sessionContext.updateWorkflowPanels();
+    sessionContext.showGraphicsForSelection(itemPath, item, { defaultScene: true });
+  }
+  sessionContext.contextTarget = target;
+  const actions = plan.menuEntries(target).map((entry) => entry.separator ? /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement("div", { className: "context-separator" })) : entry.available === false ? sessionContext.menuButton(entry.label, entry.action) : sessionContext.availableMenuButton(entry.label, entry.action));
+  if (!actions.length) return;
+  renderOwnedView(sessionContext.contextMenu, joinView(actions, ""));
+  sessionContext.contextMenu.classList.remove("hidden");
+  const width = sessionContext.contextMenu.offsetWidth, height = sessionContext.contextMenu.offsetHeight;
+  const left = Math.max(8, Math.min(event.clientX, window.innerWidth - width - 8));
+  const top = Math.max(8, Math.min(event.clientY, window.innerHeight - height - 8));
+  sessionContext.contextMenu.style.left = left + "px";
+  sessionContext.contextMenu.style.top = top + "px";
+  sessionContext.contextMenu.querySelector("button:not(:disabled)")?.focus();
+}
+function createController(context) {
+  return {
+    validateTreeAnnotationCandidate: validateTreeAnnotationCandidate.bind(null, context),
+    applicationTreeBehavior: applicationTreeBehavior.bind(null, context),
+    schemaAuthoringTreePreview: schemaAuthoringTreePreview.bind(null, context),
+    treeIconSource: treeIconSource.bind(null, context),
+    treeIconForDeclaration: treeIconForDeclaration.bind(null, context),
+    treeIconForPath: treeIconForPath.bind(null, context),
+    createModelTreeItem: createModelTreeItem.bind(null, context),
+    treeSectionIconSvg: treeSectionIconSvg.bind(null, context),
+    appendTreeSectionIcon: appendTreeSectionIcon.bind(null, context),
+    schemaTreeButtonForSelection: schemaTreeButtonForSelection.bind(null, context),
+    updateTreeSelection: updateTreeSelection.bind(null, context),
+    treeUiSetting: treeUiSetting.bind(null, context),
+    configureTreeRoot: configureTreeRoot.bind(null, context),
+    configureTreeSectionCollapse: configureTreeSectionCollapse.bind(null, context),
+    treeItemPath: treeItemPath.bind(null, context),
+    treeArrayPathForItem: treeArrayPathForItem.bind(null, context),
+    configureTreeItemDragging: configureTreeItemDragging.bind(null, context),
+    clearTreeDropIndicators: clearTreeDropIndicators.bind(null, context),
+    reorderTreeItem: reorderTreeItem.bind(null, context),
+    moveSpecialTreeItem: moveSpecialTreeItem.bind(null, context),
+    treeDropPlan: treeDropPlan.bind(null, context),
+    renderTree: renderTree.bind(null, context),
+    selectItem: selectItem.bind(null, context),
+    showModelOverview: showModelOverview.bind(null, context),
+    treeActionPlans: treeActionPlans.bind(null, context),
+    modelAfterTreeDeletion: modelAfterTreeDeletion.bind(null, context),
+    deleteTreeItem: deleteTreeItem.bind(null, context),
+    startInlineTreeRename: startInlineTreeRename.bind(null, context),
+    startRenameTreeItem: startRenameTreeItem.bind(null, context),
+    changeTreeRename: changeTreeRename.bind(null, context),
+    commitTreeRename: commitTreeRename.bind(null, context),
+    cancelTreeRename: cancelTreeRename.bind(null, context),
+    startDeclaredTreeInlineEdit: startDeclaredTreeInlineEdit.bind(null, context),
+    closeTreeMenu: closeTreeMenu.bind(null, context),
+    treeInsertionForAction: treeInsertionForAction.bind(null, context),
+    toggleTreeItemEnabled: toggleTreeItemEnabled.bind(null, context),
+    treeActionAvailability: treeActionAvailability.bind(null, context),
+    performTreeInsertionAction: performTreeInsertionAction.bind(null, context),
+    performDeclaredTreeAction: performDeclaredTreeAction.bind(null, context),
+    openTreeMenu: openTreeMenu.bind(null, context),
+    clearTreeDropTargetIndicators: clearTreeDropTargetIndicators.bind(null, context),
+    setTreeWidth: setTreeWidth.bind(null, context)
+  };
+}
+export {
+  createController
+};
 
 //# sourceMappingURL=tree-controller.js.map

@@ -1,4 +1,42 @@
 // Generated from widget.jsx by scripts/build-frontend.mjs.
-import t from"../shared/react/react-runtime.js";import{mountReactComponent as S}from"../shared/react/mount.js";import{renderLegacyWidgetMarkup as v}from"../shared/react/render-markup.js";import{relatedFieldsDesignLabel as D,renderRelatedFieldsDesignEditor as L}from"./design-editor.js";import{validateRelatedFieldsAnnotation as E}from"./fullmeta-ui-relatedFields-1.schema.js";function p({label:r,value:l,path:c=[],schema:h={},context:o={},ui:f={},renderObject:i,onCommand:u,siblings:g}){const F=g||(f.siblings||[]).flatMap(({path:e,label:d})=>{const n=o.schemaAtPath?.(e);if(!n)return[];const a=o.resolveSchema?.(n)||{};return[{label:d||a.title||e.at(-1),value:e.reduce((s,m)=>s?.[m],o.rootValue)??{},path:e,schemaNode:n,context:o}]});return t.createElement(t.Fragment,null,t.createElement("tr",{className:"settings-group"},t.createElement("th",{colSpan:2},r)),i?.({value:l,path:c,schemaNode:h,context:o,onCommand:u}),F.map((e,d)=>{const n=(s,m)=>u?.({...s,rootPath:!0},m),a=i?.({...e,context:{...e.context,rootSettingPath:!0},onCommand:n});return a?t.createElement(t.Fragment,{key:e.id||JSON.stringify(e.path)||d},t.createElement("tr",{className:"settings-group"},t.createElement("th",{colSpan:2},e.label)),a):null}))}function N(r){return t.createElement(p,{...r,...r.view})}const k=r=>v(p,r,["renderObject"]),w=(r,l)=>S(r,N,l);export{p as RelatedFields,N as Widget,w as mountWidget,D as relatedFieldsDesignLabel,k as renderRelatedFields,L as renderRelatedFieldsDesignEditor,E as validateRelatedFieldsAnnotation};
+import React from "../shared/react/react-runtime.js";
+import { mountReactComponent } from "../shared/react/mount.js";
+import { renderLegacyWidgetMarkup } from "../shared/react/render-markup.js";
+import { relatedFieldsDesignLabel, renderRelatedFieldsDesignEditor } from "./design-editor.js";
+import { validateRelatedFieldsAnnotation } from "./fullmeta-ui-relatedFields-1.schema.js";
+function RelatedFields({ label, value, path = [], schema = {}, context = {}, ui = {}, renderObject, onCommand, siblings }) {
+  const related = siblings || (ui.siblings || []).flatMap(({ path: siblingPath, label: siblingLabel }) => {
+    const siblingSchema = context.schemaAtPath?.(siblingPath);
+    if (!siblingSchema) return [];
+    const resolved = context.resolveSchema?.(siblingSchema) || {};
+    return [{
+      label: siblingLabel || resolved.title || siblingPath.at(-1),
+      value: siblingPath.reduce((current, key) => current?.[key], context.rootValue) ?? {},
+      path: siblingPath,
+      schemaNode: siblingSchema,
+      context
+    }];
+  });
+  return /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement("tr", { className: "settings-group" }, /* @__PURE__ */ React.createElement("th", { colSpan: 2 }, label)), renderObject?.({ value, path, schemaNode: schema, context, onCommand }), related.map((sibling, index) => {
+    const onSiblingCommand = (command, event) => onCommand?.({ ...command, rootPath: true }, event);
+    const rows = renderObject?.({ ...sibling, context: { ...sibling.context, rootSettingPath: true }, onCommand: onSiblingCommand });
+    if (!rows) return null;
+    return /* @__PURE__ */ React.createElement(React.Fragment, { key: sibling.id || JSON.stringify(sibling.path) || index }, /* @__PURE__ */ React.createElement("tr", { className: "settings-group" }, /* @__PURE__ */ React.createElement("th", { colSpan: 2 }, sibling.label)), rows);
+  }));
+}
+function Widget(props) {
+  return /* @__PURE__ */ React.createElement(RelatedFields, { ...props, ...props.view });
+}
+const renderRelatedFields = (props) => renderLegacyWidgetMarkup(RelatedFields, props, ["renderObject"]);
+const mountWidget = (container, props) => mountReactComponent(container, Widget, props);
+export {
+  RelatedFields,
+  Widget,
+  mountWidget,
+  relatedFieldsDesignLabel,
+  renderRelatedFields,
+  renderRelatedFieldsDesignEditor,
+  validateRelatedFieldsAnnotation
+};
 
 //# sourceMappingURL=widget.js.map

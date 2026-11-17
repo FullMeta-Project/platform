@@ -3,7 +3,7 @@
 **Status:** Current implementation, `fullmeta-ui-behavior/1`  
 **Last updated:** 2026-10-28
 
-This document describes how FullMeta stores and consumes UI annotations on JSON Schema documents. It covers both project-field annotations and reusable widget authoring profiles. The completed [migration record](../../../backup/documentation-archive-2026-10-28/ui-annotation-language-unification-plan.md) is archived under `backup/`.
+This document describes how FullMeta stores and consumes UI annotations on JSON Schema documents. It covers both project-field annotations and reusable widget authoring profiles. The completed migration record is archived under `backup/`.
 
 ## 1. Design goals
 
@@ -143,4 +143,4 @@ If reusable runtime defaults are needed later, add an explicitly runtime-scoped 
 - [Language helpers and renderer projection](../../ui/annotation-language.js)
 - [Schema interpreter and authoring profiles](../schema-editor.schema.json)
 - [Project form resolver](../../ui/widgets/model-editor/schema-form.js)
-- [Archived migration record](../../../backup/documentation-archive-2026-10-28/ui-annotation-language-unification-plan.md)
+- Archived migration record

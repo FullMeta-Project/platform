@@ -18,7 +18,7 @@ Preview creates a checked candidate. Apply changes the open draft; Save persists
 - [Validation rules for an application](validation-rules.md) explains how authored requirements become executable rules and how to check them against project models.
 - [UI annotation language](ui-annotation-language.md) explains shared UI declarations and their scope.
 - [Declarative validation obligations](../../docs/declarative-validation-language.md) specifies `fullmeta-declarative-rules/1`, neutral predicates, scopes, diagnostics and generated executable rules. **Validation requirements** authors obligations; native bulk and dedicated native editing controls have been retired. Existing programs are not converted automatically, and mismatched generated rules require explicit regeneration.
-- [Widget packages and catalog interfaces](../../ui/widgets/README.md) and [shared UI contracts](../../ui/README.md) describe registered widgets, checked options, public exports and reuse.
+- Widget packages and catalog interfaces and shared UI contracts describe registered widgets, checked options, public exports and reuse.
 - [Using shared UI widgets](shared-widgets.md) explains their roles in the editor and in application project models.
 - [API, executable and compact native bindings](../../docs/api-and-executable-registries.md) describes registry ownership and versioned operation bindings. The [native operation authority](../../contracts/native-operations.json) supplies their descriptors. These bindings select existing declared capabilities; adding a declaration alone does not implement an application operation.
 - [Application development](../../docs/application-development.md) distinguishes schema-only applications from application-owned runtime packages.
@@ -35,13 +35,13 @@ interpreter.
 
 ## Files, layouts and development tools
 
-The [workspace/file/layout guide](../../workspace/docs/workspace-files-and-layout.md) covers canonical paths, nested pickers, the two pane arrangements, ordinary menus and contextual Help. Help resolves beside the active interpreting schema, not beside whichever JSON document happens to be open.
+The [workspace/file/layout guide](../../docs/workspace.md) covers canonical paths, nested pickers, the two pane arrangements, ordinary menus and contextual Help. Help normally resolves beside the active interpreting schema, not beside whichever JSON document happens to be open.
 
-For platform or application component work, use the [shared application contract](../../docs/application-platform-contract.md), [frontend build/watch guide](../../ui/frontend-development.md) and [visible debugging guide](../../ui/editor-debugging.md). JSX sources compile to public JavaScript entries. Human editing and WebMCP use the same guarded commands; watch/replay is optional development tooling.
+For platform or application component work, use the [shared application contract](../../docs/application-platform-contract.md), frontend build/watch guide and visible debugging guide. JSX sources compile to public JavaScript entries. Human editing and WebMCP use the same guarded commands; watch/replay is optional development tooling.
 
 In a browser that supports WebMCP, the open editor exposes discoverable tools to
 inspect its current document and invoke supported semantic commands. Discover
 the available descriptors and their arguments in that session. These tools use
 the same draft, Preview, Apply, Save, validation and target guards as the visible
-editor. The [debugging guide](../../ui/editor-debugging.md#native-webmcp-registration)
+editor. The debugging guide
 describes registration status, commands and the separate optional debug bridge.

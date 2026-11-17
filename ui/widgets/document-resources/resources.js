@@ -1,4 +1,26 @@
 // Generated from resources.jsx by scripts/build-frontend.mjs.
-import u from"../shared/react/react-runtime.js";import{mountReactComponent as d}from"../shared/react/mount.js";import{documentValueAtPath as f}from"./registry.js";function a({view:o,onCommand:e,widgets:s=[],sourceDocument:m,open:i,create:r}){const c=o||{widgets:s,sourceDocument:m};return u.createElement("div",{className:"document-widget-index","data-jsx-widget":"document-resources"},(c.widgets||[]).filter(t=>t.widget!=="source").map(t=>{const n=f(c.sourceDocument??c.value,t.path)!==void 0,l=()=>e?e({type:"widget.action",widget:"documentResources",path:t.path,action:n?"open":"create",args:{id:t.id}}):n?i?.(t):r?.(t);return u.createElement("div",{className:"document-widget-card",key:t.id},u.createElement("strong",null,t.label),u.createElement("span",null,n?`Widget \u2192 ${t.widget==="structured"?"Structured UI settings":t.label}`:"Declaration is not present"),u.createElement("button",{className:"button",type:"button",disabled:n?!e&&typeof i!="function":typeof t.initialValue>"u"||!e&&typeof r!="function",onClick:l},n?"Open":"Create"))}))}const p=new WeakMap;function y(o,e){const s=p.get(o);s?.inspect().mounted?s.update(e):p.set(o,d(o,a,e))}const v=(o,e)=>d(o,a,e);export{a as DocumentResources,y as mountDocumentWidgetIndex,v as mountWidget};
+import React from "../shared/react/react-runtime.js";
+import { mountReactComponent } from "../shared/react/mount.js";
+import { documentValueAtPath } from "./registry.js";
+function DocumentResources({ view, onCommand, widgets = [], sourceDocument, open, create }) {
+  const model = view || { widgets, sourceDocument };
+  return /* @__PURE__ */ React.createElement("div", { className: "document-widget-index", "data-jsx-widget": "document-resources" }, (model.widgets || []).filter((widget) => widget.widget !== "source").map((widget) => {
+    const declared = documentValueAtPath(model.sourceDocument ?? model.value, widget.path) !== void 0;
+    const act = () => onCommand ? onCommand({ type: "widget.action", widget: "documentResources", path: widget.path, action: declared ? "open" : "create", args: { id: widget.id } }) : declared ? open?.(widget) : create?.(widget);
+    return /* @__PURE__ */ React.createElement("div", { className: "document-widget-card", key: widget.id }, /* @__PURE__ */ React.createElement("strong", null, widget.label), /* @__PURE__ */ React.createElement("span", null, declared ? `Widget \u2192 ${widget.widget === "structured" ? "Structured UI settings" : widget.label}` : "Declaration is not present"), /* @__PURE__ */ React.createElement("button", { className: "button", type: "button", disabled: declared ? !onCommand && typeof open !== "function" : typeof widget.initialValue === "undefined" || !onCommand && typeof create !== "function", onClick: act }, declared ? "Open" : "Create"));
+  }));
+}
+const roots = /* @__PURE__ */ new WeakMap();
+function mountDocumentWidgetIndex(container, props) {
+  const mounted = roots.get(container);
+  if (mounted?.inspect().mounted) mounted.update(props);
+  else roots.set(container, mountReactComponent(container, DocumentResources, props));
+}
+const mountWidget = (container, props) => mountReactComponent(container, DocumentResources, props);
+export {
+  DocumentResources,
+  mountDocumentWidgetIndex,
+  mountWidget
+};
 
 //# sourceMappingURL=resources.js.map

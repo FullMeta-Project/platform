@@ -1,4 +1,130 @@
 // Generated from interfaces-editor.jsx by scripts/build-frontend.mjs.
-import a from"../shared/react/react-runtime.js";import{mountReactComponent as k}from"../shared/react/mount.js";import{StructuredValueEditor as C,structuredValueDraft as g,readStructuredValueDraft as d,validateStructuredValueDraftShape as D}from"../shared/structured-value-editor.js";import{mergeGraphicsInterfacesDraft as E}from"./draft-model.js";import{mergeGraphicsInterfacesDraft as V}from"./draft-model.js";const h=r=>r!==null&&typeof r=="object"&&!Array.isArray(r);function S(r,{source:i}={}){if(r?.format!=="fullmeta-graphics-interfaces-editor-state/1"||!h(r.source)||!h(r.mergeBase)||!h(r.model)||typeof r.model.error!="string")throw new Error("Unsupported Graphics interfaces editor state.");if(i!==void 0&&JSON.stringify(r.source)!==JSON.stringify(i))throw new Error("Graphics interfaces state belongs to a different declaration.");if(D(r.model.draft),r.model.duplicate!==null){const n=r.model.duplicate;if(!h(n)||typeof n.source!="string"||typeof n.key!="string")throw new Error("Unsupported pending graphics widget copy state.");D(n.draft)}return r}function j({model:r,commands:i}){const n=(()=>{try{return d(r.draft).widgets||{}}catch{return{}}})();return a.createElement("section",{className:"schema-graphics-interfaces-design","data-jsx-widget":"graphics-interfaces"},a.createElement("p",null,"Edit renderer declarations, actions and interfaces. Additional annotation data is preserved."),a.createElement("button",{type:"button",className:"schema-graphics-widget-duplicate-trigger",disabled:!Object.keys(n).length,onClick:i.openDuplicate},"Duplicate graphics widget"),a.createElement(C,{draft:r.draft,label:"Graphics interfaces",onDraftChange:i.change,error:r.error}),r.duplicate?a.createElement("section",{role:"dialog","aria-modal":"false","aria-label":"Duplicate graphics widget",className:"schema-graphics-widget-duplicate-dialog"},a.createElement("h3",null,"Duplicate graphics widget"),a.createElement("label",null,"Source widget",a.createElement("select",{"aria-label":"Source graphics widget",value:r.duplicate.source,onChange:o=>i.duplicateSource(o.target.value)},Object.keys(n).map(o=>a.createElement("option",{value:o,key:o},o)))),a.createElement("label",null,"New widget ID",a.createElement("input",{"aria-label":"New graphics widget ID",value:r.duplicate.key,onChange:o=>i.duplicateKey(o.target.value)})),a.createElement(C,{draft:r.duplicate.draft,label:"Copied widget",onDraftChange:i.duplicateDraft}),a.createElement("button",{type:"button",onClick:i.confirmDuplicate},"Add copied widget"),a.createElement("button",{type:"button",onClick:i.cancelDuplicate},"Cancel")):null,r.error?a.createElement("p",{role:"alert"},r.error):null)}function x({container:r,declaration:i,onDraftChange:n,onRawDraftChange:o}={}){if(!i||typeof i!="object"||Array.isArray(i))throw new Error("Choose a Graphics interfaces declaration for the structured editor.");const w=structuredClone(i);let m=w,f=w,e={draft:g(i),error:"",duplicate:null},l;const c=()=>l.update({model:e,commands:b}),y=t=>{e={...e,draft:t,error:""};let s,u=!0;try{s=d(t)}catch(p){u=!1,e.error=p.message}if(l.inspect().mounted&&c(),o?.(structuredClone(t)),u)try{n?.(structuredClone(s))}catch(p){e.error=p.message,l.inspect().mounted&&c()}},b={change:y,openDuplicate(){const t=d(e.draft).widgets||{},s=Object.keys(t)[0];if(!s)return;let u=`${s}Copy`,p=2;for(;Object.hasOwn(t,u);)u=`${s}Copy${p++}`;e={...e,duplicate:{source:s,key:u,draft:g(t[s])}},c(),o?.(structuredClone(e))},duplicateSource(t){const s=d(e.draft).widgets;e={...e,duplicate:{...e.duplicate,source:t,draft:g(s[t])}},c(),o?.(structuredClone(e))},duplicateKey(t){e={...e,duplicate:{...e.duplicate,key:t}},c(),o?.(structuredClone(e))},duplicateDraft(t){e={...e,duplicate:{...e.duplicate,draft:t}},c(),o?.(structuredClone(e))},cancelDuplicate(){e={...e,duplicate:null},c(),o?.(structuredClone(e))},confirmDuplicate(){try{const t=d(e.draft),s=e.duplicate.key.trim();if(!s||Object.hasOwn(t.widgets||{},s))throw new Error("Use a new nonblank graphics widget ID.");const u={...t,widgets:{...t.widgets,[s]:d(e.duplicate.draft)}};e={...e,duplicate:null},y(g(u))}catch(t){e={...e,error:t.message},c()}}};return l=k(r,j,{model:e,commands:b}),{snapshot:()=>d(e.draft),draft:()=>structuredClone(e),restore(t){S({format:"fullmeta-graphics-interfaces-editor-state/1",source:m,mergeBase:f,model:t}),e=structuredClone(t),c()},snapshotState(){return{format:"fullmeta-graphics-interfaces-editor-state/1",source:structuredClone(m),mergeBase:structuredClone(f),model:structuredClone(e)}},restoreState(t){return S(t),m=structuredClone(t.source),f=structuredClone(t.mergeBase),e=structuredClone(t.model),c(),{restored:!0,pendingDuplicate:e.duplicate!==null}},commit(t=i){return E(f,d(e.draft),t)},dispose:()=>l.dispose()}}export{j as GraphicsInterfacesEditor,V as mergeGraphicsInterfacesDraft,x as mountGraphicsInterfacesDesignEditor,S as validateGraphicsInterfacesEditorState};
+import React from "../shared/react/react-runtime.js";
+import { mountReactComponent } from "../shared/react/mount.js";
+import { StructuredValueEditor, structuredValueDraft, readStructuredValueDraft, validateStructuredValueDraftShape } from "../shared/structured-value-editor.js";
+import { mergeGraphicsInterfacesDraft } from "./draft-model.js";
+import { mergeGraphicsInterfacesDraft as mergeGraphicsInterfacesDraft2 } from "./draft-model.js";
+const object = (value) => value !== null && typeof value === "object" && !Array.isArray(value);
+function validateGraphicsInterfacesEditorState(value, { source } = {}) {
+  if (value?.format !== "fullmeta-graphics-interfaces-editor-state/1" || !object(value.source) || !object(value.mergeBase) || !object(value.model) || typeof value.model.error !== "string") throw new Error("Unsupported Graphics interfaces editor state.");
+  if (source !== void 0 && JSON.stringify(value.source) !== JSON.stringify(source)) throw new Error("Graphics interfaces state belongs to a different declaration.");
+  validateStructuredValueDraftShape(value.model.draft);
+  if (value.model.duplicate !== null) {
+    const duplicate = value.model.duplicate;
+    if (!object(duplicate) || typeof duplicate.source !== "string" || typeof duplicate.key !== "string") throw new Error("Unsupported pending graphics widget copy state.");
+    validateStructuredValueDraftShape(duplicate.draft);
+  }
+  return value;
+}
+function GraphicsInterfacesEditor({ model, commands }) {
+  const widgets = (() => {
+    try {
+      return readStructuredValueDraft(model.draft).widgets || {};
+    } catch {
+      return {};
+    }
+  })();
+  return /* @__PURE__ */ React.createElement("section", { className: "schema-graphics-interfaces-design", "data-jsx-widget": "graphics-interfaces" }, /* @__PURE__ */ React.createElement("p", null, "Edit renderer declarations, actions and interfaces. Additional annotation data is preserved."), /* @__PURE__ */ React.createElement("button", { type: "button", className: "schema-graphics-widget-duplicate-trigger", disabled: !Object.keys(widgets).length, onClick: commands.openDuplicate }, "Duplicate graphics widget"), /* @__PURE__ */ React.createElement(StructuredValueEditor, { draft: model.draft, label: "Graphics interfaces", onDraftChange: commands.change, error: model.error }), model.duplicate ? /* @__PURE__ */ React.createElement("section", { role: "dialog", "aria-modal": "false", "aria-label": "Duplicate graphics widget", className: "schema-graphics-widget-duplicate-dialog" }, /* @__PURE__ */ React.createElement("h3", null, "Duplicate graphics widget"), /* @__PURE__ */ React.createElement("label", null, "Source widget", /* @__PURE__ */ React.createElement("select", { "aria-label": "Source graphics widget", value: model.duplicate.source, onChange: (event) => commands.duplicateSource(event.target.value) }, Object.keys(widgets).map((key) => /* @__PURE__ */ React.createElement("option", { value: key, key }, key)))), /* @__PURE__ */ React.createElement("label", null, "New widget ID", /* @__PURE__ */ React.createElement("input", { "aria-label": "New graphics widget ID", value: model.duplicate.key, onChange: (event) => commands.duplicateKey(event.target.value) })), /* @__PURE__ */ React.createElement(StructuredValueEditor, { draft: model.duplicate.draft, label: "Copied widget", onDraftChange: commands.duplicateDraft }), /* @__PURE__ */ React.createElement("button", { type: "button", onClick: commands.confirmDuplicate }, "Add copied widget"), /* @__PURE__ */ React.createElement("button", { type: "button", onClick: commands.cancelDuplicate }, "Cancel")) : null, model.error ? /* @__PURE__ */ React.createElement("p", { role: "alert" }, model.error) : null);
+}
+function mountGraphicsInterfacesDesignEditor({ container, declaration, onDraftChange, onRawDraftChange } = {}) {
+  if (!declaration || typeof declaration !== "object" || Array.isArray(declaration)) throw new Error("Choose a Graphics interfaces declaration for the structured editor.");
+  const original = structuredClone(declaration);
+  let replaySource = original, mergeBase = original, model = { draft: structuredValueDraft(declaration), error: "", duplicate: null }, mounted;
+  const render = () => mounted.update({ model, commands });
+  const emit = (draft) => {
+    model = { ...model, draft, error: "" };
+    let value, valid = true;
+    try {
+      value = readStructuredValueDraft(draft);
+    } catch (error) {
+      valid = false;
+      model.error = error.message;
+    }
+    if (mounted.inspect().mounted) render();
+    onRawDraftChange?.(structuredClone(draft));
+    if (valid) try {
+      onDraftChange?.(structuredClone(value));
+    } catch (error) {
+      model.error = error.message;
+      if (mounted.inspect().mounted) render();
+    }
+  };
+  const commands = {
+    change: emit,
+    openDuplicate() {
+      const widgets = readStructuredValueDraft(model.draft).widgets || {}, source = Object.keys(widgets)[0];
+      if (!source) return;
+      let key = `${source}Copy`, serial = 2;
+      while (Object.hasOwn(widgets, key)) key = `${source}Copy${serial++}`;
+      model = { ...model, duplicate: { source, key, draft: structuredValueDraft(widgets[source]) } };
+      render();
+      onRawDraftChange?.(structuredClone(model));
+    },
+    duplicateSource(source) {
+      const widgets = readStructuredValueDraft(model.draft).widgets;
+      model = { ...model, duplicate: { ...model.duplicate, source, draft: structuredValueDraft(widgets[source]) } };
+      render();
+      onRawDraftChange?.(structuredClone(model));
+    },
+    duplicateKey(key) {
+      model = { ...model, duplicate: { ...model.duplicate, key } };
+      render();
+      onRawDraftChange?.(structuredClone(model));
+    },
+    duplicateDraft(draft) {
+      model = { ...model, duplicate: { ...model.duplicate, draft } };
+      render();
+      onRawDraftChange?.(structuredClone(model));
+    },
+    cancelDuplicate() {
+      model = { ...model, duplicate: null };
+      render();
+      onRawDraftChange?.(structuredClone(model));
+    },
+    confirmDuplicate() {
+      try {
+        const value = readStructuredValueDraft(model.draft), key = model.duplicate.key.trim();
+        if (!key || Object.hasOwn(value.widgets || {}, key)) throw new Error("Use a new nonblank graphics widget ID.");
+        const next = { ...value, widgets: { ...value.widgets, [key]: readStructuredValueDraft(model.duplicate.draft) } };
+        model = { ...model, duplicate: null };
+        emit(structuredValueDraft(next));
+      } catch (error) {
+        model = { ...model, error: error.message };
+        render();
+      }
+    }
+  };
+  mounted = mountReactComponent(container, GraphicsInterfacesEditor, { model, commands });
+  return {
+    snapshot: () => readStructuredValueDraft(model.draft),
+    draft: () => structuredClone(model),
+    restore(value) {
+      validateGraphicsInterfacesEditorState({ format: "fullmeta-graphics-interfaces-editor-state/1", source: replaySource, mergeBase, model: value });
+      model = structuredClone(value);
+      render();
+    },
+    snapshotState() {
+      return { format: "fullmeta-graphics-interfaces-editor-state/1", source: structuredClone(replaySource), mergeBase: structuredClone(mergeBase), model: structuredClone(model) };
+    },
+    restoreState(value) {
+      validateGraphicsInterfacesEditorState(value);
+      replaySource = structuredClone(value.source);
+      mergeBase = structuredClone(value.mergeBase);
+      model = structuredClone(value.model);
+      render();
+      return { restored: true, pendingDuplicate: model.duplicate !== null };
+    },
+    commit(source = declaration) {
+      return mergeGraphicsInterfacesDraft(mergeBase, readStructuredValueDraft(model.draft), source);
+    },
+    dispose: () => mounted.dispose()
+  };
+}
+export {
+  GraphicsInterfacesEditor,
+  mergeGraphicsInterfacesDraft2 as mergeGraphicsInterfacesDraft,
+  mountGraphicsInterfacesDesignEditor,
+  validateGraphicsInterfacesEditorState
+};
 
 //# sourceMappingURL=interfaces-editor.js.map

@@ -1,4 +1,172 @@
 // Generated from recipe-editor.jsx by scripts/build-frontend.mjs.
-import t,{useLayoutEffect as O,useRef as E}from"../shared/react/react-runtime.js";import{mountReactComponent as N}from"../shared/react/mount.js";import{StructuredValueEditor as x,structuredValueDraft as h,readStructuredValueDraft as k,validateStructuredValueDraftShape as A}from"../shared/structured-value-editor.js";import{fullMetaValidationProgramKeys as J,isFullMetaValidationProgramKey as V}from"./program-contract.js";import{assertValidationProgramSemantics as P}from"./semantic-validation.js";import{validationRuleRecipeTemplates as b,validationRuleFromRecipe as D,validationRuleRecipeFromRule as T}from"./recipe-model.js";import{validationRuleRecipeTemplates as H,validationRuleFromRecipe as Q,validationRuleRecipeFromRule as W}from"./recipe-model.js";function F({open:a,title:i,children:l,actions:u,onClose:r,dialogRef:d,className:c=""}){const y=E(null);return O(()=>{const s=y.current;a&&!s.open?s.showModal():!a&&s.open&&s.close()},[a]),t.createElement("dialog",{ref:s=>{y.current=s,d?.(s)},className:`schema-bulk-dialog ${c}`,onCancel:s=>{s.preventDefault(),r?.()},onClose:()=>{a&&r?.()}},t.createElement("div",{className:"schema-bulk-content"},t.createElement("header",{className:"schema-validation-dialog-head"},t.createElement("h2",null,i),t.createElement("button",{type:"button","aria-label":"Close dialog",onClick:r},"\xD7")),t.createElement("div",{className:"schema-bulk-body"},l),t.createElement("footer",{className:"schema-validation-dialog-actions"},u)))}function K({model:a,commands:i}){return t.createElement("details",{className:"schema-rule-recipe-advanced",open:a.open,onToggle:l=>i.setOpen?.(l.currentTarget.open)},t.createElement("summary",null,"Prefill an editable rule from a recipe"),t.createElement("section",{className:"schema-validation-batch-panel"},t.createElement("label",null,"Recipe",t.createElement("select",{"aria-label":"Bulk rule recipe",value:a.template,onChange:l=>i.template(l.target.value)},b.map(l=>t.createElement("option",{key:l.id,value:l.id},l.label)))),t.createElement(x,{draft:a.draft,label:"Recipe fields",onDraftChange:i.change}),t.createElement("button",{type:"button",onClick:i.stage},"Stage recipe row"),t.createElement("button",{type:"button",onClick:i.reset},"Reset recipe")))}function L({onStage:a,onChange:i=()=>{},onError:l=()=>{}}){const u=document.createElement("div");let r={template:b[0].id,draft:h(b[0].facts),dirty:!1,open:!1},d;const c=()=>d.update({model:r,commands:s}),y=()=>{r={...r,draft:h(b.find(e=>e.id===r.template).facts),dirty:!1},c(),i()},s={template(e){r={...r,template:e,draft:h(b.find(m=>m.id===e).facts),dirty:!0},c(),i()},change(e){r={...r,draft:e,dirty:!0},c(),i()},setOpen(e){r.open=e},reset:y,stage(){try{a(D(k(r.draft))),r.dirty=!1,c()}catch(e){l(e.message)}}};return d=N(u,K,{model:r,commands:s}),{element:u,isDirty:()=>r.dirty,reset:y,snapshot:()=>structuredClone(r),restore(e){r=structuredClone(e),c()},dispose:()=>d.dispose()}}function M({model:a,commands:i}){return t.createElement(F,{open:a.open,title:"Validation rule recipes",onClose:i.close,dialogRef:i.ref,actions:t.createElement(t.Fragment,null,t.createElement("button",{type:"button",onClick:i.preview},"Preview"),t.createElement("button",{type:"button",disabled:!a.ready,onClick:i.apply},"Apply"))},t.createElement("label",null,"Validation program",t.createElement("select",{value:a.key,onChange:l=>i.select(l.target.value)},a.keys.map(l=>t.createElement("option",{key:l,value:l},l)))),a.rows.map((l,u)=>t.createElement("details",{key:u,open:!0},t.createElement("summary",null,"Recipe ",u+1),t.createElement(x,{draft:l.draft,label:`Recipe ${u+1}`,onDraftChange:r=>i.change(u,r)}),t.createElement("button",{type:"button",onClick:()=>i.remove(u)},"Remove"))),t.createElement("button",{type:"button",onClick:i.add},"Add recipe"),t.createElement("p",{role:"status"},a.status),a.candidate?t.createElement("pre",null,JSON.stringify(a.candidate[a.key],null,2)):null)}function j({getDocument:a,validateCandidate:i,applyCandidate:l,buildCandidate:u}){const r=document.createElement("div");document.body.append(r);let d,c,y,s,e={open:!1,key:"x-fullmeta-rules",keys:[],rows:[],ready:!1,status:"",candidate:null};const m=()=>s.update({model:e,commands:g}),w=()=>{e={...e,ready:!1,candidate:null},m()},C=n=>{e={...e,key:n,rows:(d[n]?.rules||[]).flatMap((o,p)=>{const v=T(o);return v?[{index:p,draft:h(v),original:JSON.stringify(v),removed:!1}]:[]})},w()},g={ref:n=>{y=n},close(){e.open=!1,m()},select:C,change(n,o){e.rows[n].draft=o,w()},remove(n){e.rows[n].removed=!0,w()},add(){e.rows.push({index:null,draft:h(b[0].facts),original:null,removed:!1}),w()},preview(){try{const n=e.rows.filter(p=>p.removed||JSON.stringify(k(p.draft))!==p.original).map(p=>({index:p.index,remove:p.removed,facts:k(p.draft)})),o=u(d,e.key,n);P(o[e.key],{programKey:e.key}),i(o),e={...e,candidate:o,ready:!0,status:`${n.length} recipe changes ready.`}}catch(n){e={...e,ready:!1,candidate:null,status:n.message}}m()},apply(){if(!e.ready||c!==JSON.stringify(a()))throw new Error("Preview the current source before Apply.");l(e.candidate,"Applied validation rule recipes. Save the schema to keep changes."),g.close()}};s=N(r,M,{model:e,commands:g});const S=()=>{if(g.preview(),!e.ready)throw new Error(e.status||"Recipe Preview failed.");return{ready:!0,programKey:e.key}};return{open(){d=structuredClone(a()),c=JSON.stringify(d),e.keys=[...new Set(["x-fullmeta-rules",...J(d)])],e.open=!0,C("x-fullmeta-rules")},snapshot(){return d?{format:"fullmeta-validation-recipe-table-state/1",source:structuredClone(d),model:structuredClone(e)}:null},restore(n){if(n?.format!=="fullmeta-validation-recipe-table-state/1"||JSON.stringify(n.source)!==JSON.stringify(a()))throw new Error("Recipe state belongs to a different source document.");const o=n.model;if(!o||typeof o.open!="boolean"||typeof o.ready!="boolean"||typeof o.status!="string"||!V(o.key)||!Array.isArray(o.keys)||!o.keys.every(V)||!o.keys.includes(o.key)||new Set(o.keys).size!==o.keys.length||!Array.isArray(o.rows))throw new Error("Unsupported recipe table state.");const p=new Set;for(const f of o.rows){if(!f||f.index!==null&&(!Number.isSafeInteger(f.index)||f.index<0||p.has(f.index))||f.original!==null&&typeof f.original!="string"||typeof f.removed!="boolean")throw new Error("Unsupported recipe row state.");f.index!==null&&p.add(f.index),A(f.draft)}const v=o.ready;return d=structuredClone(n.source),c=JSON.stringify(d),e={...structuredClone(o),ready:!1,candidate:null},m(),v&&S(),{restored:!0,previewReady:e.ready,programKey:e.key}},preview:S,apply:g.apply,close:g.close,get dialog(){return y},dispose(){s.dispose(),r.remove()}}}export{F as ValidationDialog,K as ValidationRecipeRow,M as ValidationRecipeTable,L as createValidationRuleRecipeRow,j as createValidationRuleRecipeTable,Q as validationRuleFromRecipe,W as validationRuleRecipeFromRule,H as validationRuleRecipeTemplates};
+import React, { useLayoutEffect, useRef } from "../shared/react/react-runtime.js";
+import { mountReactComponent } from "../shared/react/mount.js";
+import { StructuredValueEditor, structuredValueDraft, readStructuredValueDraft, validateStructuredValueDraftShape } from "../shared/structured-value-editor.js";
+import { fullMetaValidationProgramKeys, isFullMetaValidationProgramKey } from "./program-contract.js";
+import { assertValidationProgramSemantics } from "./semantic-validation.js";
+import { validationRuleRecipeTemplates, validationRuleFromRecipe, validationRuleRecipeFromRule } from "./recipe-model.js";
+import { validationRuleRecipeTemplates as validationRuleRecipeTemplates2, validationRuleFromRecipe as validationRuleFromRecipe2, validationRuleRecipeFromRule as validationRuleRecipeFromRule2 } from "./recipe-model.js";
+function ValidationDialog({ open, title, children, actions, onClose, dialogRef, className = "" }) {
+  const reference = useRef(null);
+  useLayoutEffect(() => {
+    const node = reference.current;
+    if (open && !node.open) node.showModal();
+    else if (!open && node.open) node.close();
+  }, [open]);
+  return /* @__PURE__ */ React.createElement("dialog", { ref: (node) => {
+    reference.current = node;
+    dialogRef?.(node);
+  }, className: `schema-bulk-dialog ${className}`, onCancel: (event) => {
+    event.preventDefault();
+    onClose?.();
+  }, onClose: () => {
+    if (open) onClose?.();
+  } }, /* @__PURE__ */ React.createElement("div", { className: "schema-bulk-content" }, /* @__PURE__ */ React.createElement("header", { className: "schema-validation-dialog-head" }, /* @__PURE__ */ React.createElement("h2", null, title), /* @__PURE__ */ React.createElement("button", { type: "button", "aria-label": "Close dialog", onClick: onClose }, "\xD7")), /* @__PURE__ */ React.createElement("div", { className: "schema-bulk-body" }, children), /* @__PURE__ */ React.createElement("footer", { className: "schema-validation-dialog-actions" }, actions)));
+}
+function ValidationRecipeRow({ model, commands }) {
+  return /* @__PURE__ */ React.createElement("details", { className: "schema-rule-recipe-advanced", open: model.open, onToggle: (event) => commands.setOpen?.(event.currentTarget.open) }, /* @__PURE__ */ React.createElement("summary", null, "Prefill an editable rule from a recipe"), /* @__PURE__ */ React.createElement("section", { className: "schema-validation-batch-panel" }, /* @__PURE__ */ React.createElement("label", null, "Recipe", /* @__PURE__ */ React.createElement("select", { "aria-label": "Bulk rule recipe", value: model.template, onChange: (event) => commands.template(event.target.value) }, validationRuleRecipeTemplates.map((item) => /* @__PURE__ */ React.createElement("option", { key: item.id, value: item.id }, item.label)))), /* @__PURE__ */ React.createElement(StructuredValueEditor, { draft: model.draft, label: "Recipe fields", onDraftChange: commands.change }), /* @__PURE__ */ React.createElement("button", { type: "button", onClick: commands.stage }, "Stage recipe row"), /* @__PURE__ */ React.createElement("button", { type: "button", onClick: commands.reset }, "Reset recipe")));
+}
+function createValidationRuleRecipeRow({ onStage, onChange = () => {
+}, onError = () => {
+} }) {
+  const element = document.createElement("div");
+  let model = { template: validationRuleRecipeTemplates[0].id, draft: structuredValueDraft(validationRuleRecipeTemplates[0].facts), dirty: false, open: false }, mounted;
+  const render = () => mounted.update({ model, commands });
+  const reset = () => {
+    model = { ...model, draft: structuredValueDraft(validationRuleRecipeTemplates.find((item) => item.id === model.template).facts), dirty: false };
+    render();
+    onChange();
+  };
+  const commands = { template(id) {
+    model = { ...model, template: id, draft: structuredValueDraft(validationRuleRecipeTemplates.find((item) => item.id === id).facts), dirty: true };
+    render();
+    onChange();
+  }, change(draft) {
+    model = { ...model, draft, dirty: true };
+    render();
+    onChange();
+  }, setOpen(open) {
+    model.open = open;
+  }, reset, stage() {
+    try {
+      onStage(validationRuleFromRecipe(readStructuredValueDraft(model.draft)));
+      model.dirty = false;
+      render();
+    } catch (error) {
+      onError(error.message);
+    }
+  } };
+  mounted = mountReactComponent(element, ValidationRecipeRow, { model, commands });
+  return { element, isDirty: () => model.dirty, reset, snapshot: () => structuredClone(model), restore(value) {
+    model = structuredClone(value);
+    render();
+  }, dispose: () => mounted.dispose() };
+}
+function ValidationRecipeTable({ model, commands }) {
+  return /* @__PURE__ */ React.createElement(ValidationDialog, { open: model.open, title: "Validation rule recipes", onClose: commands.close, dialogRef: commands.ref, actions: /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement("button", { type: "button", onClick: commands.preview }, "Preview"), /* @__PURE__ */ React.createElement("button", { type: "button", disabled: !model.ready, onClick: commands.apply }, "Apply")) }, /* @__PURE__ */ React.createElement("label", null, "Validation program", /* @__PURE__ */ React.createElement("select", { value: model.key, onChange: (event) => commands.select(event.target.value) }, model.keys.map((key) => /* @__PURE__ */ React.createElement("option", { key, value: key }, key)))), model.rows.map((row, index) => /* @__PURE__ */ React.createElement("details", { key: index, open: true }, /* @__PURE__ */ React.createElement("summary", null, "Recipe ", index + 1), /* @__PURE__ */ React.createElement(StructuredValueEditor, { draft: row.draft, label: `Recipe ${index + 1}`, onDraftChange: (draft) => commands.change(index, draft) }), /* @__PURE__ */ React.createElement("button", { type: "button", onClick: () => commands.remove(index) }, "Remove"))), /* @__PURE__ */ React.createElement("button", { type: "button", onClick: commands.add }, "Add recipe"), /* @__PURE__ */ React.createElement("p", { role: "status" }, model.status), model.candidate ? /* @__PURE__ */ React.createElement("pre", null, JSON.stringify(model.candidate[model.key], null, 2)) : null);
+}
+function createValidationRuleRecipeTable({ getDocument, validateCandidate, applyCandidate, buildCandidate }) {
+  const host = document.createElement("div");
+  document.body.append(host);
+  let source, stamp, dialog, mounted, model = { open: false, key: "x-fullmeta-rules", keys: [], rows: [], ready: false, status: "", candidate: null };
+  const render = () => mounted.update({ model, commands });
+  const invalidate = () => {
+    model = { ...model, ready: false, candidate: null };
+    render();
+  };
+  const select = (key) => {
+    model = { ...model, key, rows: (source[key]?.rules || []).flatMap((rule, index) => {
+      const facts = validationRuleRecipeFromRule(rule);
+      return facts ? [{ index, draft: structuredValueDraft(facts), original: JSON.stringify(facts), removed: false }] : [];
+    }) };
+    invalidate();
+  };
+  const commands = { ref: (node) => {
+    dialog = node;
+  }, close() {
+    model.open = false;
+    render();
+  }, select, change(index, draft) {
+    model.rows[index].draft = draft;
+    invalidate();
+  }, remove(index) {
+    model.rows[index].removed = true;
+    invalidate();
+  }, add() {
+    model.rows.push({ index: null, draft: structuredValueDraft(validationRuleRecipeTemplates[0].facts), original: null, removed: false });
+    invalidate();
+  }, preview() {
+    try {
+      const edits = model.rows.filter((row) => row.removed || JSON.stringify(readStructuredValueDraft(row.draft)) !== row.original).map((row) => ({ index: row.index, remove: row.removed, facts: readStructuredValueDraft(row.draft) }));
+      const candidate = buildCandidate(source, model.key, edits);
+      assertValidationProgramSemantics(candidate[model.key], { programKey: model.key });
+      validateCandidate(candidate);
+      model = { ...model, candidate, ready: true, status: `${edits.length} recipe changes ready.` };
+    } catch (error) {
+      model = { ...model, ready: false, candidate: null, status: error.message };
+    }
+    render();
+  }, apply() {
+    if (!model.ready || stamp !== JSON.stringify(getDocument())) throw new Error("Preview the current source before Apply.");
+    applyCandidate(model.candidate, "Applied validation rule recipes. Save the schema to keep changes.");
+    commands.close();
+  } };
+  mounted = mountReactComponent(host, ValidationRecipeTable, { model, commands });
+  const previewNow = () => {
+    commands.preview();
+    if (!model.ready) throw new Error(model.status || "Recipe Preview failed.");
+    return { ready: true, programKey: model.key };
+  };
+  return {
+    open() {
+      source = structuredClone(getDocument());
+      stamp = JSON.stringify(source);
+      model.keys = [.../* @__PURE__ */ new Set(["x-fullmeta-rules", ...fullMetaValidationProgramKeys(source)])];
+      model.open = true;
+      select("x-fullmeta-rules");
+    },
+    snapshot() {
+      return source ? { format: "fullmeta-validation-recipe-table-state/1", source: structuredClone(source), model: structuredClone(model) } : null;
+    },
+    restore(value) {
+      if (value?.format !== "fullmeta-validation-recipe-table-state/1" || JSON.stringify(value.source) !== JSON.stringify(getDocument())) throw new Error("Recipe state belongs to a different source document.");
+      const next = value.model;
+      if (!next || typeof next.open !== "boolean" || typeof next.ready !== "boolean" || typeof next.status !== "string" || !isFullMetaValidationProgramKey(next.key) || !Array.isArray(next.keys) || !next.keys.every(isFullMetaValidationProgramKey) || !next.keys.includes(next.key) || new Set(next.keys).size !== next.keys.length || !Array.isArray(next.rows)) throw new Error("Unsupported recipe table state.");
+      const indexes = /* @__PURE__ */ new Set();
+      for (const row of next.rows) {
+        if (!row || row.index !== null && (!Number.isSafeInteger(row.index) || row.index < 0 || indexes.has(row.index)) || row.original !== null && typeof row.original !== "string" || typeof row.removed !== "boolean") throw new Error("Unsupported recipe row state.");
+        if (row.index !== null) indexes.add(row.index);
+        validateStructuredValueDraftShape(row.draft);
+      }
+      const hadPreview = next.ready;
+      source = structuredClone(value.source);
+      stamp = JSON.stringify(source);
+      model = { ...structuredClone(next), ready: false, candidate: null };
+      render();
+      if (hadPreview) previewNow();
+      return { restored: true, previewReady: model.ready, programKey: model.key };
+    },
+    preview: previewNow,
+    apply: commands.apply,
+    close: commands.close,
+    get dialog() {
+      return dialog;
+    },
+    dispose() {
+      mounted.dispose();
+      host.remove();
+    }
+  };
+}
+export {
+  ValidationDialog,
+  ValidationRecipeRow,
+  ValidationRecipeTable,
+  createValidationRuleRecipeRow,
+  createValidationRuleRecipeTable,
+  validationRuleFromRecipe2 as validationRuleFromRecipe,
+  validationRuleRecipeFromRule2 as validationRuleRecipeFromRule,
+  validationRuleRecipeTemplates2 as validationRuleRecipeTemplates
+};
 
 //# sourceMappingURL=recipe-editor.js.map

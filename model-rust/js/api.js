@@ -28,6 +28,7 @@ const pointerKey = (key) => String(key).replace(/~/g, "~0").replace(/\//g, "~1")
 const schemaMapKeywords = new Set(["$defs", "definitions", "properties", "patternProperties", "dependentSchemas", "dependencies"]);
 const schemaArrayKeywords = new Set(["allOf", "anyOf", "oneOf", "prefixItems"]);
 const schemaValueKeywords = new Set(["additionalProperties", "additionalItems", "items", "contains", "propertyNames", "unevaluatedItems", "unevaluatedProperties", "not", "if", "then", "else", "contentSchema"]);
+const registeredSchemaOperations = new Set(["validate_schema", "validate_json_schema", "validate_json_schema_at", "schema_resolve", "schema_property", "schema_item", "schema_at_path", "validate_rules", "validate_model", "bind_runtime_policy", "transaction", "validated_transaction"]);
 
 function schemaChildren(value, includeDefinitions = true) {
   return Object.entries(value).flatMap(([key, child]) => {
@@ -228,7 +229,7 @@ function bundledSchema(schema, entrypoints = []) {
 
 export function modelRequest(operation, fields = {}) {
   if (Object.hasOwn(fields, 'schema')) fields = { ...fields, schema: documentSnapshot(fields.schema) };
-  if (validation.activeSchemaHandle && operation !== "configure_schema" && operation !== "release_schema"
+  if (validation.activeSchemaHandle && registeredSchemaOperations.has(operation)
     && (fields.schema === validation.activeSchema || fields.schema === validation.activeSchemaBundle)) {
     const { schema, documents, ...remaining } = fields;
     fields = { ...remaining, schemaHandle: validation.activeSchemaHandle };
@@ -424,4 +425,77 @@ export function validatedModelTransaction(transaction, model, fields = {}) {
     throw error;
   }
   return response.model;
+}
+
+// These operations work on explicit caller-supplied data and do not select
+// application schemas or read the host filesystem.
+export function decodeArguments(args, declaration, schema) { return modelRequest("argv_decode", {arguments: args, declaration, schema}); }
+export function normalizeArgument(value, declaration, schema) { return modelRequest("argv_string_value", {value, declaration, schema}); }
+export function collectProgramRegistry(documents) { return modelRequest("program_registry", {documents}); }
+export function validateRuleDeclaration(model, schema, declaration, documents = [], context = {}) {
+  return modelRequest("validate_rule_declaration", {model, schema, declaration, documents, context});
+}
+export function resolveOptions(resolution, optionSets, conditionalRules, sources, context) {
+  return modelRequest("resolve_options", {resolution, optionSets, conditionalRules, sources, context});
+}
+export function validateResolvedNumber(value, rules, path, unit) { return modelRequest("validate_resolved_number", {value, rules, path, unit}); }
+export function numericBounds(value, rules, path, unit, errors = []) { return modelRequest("numeric_bounds", {value, rules, path, unit, errors}); }
+export function validateSemanticCollections(input) { return modelRequest("validate_semantic_collections", {input}); }
+export function validateSemanticExpressions(input) { return modelRequest("validate_semantic_expressions", {input}); }
+export function validateSemanticQuantities(input) { return modelRequest("validate_semantic_quantities", {input}); }
+export function uniqueIdErrors(value) { return modelRequest("unique_id_errors", {value}); }
+export function bundleModelSchema(schema, documents = []) { return modelRequest("bundle_schema", {schema, documents}); }
+export function bundleModelSchemaWithEntrypoints(schema, documents = [], entrypoints = []) {
+  return modelRequest("bundle_schema_with_entrypoints", {schema, documents, entrypoints});
+}
+
+// Context handles belong to this model WASM instance; release them explicitly.
+export function createSchemaContext(schema, documents = [], entrypoints = []) {
+  return modelRequest("schema_context_new", {schema, documents, entrypoints});
+}
+export function schemaContextFromDocuments(documents) { return modelRequest("schema_context_from_documents", {documents}); }
+export function schemaContextRoot(handle) { return modelRequest("schema_context_root", {handle}); }
+export function schemaContextDocuments(handle) { return modelRequest("schema_context_documents", {handle}); }
+export function schemaContextDocumentAnnotations(handle, key) { return modelRequest("schema_context_document_annotations", {handle, key}); }
+export function schemaContextSchemaAnnotations(handle, key) { return modelRequest("schema_context_schema_annotations", {handle, key}); }
+export function schemaContextModelRoleValues(handle, model, role) { return modelRequest("schema_context_model_role_values", {handle, model, role}); }
+export function takeSchemaContextRoot(handle) { return modelRequest("schema_context_take_root", {handle}); }
+export function releaseSchemaContext(handle) { return modelRequest("schema_context_release", {handle}); }
+
+export function evaluateComplexQuantity(quantity, symbols, policy, path = "value") {
+  return modelRequest("evaluate_complex_quantity", {quantity, symbols, policy, path});
+}
+export function compileComplexQuantity(quantity, policy, path = "value") {
+  return modelRequest("compile_complex_quantity", {quantity, policy, path});
+}
+export function evaluateCompiledComplexQuantity(handle, symbols = {}, path = "value") {
+  return modelRequest("evaluate_compiled_complex_quantity", {handle, symbols, path});
+}
+export function evaluateCompiledComplexQuantityBatch(handle, symbolTables, path = "value") {
+  return modelRequest("evaluate_compiled_complex_quantity_batch", {handle, symbolTables, path});
+}
+export function releaseCompiledComplexQuantity(handle) { return modelRequest("release_compiled_complex_quantity", {handle}); }
+
+// Native file operations require an explicitly supplied host. The host is
+// responsible for file confinement, link checks and native path semantics.
+function hostOperation(host, name) {
+  if (!host || typeof host[name] !== "function") throw new Error(`The model filesystem host must provide ${name}().`);
+  return host[name].bind(host);
+}
+export async function loadSchemaDocumentsFromHost(path, host) {
+  const documents = await hostOperation(host, "loadSchemaDocuments")(path);
+  if (!Array.isArray(documents)) throw new Error("The model filesystem host must return a schema document array.");
+  return documents;
+}
+export async function schemaContextFromHostPath(path, host) {
+  return schemaContextFromDocuments(await loadSchemaDocumentsFromHost(path, host));
+}
+export async function installationRootFromHost(host) {
+  return hostOperation(host, "installationRoot")();
+}
+export async function externalProgramPathFromHost(documents, schemaFile, root, id, host) {
+  return hostOperation(host, "externalProgramPath")(documents, schemaFile, root, id);
+}
+export async function runtimeToolPathFromHost(documents, schemaFile, root, id, host) {
+  return hostOperation(host, "runtimeToolPath")(documents, schemaFile, root, id);
 }

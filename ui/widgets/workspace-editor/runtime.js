@@ -261,7 +261,7 @@ export function createWorkspaceEditorController(container,context,{update}){
     return inspect();
   };
   picker=createWorkspaceFilePicker({dialog:container.querySelector('#workspace-file-dialog'),container:container.querySelector('#workspace-file-dialog-host'),requestJson:json,defaultFolder:()=>'.'});
-  standardMenus=createStandardMenuController({root:container,fetcher,workspaceUrl,getInterpretingSchema:()=>({schemaUrl:context.schemaUrl,revision:context.schemaRevision}),clipboard:context.services?.clipboard,onStatus:message=>{const status=container.querySelector('#launcher-status');status.textContent=message;status.classList.add('error');}});
+  standardMenus=createStandardMenuController({root:container,fetcher,workspaceUrl,getInterpretingSchema:()=>({schemaUrl:context.schemaUrl,revision:context.schemaRevision}),clipboard:context.services?.clipboard,onApplicationInstalled:context.services?.reloadPage,onStatus:(message,level)=>{const status=container.querySelector('#launcher-status');status.textContent=message;status.classList.toggle('error',level==='error');}});
   const tools=createWorkspaceWebMcpTools({inspect,dispatch});
   launcher=createLauncherController(container,{workspaceUrl,fetcher,navigate:url=>{
     const target=new URL(url,workspaceUrl),path=target.searchParams.get('model');

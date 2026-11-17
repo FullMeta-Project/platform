@@ -1,4 +1,91 @@
 // Generated from schema-authoring-workflow.jsx by scripts/build-frontend.mjs.
-import k from"../shared/react/react-runtime.js";import{mountReactComponent as v}from"../shared/react/mount.js";function V({dirty:r=!1,jsonDirty:f=!1,settingsDirty:p=!1,renamePending:a=!1,saving:i=!1,validating:s=!1,validation:o=null}={}){const l=i?"Saving\u2026":a?"Tree rename pending \xB7 Enter to apply or Escape to cancel":f?"JSON draft pending Apply":p?"Settings draft pending Apply":r?"Applied edits \xB7 unsaved":"Saved",d=s?"Validation running\u2026":o?!o.current||f||p||a?"Validation is out of date":o.error?"Validation failed":o.errors?`Validation: ${o.errors} issue(s)`:"Validation passed":"Validate not run";return{save:l,validation:d,detail:o?.summary||"Use Validate to check the current document.",kind:s?"pending":d==="Validation passed"?"good":o?.current&&(o.error||o.errors)?"error":"pending"}}function w({ready:r}){return k.createElement("p",{"data-schema-authoring-workflow":"","data-state":r?"ready":"pending",className:"schema-authoring-dialog-workflow",role:"status"},r?"Preview ready \xB7 Apply updates the draft. Save persists it. Validate checks the current document.":"Pending preview \xB7 Preview before Apply. Save and Validate remain separate.")}function E({document:r,enabled:f,onChange:p=()=>{}}){let a=!1,i=!1;const s=new Map,o=()=>{if(a=!1,!i){for(const[e,t]of s)(!e.isConnected||!t.host.isConnected)&&(t.mount.dispose(),t.host.remove(),s.delete(e));if(f()){for(const e of r.querySelectorAll("dialog.schema-bulk-dialog[open]")){const t=e.querySelector(".schema-bulk-content");if(!t)continue;const h=t.querySelector(":scope > footer"),g=[...(h||t).querySelectorAll("button")],y=g.find(n=>/^Preview(?:\b|…)/.test(n.textContent.trim())),b=g.find(n=>/^Apply(?:\b|…)/.test(n.textContent.trim()));if(!y||!b)continue;const u=!b.disabled;let c=s.get(e);if(c)c.ready!==u&&(c.ready=u,c.mount.update({ready:u}));else{const n=r.createElement("div");n.dataset.schemaAuthoringWorkflowHost="",t.querySelector("header")?.after(n),c={host:n,ready:u,mount:v(n,w,{ready:u})},s.set(e,c)}}p()}}},l=()=>{!a&&!i&&(a=!0,queueMicrotask(o))},d=new MutationObserver(e=>{e.some(t=>!(t.target instanceof Element&&t.target.closest("[data-schema-authoring-workflow-host]"))&&(t.target instanceof Element&&t.target.closest("dialog.schema-bulk-dialog")||[...t.addedNodes].some(h=>h instanceof Element&&h.matches("dialog.schema-bulk-dialog"))))&&l()});d.observe(r.body,{childList:!0,subtree:!0,attributes:!0,attributeFilter:["open","disabled","hidden"]});const m=e=>{e.target.closest?.("dialog.schema-bulk-dialog")&&l()};for(const e of["input","change","click","close"])r.addEventListener(e,m,!0);return l(),{refresh:l,dispose(){if(!i){i=!0,d.disconnect();for(const e of["input","change","click","close"])r.removeEventListener(e,m,!0);for(const e of s.values())e.mount.dispose(),e.host.remove();s.clear()}}}}export{w as SchemaAuthoringWorkflowIndicator,E as observeSchemaAuthoringDialogs,V as schemaAuthoringWorkflowState};
+import React from "../shared/react/react-runtime.js";
+import { mountReactComponent } from "../shared/react/mount.js";
+function schemaAuthoringWorkflowState({
+  dirty = false,
+  jsonDirty = false,
+  settingsDirty = false,
+  renamePending = false,
+  saving = false,
+  validating = false,
+  validation = null
+} = {}) {
+  const save = saving ? "Saving\u2026" : renamePending ? "Tree rename pending \xB7 Enter to apply or Escape to cancel" : jsonDirty ? "JSON draft pending Apply" : settingsDirty ? "Settings draft pending Apply" : dirty ? "Applied edits \xB7 unsaved" : "Saved";
+  const validationLabel = validating ? "Validation running\u2026" : !validation ? "Validate not run" : !validation.current || jsonDirty || settingsDirty || renamePending ? "Validation is out of date" : validation.error ? "Validation failed" : validation.errors ? `Validation: ${validation.errors} issue(s)` : "Validation passed";
+  return {
+    save,
+    validation: validationLabel,
+    detail: validation?.summary || "Use Validate to check the current document.",
+    kind: validating ? "pending" : validationLabel === "Validation passed" ? "good" : validation?.current && (validation.error || validation.errors) ? "error" : "pending"
+  };
+}
+function SchemaAuthoringWorkflowIndicator({ ready }) {
+  return /* @__PURE__ */ React.createElement("p", { "data-schema-authoring-workflow": "", "data-state": ready ? "ready" : "pending", className: "schema-authoring-dialog-workflow", role: "status" }, ready ? "Preview ready \xB7 Apply updates the draft. Save persists it. Validate checks the current document." : "Pending preview \xB7 Preview before Apply. Save and Validate remain separate.");
+}
+function observeSchemaAuthoringDialogs({ document, enabled, onChange = () => {
+} }) {
+  let queued = false, disposed = false;
+  const surfaces = /* @__PURE__ */ new Map();
+  const refresh = () => {
+    queued = false;
+    if (disposed) return;
+    for (const [dialog, entry] of surfaces) if (!dialog.isConnected || !entry.host.isConnected) {
+      entry.mount.dispose();
+      entry.host.remove();
+      surfaces.delete(dialog);
+    }
+    if (!enabled()) return;
+    for (const dialog of document.querySelectorAll("dialog.schema-bulk-dialog[open]")) {
+      const content = dialog.querySelector(".schema-bulk-content");
+      if (!content) continue;
+      const footer = content.querySelector(":scope > footer"), buttons = [...(footer || content).querySelectorAll("button")], preview = buttons.find((button) => /^Preview(?:\b|…)/.test(button.textContent.trim())), apply = buttons.find((button) => /^Apply(?:\b|…)/.test(button.textContent.trim()));
+      if (!preview || !apply) continue;
+      const ready = !apply.disabled;
+      let entry = surfaces.get(dialog);
+      if (!entry) {
+        const host = document.createElement("div");
+        host.dataset.schemaAuthoringWorkflowHost = "";
+        content.querySelector("header")?.after(host);
+        entry = { host, ready, mount: mountReactComponent(host, SchemaAuthoringWorkflowIndicator, { ready }) };
+        surfaces.set(dialog, entry);
+      } else if (entry.ready !== ready) {
+        entry.ready = ready;
+        entry.mount.update({ ready });
+      }
+    }
+    onChange();
+  };
+  const schedule = () => {
+    if (!queued && !disposed) {
+      queued = true;
+      queueMicrotask(refresh);
+    }
+  };
+  const observer = new MutationObserver((records) => {
+    if (records.some((record) => !(record.target instanceof Element && record.target.closest("[data-schema-authoring-workflow-host]")) && (record.target instanceof Element && record.target.closest("dialog.schema-bulk-dialog") || [...record.addedNodes].some((node) => node instanceof Element && node.matches("dialog.schema-bulk-dialog"))))) schedule();
+  });
+  observer.observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ["open", "disabled", "hidden"] });
+  const event = (event2) => {
+    if (event2.target.closest?.("dialog.schema-bulk-dialog")) schedule();
+  };
+  for (const type of ["input", "change", "click", "close"]) document.addEventListener(type, event, true);
+  schedule();
+  return { refresh: schedule, dispose() {
+    if (disposed) return;
+    disposed = true;
+    observer.disconnect();
+    for (const type of ["input", "change", "click", "close"]) document.removeEventListener(type, event, true);
+    for (const entry of surfaces.values()) {
+      entry.mount.dispose();
+      entry.host.remove();
+    }
+    surfaces.clear();
+  } };
+}
+export {
+  SchemaAuthoringWorkflowIndicator,
+  observeSchemaAuthoringDialogs,
+  schemaAuthoringWorkflowState
+};
 
 //# sourceMappingURL=schema-authoring-workflow.js.map

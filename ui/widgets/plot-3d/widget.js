@@ -1,4 +1,21 @@
 // Generated from widget.jsx by scripts/build-frontend.mjs.
-import{drawPlot3d as D}from"./runtime.js";import a from"../shared/react/react-runtime.js";import{mountReactComponent as i}from"../shared/react/mount.js";import{CanvasSurface as p}from"../scene-view/widget.js";import{drawPlot3d as u}from"./runtime.js";function c({label:o="3D scalar plot",width:t,height:r,style:m,className:e,onDraw:d,onError:l,...f}){return a.createElement(p,{draw:u,options:f,label:o,width:t,height:r,style:m,className:e,onDraw:d,onError:l})}function n({view:o,onCommand:t,...r}){return a.createElement(c,{...r,...o,data:o?.data||o?.value||r.data})}const h=(o,t)=>i(o,n,t);export{n as Plot3d,n as Widget,D as drawPlot3d,h as mountWidget};
+import { drawPlot3d } from "./runtime.js";
+import React from "../shared/react/react-runtime.js";
+import { mountReactComponent } from "../shared/react/mount.js";
+import { CanvasSurface } from "../scene-view/widget.js";
+import { drawPlot3d as drawPlot3d2 } from "./runtime.js";
+function PlotSurface({ label = "3D scalar plot", width, height, style, className, onDraw, onError, ...options }) {
+  return /* @__PURE__ */ React.createElement(CanvasSurface, { draw: drawPlot3d2, options, label, width, height, style, className, onDraw, onError });
+}
+function Plot3d({ view, onCommand, ...props }) {
+  return /* @__PURE__ */ React.createElement(PlotSurface, { ...props, ...view, data: view?.data || view?.value || props.data });
+}
+const mountWidget = (container, props) => mountReactComponent(container, Plot3d, props);
+export {
+  Plot3d,
+  Plot3d as Widget,
+  drawPlot3d,
+  mountWidget
+};
 
 //# sourceMappingURL=widget.js.map

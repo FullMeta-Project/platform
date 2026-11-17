@@ -1,4 +1,72 @@
 // Generated from widget.jsx by scripts/build-frontend.mjs.
-import t,{renderWidgetMarkup as N}from"../shared/react/react-runtime.js";import{mountReactComponent as D}from"../shared/react/mount.js";import{referenceSelectorDesignLabel as J,renderReferenceSelectorDesignEditor as W}from"./design-editor.js";import{referenceFilterDraft as L,referenceTargetSchemaFromDraft as z,referenceFilterDraftAfterCommand as I}from"./filter-model.js";import{ReferenceFilterEditor as j,createReferenceFilterEditor as q}from"./filter-editor.js";import{validateReferenceSelectorAnnotation as G,validateReferenceSelectorOptions as H}from"./fullmeta-ui-referenceSelector-1.schema.js";function A({label:n,value:r,path:u=[],schema:i={},ui:s={},referenceOptionsUi:h=s,options:g,context:m={},onChange:S,onCommand:v,disabled:b=!1}){const a=Array.isArray(r)||i.type==="array"||Array.isArray(i.type)&&i.type.includes("array");let l,d="";try{l=g===void 0&&i["x-fullmeta-modelReference"]?m.referenceOptions?.(i["x-fullmeta-modelReference"],r??"",n,h):g}catch(e){d=e?.message||"The reference provider failed."}if(!d&&l!==void 0&&(!Array.isArray(l)||l.some(e=>!e||typeof e.value!="string"||typeof e.label!="string"||!e.label.length))&&(d="The reference provider returned invalid options."),!d&&Array.isArray(l)){const e=new Set;l.some(c=>e.has(c.value)?!0:(e.add(c.value),!1))&&(d="The reference provider returned duplicate option values.")}const o=Array.isArray(l)?l.filter(e=>e&&typeof e.value=="string"&&typeof e.label=="string"&&e.label.length):null,f=a?o?.filter(e=>e.value!==""):o,x=!o||!o.some(e=>e.value!==""&&e.unavailable!==!0),y=a?"array-string-select":"string",O=e=>{const p=a?[...e.target.selectedOptions].map(c=>c.value):e.target.value;v?v({type:"field.change",path:u,value:p,rawValue:p,valueType:y},e):(S||m.onChange)?.({path:u,value:p,type:y},e)};return d?t.createElement("tr",null,t.createElement("td",null,n),t.createElement("td",null,t.createElement("div",{role:"alert"},"Could not load reference options: ",d),r!=null?t.createElement("div",{className:"settings-empty"},"Saved reference: ",JSON.stringify(r)):null)):t.createElement("tr",null,t.createElement("td",null,n),t.createElement("td",null,!f||a&&!f.length?t.createElement("span",{className:"settings-empty"},s.emptyMessage||"No matching options are available.",r!=null&&r!==""&&!(Array.isArray(r)&&!r.length)?` Saved reference: ${JSON.stringify(r)}`:""):t.createElement("select",{"data-setting-path":JSON.stringify(u),"data-setting-type":y,"aria-label":s.ariaLabel||n,disabled:b||i.readOnly===!0||s.readOnly===!0,multiple:a,size:a?Math.max(2,Math.min(Number.isInteger(s.maxVisibleOptions)?s.maxVisibleOptions:6,o.length)):void 0,value:a?Array.isArray(r)?r.map(String):[]:String(r??""),onChange:O},f.map(e=>t.createElement("option",{key:e.value,value:e.value,title:e.description||void 0},e.label))),f&&!(a&&!f.length)&&x?t.createElement("div",{className:"settings-empty",role:"status"},s.emptyMessage||"No matching options are available."):null,i.description?t.createElement("div",{className:"settings-empty"},i.description):null))}function C(n){return t.createElement(A,{...n,...n.view})}const T=n=>N(t.createElement(A,{...n})),V=(n,r)=>D(n,C,r);export{j as ReferenceFilterEditor,A as ReferenceSelector,C as Widget,q as createReferenceFilterEditor,V as mountWidget,L as referenceFilterDraft,I as referenceFilterDraftAfterCommand,J as referenceSelectorDesignLabel,z as referenceTargetSchemaFromDraft,T as renderReferenceSelector,W as renderReferenceSelectorDesignEditor,G as validateReferenceSelectorAnnotation,H as validateReferenceSelectorOptions};
+import React, { renderWidgetMarkup } from "../shared/react/react-runtime.js";
+import { mountReactComponent } from "../shared/react/mount.js";
+import { referenceSelectorDesignLabel, renderReferenceSelectorDesignEditor } from "./design-editor.js";
+import { referenceFilterDraft, referenceTargetSchemaFromDraft, referenceFilterDraftAfterCommand } from "./filter-model.js";
+import { ReferenceFilterEditor, createReferenceFilterEditor } from "./filter-editor.js";
+import { validateReferenceSelectorAnnotation, validateReferenceSelectorOptions } from "./fullmeta-ui-referenceSelector-1.schema.js";
+function ReferenceSelector({ label, value, path = [], schema = {}, ui = {}, referenceOptionsUi = ui, options, context = {}, onChange, onCommand, disabled = false }) {
+  const multiple = Array.isArray(value) || schema.type === "array" || Array.isArray(schema.type) && schema.type.includes("array");
+  let resolvedOptions, providerError = "";
+  try {
+    resolvedOptions = options === void 0 && schema["x-fullmeta-modelReference"] ? context.referenceOptions?.(schema["x-fullmeta-modelReference"], value ?? "", label, referenceOptionsUi) : options;
+  } catch (error) {
+    providerError = error?.message || "The reference provider failed.";
+  }
+  if (!providerError && resolvedOptions !== void 0 && (!Array.isArray(resolvedOptions) || resolvedOptions.some((option) => !option || typeof option.value !== "string" || typeof option.label !== "string" || !option.label.length))) providerError = "The reference provider returned invalid options.";
+  if (!providerError && Array.isArray(resolvedOptions)) {
+    const values = /* @__PURE__ */ new Set();
+    const hasDuplicateValues = resolvedOptions.some((option) => {
+      if (values.has(option.value)) return true;
+      values.add(option.value);
+      return false;
+    });
+    if (hasDuplicateValues) providerError = "The reference provider returned duplicate option values.";
+  }
+  const available = Array.isArray(resolvedOptions) ? resolvedOptions.filter((option) => option && typeof option.value === "string" && typeof option.label === "string" && option.label.length) : null;
+  const choices = multiple ? available?.filter((option) => option.value !== "") : available;
+  const noAvailableChoices = !available || !available.some((option) => option.value !== "" && option.unavailable !== true);
+  const valueType = multiple ? "array-string-select" : "string";
+  const emit = (event) => {
+    const next = multiple ? [...event.target.selectedOptions].map((option) => option.value) : event.target.value;
+    if (onCommand) onCommand({ type: "field.change", path, value: next, rawValue: next, valueType }, event);
+    else (onChange || context.onChange)?.({ path, value: next, type: valueType }, event);
+  };
+  if (providerError) return /* @__PURE__ */ React.createElement("tr", null, /* @__PURE__ */ React.createElement("td", null, label), /* @__PURE__ */ React.createElement("td", null, /* @__PURE__ */ React.createElement("div", { role: "alert" }, "Could not load reference options: ", providerError), value !== void 0 && value !== null ? /* @__PURE__ */ React.createElement("div", { className: "settings-empty" }, "Saved reference: ", JSON.stringify(value)) : null));
+  return /* @__PURE__ */ React.createElement("tr", null, /* @__PURE__ */ React.createElement("td", null, label), /* @__PURE__ */ React.createElement("td", null, !choices || multiple && !choices.length ? /* @__PURE__ */ React.createElement("span", { className: "settings-empty" }, ui.emptyMessage || "No matching options are available.", value !== void 0 && value !== null && value !== "" && !(Array.isArray(value) && !value.length) ? ` Saved reference: ${JSON.stringify(value)}` : "") : /* @__PURE__ */ React.createElement(
+    "select",
+    {
+      "data-setting-path": JSON.stringify(path),
+      "data-setting-type": valueType,
+      "aria-label": ui.ariaLabel || label,
+      disabled: disabled || schema.readOnly === true || ui.readOnly === true,
+      multiple,
+      size: multiple ? Math.max(2, Math.min(Number.isInteger(ui.maxVisibleOptions) ? ui.maxVisibleOptions : 6, available.length)) : void 0,
+      value: multiple ? Array.isArray(value) ? value.map(String) : [] : String(value ?? ""),
+      onChange: emit
+    },
+    choices.map((option) => /* @__PURE__ */ React.createElement("option", { key: option.value, value: option.value, title: option.description || void 0 }, option.label))
+  ), choices && !(multiple && !choices.length) && noAvailableChoices ? /* @__PURE__ */ React.createElement("div", { className: "settings-empty", role: "status" }, ui.emptyMessage || "No matching options are available.") : null, schema.description ? /* @__PURE__ */ React.createElement("div", { className: "settings-empty" }, schema.description) : null));
+}
+function Widget(props) {
+  return /* @__PURE__ */ React.createElement(ReferenceSelector, { ...props, ...props.view });
+}
+const renderReferenceSelector = (props) => renderWidgetMarkup(/* @__PURE__ */ React.createElement(ReferenceSelector, { ...props }));
+const mountWidget = (container, props) => mountReactComponent(container, Widget, props);
+export {
+  ReferenceFilterEditor,
+  ReferenceSelector,
+  Widget,
+  createReferenceFilterEditor,
+  mountWidget,
+  referenceFilterDraft,
+  referenceFilterDraftAfterCommand,
+  referenceSelectorDesignLabel,
+  referenceTargetSchemaFromDraft,
+  renderReferenceSelector,
+  renderReferenceSelectorDesignEditor,
+  validateReferenceSelectorAnnotation,
+  validateReferenceSelectorOptions
+};
 
 //# sourceMappingURL=widget.js.map

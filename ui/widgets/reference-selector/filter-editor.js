@@ -1,4 +1,99 @@
 // Generated from filter-editor.jsx by scripts/build-frontend.mjs.
-import e from"../shared/react/react-runtime.js";import{mountReactComponent as p}from"../shared/react/mount.js";import{referenceFilterDraft as m,referenceTargetSchemaFromDraft as b,referenceFilterDraftAfterCommand as f}from"./filter-model.js";function v({view:s,onCommand:u}){const{draft:n,disabled:a=!1}=s,r=(t,o={})=>u({type:t,...o});return n.mode==="complex"?e.createElement("div",{className:"schema-reference-filter-editor"},e.createElement("p",{className:"schema-bulk-note"},"This filter has conditions that this table cannot safely edit. It will be kept unchanged."),e.createElement("button",{type:"button",className:"button",disabled:a,onClick:()=>r("filter.replace")},"Replace with property filter")):e.createElement("div",{className:"schema-reference-filter-editor"},e.createElement("div",{className:"schema-bulk-toolbar"},e.createElement("label",{className:"schema-bulk-field"},"Filter mode",e.createElement("select",{value:n.mode,disabled:a,onChange:t=>r("filter.mode",{mode:t.target.value})},e.createElement("option",{value:"none"},"No filter"),e.createElement("option",{value:"single"},"Property equals value"),e.createElement("option",{value:"oneOf"},"Any of these alternatives")))),n.mode==="none"?null:e.createElement(e.Fragment,null,e.createElement("div",{className:"schema-bulk-table-wrap"},e.createElement("table",{className:"schema-bulk-table schema-reference-filter-table",style:{minWidth:"720px"}},e.createElement("thead",null,e.createElement("tr",null,["Property","Value type","Equals","Role (optional)",""].map(t=>e.createElement("th",{key:t},t)))),e.createElement("tbody",null,n.rows.map((t,o)=>{const i=(l,d)=>r("filter.patch",{index:o,patch:{[l]:d}});return e.createElement("tr",{key:o},e.createElement("td",null,e.createElement("input",{type:"text",value:t.property,placeholder:"property key",disabled:a,"aria-label":"Filter row "+(o+1)+" property",onChange:l=>i("property",l.target.value)})),e.createElement("td",null,e.createElement("select",{value:t.valueType,disabled:a,"aria-label":"Filter row "+(o+1)+" value type",onChange:l=>r("filter.valueType",{index:o,valueType:l.target.value})},["string","number","boolean","null"].map(l=>e.createElement("option",{key:l,value:l},l)))),e.createElement("td",null,t.valueType==="null"?e.createElement("span",null,"null"):t.valueType==="boolean"?e.createElement("select",{value:t.value,disabled:a,"aria-label":"Filter row "+(o+1)+" equals",onChange:l=>i("value",l.target.value)},e.createElement("option",{value:"true"},"true"),e.createElement("option",{value:"false"},"false")):e.createElement("input",{type:t.valueType==="number"?"number":"text",value:t.value,disabled:a,"aria-label":"Filter row "+(o+1)+" equals",onChange:l=>i("value",l.target.value)})),e.createElement("td",null,e.createElement("input",{type:"text",value:t.role,placeholder:"optional role",disabled:a,"aria-label":"Filter row "+(o+1)+" role",onChange:l=>i("role",l.target.value)})),e.createElement("td",null,e.createElement("button",{type:"button",className:"button",disabled:a,"aria-label":"Remove filter row "+(o+1),onClick:()=>r("filter.remove",{index:o})},"Remove")))})))),e.createElement("button",{type:"button",className:"button",disabled:a,onClick:()=>r("filter.add")},"Add alternative")))}function g(s,u){const n=document.createElement("div");let a=m(s),r=!1,t;const o=()=>t.update({view:{draft:a,disabled:r},onCommand:i}),i=l=>{r||(a=f(a,l),o(),u?.())};return t=p(n,v,{view:{draft:a,disabled:r},onCommand:i}),{node:n,value:()=>b(s,a),disable(){r=!0,o()},snapshot:()=>({format:"fullmeta-reference-filter-state/1",draft:structuredClone(a),disabled:r}),dispose:()=>t.dispose()}}export{v as ReferenceFilterEditor,g as createReferenceFilterEditor};
+import React from "../shared/react/react-runtime.js";
+import { mountReactComponent } from "../shared/react/mount.js";
+import { referenceFilterDraft, referenceTargetSchemaFromDraft, referenceFilterDraftAfterCommand } from "./filter-model.js";
+function ReferenceFilterEditor({ view, onCommand }) {
+  const { draft, disabled = false } = view;
+  const command = (type, payload = {}) => onCommand({ type, ...payload });
+  if (draft.mode === "complex") return /* @__PURE__ */ React.createElement("div", { className: "schema-reference-filter-editor" }, /* @__PURE__ */ React.createElement("p", { className: "schema-bulk-note" }, "This filter has conditions that this table cannot safely edit. It will be kept unchanged."), /* @__PURE__ */ React.createElement("button", { type: "button", className: "button", disabled, onClick: () => command("filter.replace") }, "Replace with property filter"));
+  return /* @__PURE__ */ React.createElement("div", { className: "schema-reference-filter-editor" }, /* @__PURE__ */ React.createElement("div", { className: "schema-bulk-toolbar" }, /* @__PURE__ */ React.createElement("label", { className: "schema-bulk-field" }, "Filter mode", /* @__PURE__ */ React.createElement(
+    "select",
+    {
+      value: draft.mode,
+      disabled,
+      onChange: (event) => command("filter.mode", { mode: event.target.value })
+    },
+    /* @__PURE__ */ React.createElement("option", { value: "none" }, "No filter"),
+    /* @__PURE__ */ React.createElement("option", { value: "single" }, "Property equals value"),
+    /* @__PURE__ */ React.createElement("option", { value: "oneOf" }, "Any of these alternatives")
+  ))), draft.mode === "none" ? null : /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement("div", { className: "schema-bulk-table-wrap" }, /* @__PURE__ */ React.createElement("table", { className: "schema-bulk-table schema-reference-filter-table", style: { minWidth: "720px" } }, /* @__PURE__ */ React.createElement("thead", null, /* @__PURE__ */ React.createElement("tr", null, ["Property", "Value type", "Equals", "Role (optional)", ""].map((title) => /* @__PURE__ */ React.createElement("th", { key: title }, title)))), /* @__PURE__ */ React.createElement("tbody", null, draft.rows.map((row, index) => {
+    const patch = (key, value) => command("filter.patch", { index, patch: { [key]: value } });
+    return /* @__PURE__ */ React.createElement("tr", { key: index }, /* @__PURE__ */ React.createElement("td", null, /* @__PURE__ */ React.createElement(
+      "input",
+      {
+        type: "text",
+        value: row.property,
+        placeholder: "property key",
+        disabled,
+        "aria-label": "Filter row " + (index + 1) + " property",
+        onChange: (event) => patch("property", event.target.value)
+      }
+    )), /* @__PURE__ */ React.createElement("td", null, /* @__PURE__ */ React.createElement(
+      "select",
+      {
+        value: row.valueType,
+        disabled,
+        "aria-label": "Filter row " + (index + 1) + " value type",
+        onChange: (event) => command("filter.valueType", { index, valueType: event.target.value })
+      },
+      ["string", "number", "boolean", "null"].map((type) => /* @__PURE__ */ React.createElement("option", { key: type, value: type }, type))
+    )), /* @__PURE__ */ React.createElement("td", null, row.valueType === "null" ? /* @__PURE__ */ React.createElement("span", null, "null") : row.valueType === "boolean" ? /* @__PURE__ */ React.createElement("select", { value: row.value, disabled, "aria-label": "Filter row " + (index + 1) + " equals", onChange: (event) => patch("value", event.target.value) }, /* @__PURE__ */ React.createElement("option", { value: "true" }, "true"), /* @__PURE__ */ React.createElement("option", { value: "false" }, "false")) : /* @__PURE__ */ React.createElement(
+      "input",
+      {
+        type: row.valueType === "number" ? "number" : "text",
+        value: row.value,
+        disabled,
+        "aria-label": "Filter row " + (index + 1) + " equals",
+        onChange: (event) => patch("value", event.target.value)
+      }
+    )), /* @__PURE__ */ React.createElement("td", null, /* @__PURE__ */ React.createElement(
+      "input",
+      {
+        type: "text",
+        value: row.role,
+        placeholder: "optional role",
+        disabled,
+        "aria-label": "Filter row " + (index + 1) + " role",
+        onChange: (event) => patch("role", event.target.value)
+      }
+    )), /* @__PURE__ */ React.createElement("td", null, /* @__PURE__ */ React.createElement(
+      "button",
+      {
+        type: "button",
+        className: "button",
+        disabled,
+        "aria-label": "Remove filter row " + (index + 1),
+        onClick: () => command("filter.remove", { index })
+      },
+      "Remove"
+    )));
+  })))), /* @__PURE__ */ React.createElement("button", { type: "button", className: "button", disabled, onClick: () => command("filter.add") }, "Add alternative")));
+}
+function createReferenceFilterEditor(originalTargetSchema, onChange) {
+  const node = document.createElement("div");
+  let draft = referenceFilterDraft(originalTargetSchema), disabled = false, mount;
+  const render = () => mount.update({ view: { draft, disabled }, onCommand });
+  const onCommand = (command) => {
+    if (disabled) return;
+    draft = referenceFilterDraftAfterCommand(draft, command);
+    render();
+    onChange?.();
+  };
+  mount = mountReactComponent(node, ReferenceFilterEditor, { view: { draft, disabled }, onCommand });
+  return {
+    node,
+    value: () => referenceTargetSchemaFromDraft(originalTargetSchema, draft),
+    disable() {
+      disabled = true;
+      render();
+    },
+    snapshot: () => ({ format: "fullmeta-reference-filter-state/1", draft: structuredClone(draft), disabled }),
+    dispose: () => mount.dispose()
+  };
+}
+export {
+  ReferenceFilterEditor,
+  createReferenceFilterEditor
+};
 
 //# sourceMappingURL=filter-editor.js.map

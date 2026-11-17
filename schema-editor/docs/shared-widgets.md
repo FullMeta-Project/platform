@@ -1,9 +1,9 @@
 # Using shared UI widgets in an application
 
-Shared widgets are registered in the [widget catalog](../../ui/widgets/README.md).
+Shared widgets are registered in the widget catalog.
 The Schema Editor uses some of them while editing schemas. Application authors
 can also select supported catalog widgets for fields, trees, graphics and other
-surfaces in their own interpreting schemas. The [shared UI reference](../../ui/README.md)
+surfaces in their own interpreting schemas. The shared UI reference
 identifies the widget families and links their individual settings and data
 contracts.
 

@@ -1,4 +1,221 @@
 // Generated from table-editor.jsx by scripts/build-frontend.mjs.
-import a from"../shared/react/react-runtime.js";import{mountReactComponent as G}from"../shared/react/mount.js";import{structuredValueDraft as b,readStructuredValueDraft as F}from"../shared/structured-value-editor.js";import{createSchemaAuthoringPathPicker as I}from"../shared/schema-authoring-path-picker.js";import{DeclarativeView as $,createDeclarativeRuleAuthoring as U}from"./declarative-editor.js";import{ValidationDialog as W}from"./recipe-editor.js";import{fullMetaValidationProgramKeys as z,isFullMetaValidationProgramKey as q}from"./program-contract.js";import{assertDeclarativeDocument as H}from"./declarative-rules.js";import{assertValidationProgramSemantics as L}from"./semantic-validation.js";import{validationProgramDraft as S,snapshotValidationDraft as Q,restoreValidationDraft as X}from"./draft-model.js";import{validationProgramDraft as ue,validationProgramWithImportedRules as de,validationStatementFromDraft as fe}from"./draft-model.js";const w=o=>structuredClone(o),P=(o,v)=>JSON.stringify(o)===JSON.stringify(v);function Y({model:o,primary:v,commands:d}){return a.createElement(W,{open:o.open,title:"Validation requirements",onClose:d.close,dialogRef:d.ref,actions:a.createElement(a.Fragment,null,a.createElement("button",{type:"button",className:"button",onClick:d.preview},"Preview"),a.createElement("button",{type:"button",className:"button primary",disabled:!o.ready,onClick:d.apply},"Apply"))},a.createElement("div",{className:"schema-bulk-toolbar"},a.createElement("label",null,"Validation program",a.createElement("select",{"aria-label":"Validation program",value:o.key,onChange:p=>d.select(p.target.value)},o.keys.map(p=>a.createElement("option",{key:p,value:p},p)))),a.createElement("label",null,"Maximum errors",a.createElement("input",{"aria-label":"Maximum errors",type:"number",min:"1",value:o.maximumErrors,onChange:p=>d.maximumErrors(p.target.value)}))),a.createElement("label",null,"Add another validation program",a.createElement("input",{"aria-label":"New validation program key",value:o.newKey,onChange:p=>d.newKey(p.target.value)})),a.createElement("button",{type:"button",onClick:d.addProgram},"Add program"),a.createElement($,{...v}),a.createElement("p",{className:"schema-validation-dialog-status",role:"status"},o.status),o.previewText?a.createElement("details",{className:"schema-bulk-preview",open:!0},a.createElement("summary",null,"Generated candidate"),a.createElement("pre",null,o.previewText)):null)}function le({getDocument:o,validateCandidate:v,applyCandidate:d,buildCandidate:p}){const V=document.createElement("div");document.body.append(V);let l={},n=new Map,D,u=null,x,M,s="x-fullmeta-rules",r={open:!1,key:s,keys:[],newKey:"",maximumErrors:80,nativeOpen:!1,nativeDraft:b([]),batchAreas:["","",""],stagedText:["","",""],importMode:"append",ready:!1,status:"",previewText:"",recipe:{draft:b({}),dirty:!1,open:!1}};const c=()=>{x&&x.update({model:r,primary:D,commands:N})},h=()=>{u=null,r={...r,ready:!1,status:""},c()},J=I({getDocument:o,onPick:void 0}),f=U({getProgramKey:()=>s,renderView:e=>{D=e,c()},onChange:h,onError:e=>{r.status=e.message,c()},pickPath:e=>J.open(e)}),y=()=>n.get(s),B=()=>y().authoredProgram||p(l,new Map([[s,y()]]))[s]||{maximumErrors:80,rules:[]},O=()=>{const e=B();f.load(e,{programKey:s}),r.maximumErrors=y().maximumErrors,r.nativeDraft=b(Array.isArray(e.rules)?e.rules:[])},A=()=>{if(f.isDirty()){const e=f.read(),t=y(),m=S(e);m.maximumErrors=t.maximumErrors,m.maxErrorsChanged=t.maxErrorsChanged,n.set(s,m)}},E=e=>{try{const t=e();return c(),t}catch(t){throw r={...r,status:t.message,ready:!1},u=null,c(),t}},T=()=>{r.batchAreas=["","",""],r.stagedText=["","",""]},C=()=>E(()=>{if(!r.open)throw new Error("Open Validation requirements first.");h(),A();for(const[i,g]of n)if(!Number.isInteger(g.maximumErrors)||g.maximumErrors<1)throw new Error(`${i}: Maximum errors must be a positive integer.`);const e=p(l,n);if(P(e,l))throw new Error("Add or change a rule before previewing.");const t=[...n.keys()].filter(i=>!P(l[i],e[i])).map(i=>[i]);H(e);const m=[];for(const[i]of t)m.push(...L(e[i],{programKey:i}).filter(g=>g.severity==="warning"));v(e,{allowGeneratedSubtrees:t});const k=[...n.keys()].reduce((i,g)=>i+(e[g]?.rules?.length||0),0);return u={candidate:e,base:JSON.stringify(l),allowGeneratedSubtrees:t,ruleCount:k,warnings:m},r={...r,ready:!0,previewText:JSON.stringify(Object.fromEntries(t.map(([i])=>[i,e[i]])),null,2),status:"Preview ready; candidate validation passed. Apply changes the draft; Save persists it."},{ready:!0,ruleCount:k,programs:t.map(([i])=>i),warnings:w(m)}}),j=()=>E(()=>{if(!r.open||!u||!r.ready)throw new Error("Preview a valid candidate before Apply.");if(JSON.stringify(o())!==u.base)throw new Error("The schema changed since preview. Reopen the table.");const e=u.ruleCount;return d(u.candidate,`Applied bulk validation rules: ${e} root rules. Save the schema to keep changes.`,{allowGeneratedSubtrees:u.allowGeneratedSubtrees}),r.open=!1,c(),{applied:!0,ruleCount:e}}),K=e=>()=>{try{e()}catch{}},N={ref:e=>{M=e},close(){r.open=!1,c()},select:e=>E(()=>{A(),s=e,r.key=e,T(),O(),h()}),maximumErrors(e){y().maximumErrors=Number(e),y().maxErrorsChanged=!0,r.maximumErrors=e,h()},newKey(e){r.newKey=e,c()},addProgram:K(()=>E(()=>{const e=r.newKey.trim();if(!q(e)||e==="x-fullmeta-rules")throw new Error("Use an x-fullmeta-\u2026Validation key for an additional validation program.");A(),n.has(e)||n.set(e,S()),r.keys=[...n.keys()],s=e,r.key=e,r.newKey="",T(),O(),h()})),preview:K(C),apply:K(j)};return x=G(V,Y,{model:r,primary:D,commands:N}),{open(){l=w(o()),n=new Map,r.keys=[...new Set(["x-fullmeta-rules",...z(l),...Object.keys(l).filter(e=>q(e)&&l[e]&&Object.hasOwn(l[e],"declarative"))])];for(const e of r.keys)n.set(e,S(l[e]));s="x-fullmeta-rules",r.key=s,r.open=!0,r.recipe.dirty=!1,T(),O(),h()},snapshot:()=>({format:"fullmeta-validation-table-state/1",source:w(l),programs:[...n].map(([e,t])=>[e,{...t,roots:t.roots.map(Q)}]),activeKey:s,primary:f.snapshot(),batchAreas:[...r.batchAreas],stagedText:[...r.stagedText],importMode:r.importMode,nativeOpen:r.nativeOpen,nativeDraft:w(r.nativeDraft),open:r.open,hadPreview:!!u,status:r.status,recipe:{...w(r.recipe),controls:[]}}),restore(e){if(e?.format!=="fullmeta-validation-table-state/1"||!P(e.source,o()))throw new Error("Validation state belongs to a different document snapshot.");if(e.batchAreas?.some((t,m)=>t!==e.stagedText?.[m])||e.recipe?.dirty)throw new Error("This saved session contains unfinished retired bulk input; recover its text with the previous editor before restoring.");if(e.nativeDraft&&!Object.hasOwn(e.primary?.original||{},"declarative")){let t;try{t=F(e.nativeDraft)}catch{throw new Error("This saved session contains an unfinished native draft; recover it with the previous editor before restoring.")}if(!P(t,e.primary?.original?.rules||[]))throw new Error("This saved session contains an unfinished native draft; recover it with the previous editor before restoring.")}return l=w(e.source),n=new Map(e.programs.map(([t,m])=>[t,{...m,roots:m.roots.map(k=>X(k))}])),s=e.activeKey,r={...r,keys:[...n.keys()],key:s,batchAreas:["","",""],stagedText:["","",""],importMode:"append",nativeOpen:!1,nativeDraft:b(e.primary?.original?.rules||[]),recipe:{draft:b({}),dirty:!1,open:!1},open:e.open!==!1,ready:!1,status:e.status||"",maximumErrors:y().maximumErrors},f.restore(e.primary),u=null,c(),e.hadPreview&&C(),{restored:!0,previewReady:!!u,programKey:s}},addRule(e){if(!r.open)throw new Error("Open Validation requirements first.");return f.addRule(e).id},applyRuleBatch(e){if(!r.open)throw new Error("Open Validation requirements first.");return f.applyRuleBatch(e)},updateRule(e,t){return f.updateRule(e,t),{updated:e}},removeRule(e){return f.removeRule(e),{removed:e}},preview:C,apply:j,close:N.close,get dialog(){return M},dispose(){f.dispose(),J.dispose(),x.dispose(),V.remove()}}}export{Y as ValidationProgramTable,le as createValidationProgramTableDialog,ue as validationProgramDraft,de as validationProgramWithImportedRules,fe as validationStatementFromDraft};
+import React from "../shared/react/react-runtime.js";
+import { mountReactComponent } from "../shared/react/mount.js";
+import { structuredValueDraft, readStructuredValueDraft } from "../shared/structured-value-editor.js";
+import { createSchemaAuthoringPathPicker } from "../shared/schema-authoring-path-picker.js";
+import { DeclarativeView, createDeclarativeRuleAuthoring } from "./declarative-editor.js";
+import { ValidationDialog } from "./recipe-editor.js";
+import { fullMetaValidationProgramKeys, isFullMetaValidationProgramKey } from "./program-contract.js";
+import { assertDeclarativeDocument } from "./declarative-rules.js";
+import { assertValidationProgramSemantics } from "./semantic-validation.js";
+import { validationProgramDraft, snapshotValidationDraft, restoreValidationDraft } from "./draft-model.js";
+import { validationProgramDraft as validationProgramDraft2, validationProgramWithImportedRules, validationStatementFromDraft } from "./draft-model.js";
+const clone = (value) => structuredClone(value), same = (left, right) => JSON.stringify(left) === JSON.stringify(right);
+function ValidationProgramTable({ model, primary, commands }) {
+  return /* @__PURE__ */ React.createElement(ValidationDialog, { open: model.open, title: "Validation requirements", onClose: commands.close, dialogRef: commands.ref, actions: /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement("button", { type: "button", className: "button", onClick: commands.preview }, "Preview"), /* @__PURE__ */ React.createElement("button", { type: "button", className: "button primary", disabled: !model.ready, onClick: commands.apply }, "Apply")) }, /* @__PURE__ */ React.createElement("div", { className: "schema-bulk-toolbar" }, /* @__PURE__ */ React.createElement("label", null, "Validation program", /* @__PURE__ */ React.createElement("select", { "aria-label": "Validation program", value: model.key, onChange: (event) => commands.select(event.target.value) }, model.keys.map((key) => /* @__PURE__ */ React.createElement("option", { key, value: key }, key)))), /* @__PURE__ */ React.createElement("label", null, "Maximum errors", /* @__PURE__ */ React.createElement("input", { "aria-label": "Maximum errors", type: "number", min: "1", value: model.maximumErrors, onChange: (event) => commands.maximumErrors(event.target.value) }))), /* @__PURE__ */ React.createElement("label", null, "Add another validation program", /* @__PURE__ */ React.createElement("input", { "aria-label": "New validation program key", value: model.newKey, onChange: (event) => commands.newKey(event.target.value) })), /* @__PURE__ */ React.createElement("button", { type: "button", onClick: commands.addProgram }, "Add program"), /* @__PURE__ */ React.createElement(DeclarativeView, { ...primary }), /* @__PURE__ */ React.createElement("p", { className: "schema-validation-dialog-status", role: "status" }, model.status), model.previewText ? /* @__PURE__ */ React.createElement("details", { className: "schema-bulk-preview", open: true }, /* @__PURE__ */ React.createElement("summary", null, "Generated candidate"), /* @__PURE__ */ React.createElement("pre", null, model.previewText)) : null);
+}
+function createValidationProgramTableDialog({ getDocument, validateCandidate, applyCandidate, buildCandidate }) {
+  const host = document.createElement("div");
+  document.body.append(host);
+  let source = {}, drafts = /* @__PURE__ */ new Map(), primaryPresentation, preview = null, mounted, dialog, activeKey = "x-fullmeta-rules";
+  let model = { open: false, key: activeKey, keys: [], newKey: "", maximumErrors: 80, nativeOpen: false, nativeDraft: structuredValueDraft([]), batchAreas: ["", "", ""], stagedText: ["", "", ""], importMode: "append", ready: false, status: "", previewText: "", recipe: { draft: structuredValueDraft({}), dirty: false, open: false } };
+  const render = () => {
+    if (mounted) mounted.update({ model, primary: primaryPresentation, commands });
+  };
+  const change = () => {
+    preview = null;
+    model = { ...model, ready: false, status: "" };
+    render();
+  };
+  const picker = createSchemaAuthoringPathPicker({ getDocument, onPick: void 0 });
+  const primary = createDeclarativeRuleAuthoring({ getProgramKey: () => activeKey, renderView: (presentation) => {
+    primaryPresentation = presentation;
+    render();
+  }, onChange: change, onError: (error) => {
+    model.status = error.message;
+    render();
+  }, pickPath: (options) => picker.open(options) });
+  const current = () => drafts.get(activeKey);
+  const candidateProgram = () => current().authoredProgram || buildCandidate(source, /* @__PURE__ */ new Map([[activeKey, current()]]))[activeKey] || { maximumErrors: 80, rules: [] };
+  const load = () => {
+    const program = candidateProgram();
+    primary.load(program, { programKey: activeKey });
+    model.maximumErrors = current().maximumErrors;
+    model.nativeDraft = structuredValueDraft(Array.isArray(program.rules) ? program.rules : []);
+  };
+  const sync = () => {
+    if (primary.isDirty()) {
+      const program = primary.read(), previous = current(), next = validationProgramDraft(program);
+      next.maximumErrors = previous.maximumErrors;
+      next.maxErrorsChanged = previous.maxErrorsChanged;
+      drafts.set(activeKey, next);
+    }
+  };
+  const report = (fn) => {
+    try {
+      const value = fn();
+      render();
+      return value;
+    } catch (error) {
+      model = { ...model, status: error.message, ready: false };
+      preview = null;
+      render();
+      throw error;
+    }
+  };
+  const clear = () => {
+    model.batchAreas = ["", "", ""];
+    model.stagedText = ["", "", ""];
+  };
+  const previewNow = () => report(() => {
+    if (!model.open) throw new Error("Open Validation requirements first.");
+    change();
+    sync();
+    for (const [key, program] of drafts) if (!Number.isInteger(program.maximumErrors) || program.maximumErrors < 1) throw new Error(`${key}: Maximum errors must be a positive integer.`);
+    const candidate = buildCandidate(source, drafts);
+    if (same(candidate, source)) throw new Error("Add or change a rule before previewing.");
+    const allowGeneratedSubtrees = [...drafts.keys()].filter((key) => !same(source[key], candidate[key])).map((key) => [key]);
+    assertDeclarativeDocument(candidate);
+    const warnings = [];
+    for (const [key] of allowGeneratedSubtrees) warnings.push(...assertValidationProgramSemantics(candidate[key], { programKey: key }).filter((item) => item.severity === "warning"));
+    validateCandidate(candidate, { allowGeneratedSubtrees });
+    const ruleCount = [...drafts.keys()].reduce((sum, key) => sum + (candidate[key]?.rules?.length || 0), 0);
+    preview = { candidate, base: JSON.stringify(source), allowGeneratedSubtrees, ruleCount, warnings };
+    model = { ...model, ready: true, previewText: JSON.stringify(Object.fromEntries(allowGeneratedSubtrees.map(([key]) => [key, candidate[key]])), null, 2), status: "Preview ready; candidate validation passed. Apply changes the draft; Save persists it." };
+    return { ready: true, ruleCount, programs: allowGeneratedSubtrees.map(([key]) => key), warnings: clone(warnings) };
+  });
+  const applyNow = () => report(() => {
+    if (!model.open || !preview || !model.ready) throw new Error("Preview a valid candidate before Apply.");
+    if (JSON.stringify(getDocument()) !== preview.base) throw new Error("The schema changed since preview. Reopen the table.");
+    const ruleCount = preview.ruleCount;
+    applyCandidate(preview.candidate, `Applied bulk validation rules: ${ruleCount} root rules. Save the schema to keep changes.`, { allowGeneratedSubtrees: preview.allowGeneratedSubtrees });
+    model.open = false;
+    render();
+    return { applied: true, ruleCount };
+  });
+  const ui = (fn) => () => {
+    try {
+      fn();
+    } catch {
+    }
+  };
+  const commands = {
+    ref: (node) => {
+      dialog = node;
+    },
+    close() {
+      model.open = false;
+      render();
+    },
+    select: (key) => report(() => {
+      sync();
+      activeKey = key;
+      model.key = key;
+      clear();
+      load();
+      change();
+    }),
+    maximumErrors(value) {
+      current().maximumErrors = Number(value);
+      current().maxErrorsChanged = true;
+      model.maximumErrors = value;
+      change();
+    },
+    newKey(value) {
+      model.newKey = value;
+      render();
+    },
+    addProgram: ui(() => report(() => {
+      const key = model.newKey.trim();
+      if (!isFullMetaValidationProgramKey(key) || key === "x-fullmeta-rules") throw new Error("Use an x-fullmeta-\u2026Validation key for an additional validation program.");
+      sync();
+      if (!drafts.has(key)) drafts.set(key, validationProgramDraft());
+      model.keys = [...drafts.keys()];
+      activeKey = key;
+      model.key = key;
+      model.newKey = "";
+      clear();
+      load();
+      change();
+    })),
+    preview: ui(previewNow),
+    apply: ui(applyNow)
+  };
+  mounted = mountReactComponent(host, ValidationProgramTable, { model, primary: primaryPresentation, commands });
+  const snapshot = () => ({ format: "fullmeta-validation-table-state/1", source: clone(source), programs: [...drafts].map(([key, program]) => [key, { ...program, roots: program.roots.map(snapshotValidationDraft) }]), activeKey, primary: primary.snapshot(), batchAreas: [...model.batchAreas], stagedText: [...model.stagedText], importMode: model.importMode, nativeOpen: model.nativeOpen, nativeDraft: clone(model.nativeDraft), open: model.open, hadPreview: Boolean(preview), status: model.status, recipe: { ...clone(model.recipe), controls: [] } });
+  return {
+    open() {
+      source = clone(getDocument());
+      drafts = /* @__PURE__ */ new Map();
+      model.keys = [.../* @__PURE__ */ new Set(["x-fullmeta-rules", ...fullMetaValidationProgramKeys(source), ...Object.keys(source).filter((key) => isFullMetaValidationProgramKey(key) && source[key] && Object.hasOwn(source[key], "declarative"))])];
+      for (const key of model.keys) drafts.set(key, validationProgramDraft(source[key]));
+      activeKey = "x-fullmeta-rules";
+      model.key = activeKey;
+      model.open = true;
+      model.recipe.dirty = false;
+      clear();
+      load();
+      change();
+    },
+    snapshot,
+    restore(value) {
+      if (value?.format !== "fullmeta-validation-table-state/1" || !same(value.source, getDocument())) throw new Error("Validation state belongs to a different document snapshot.");
+      if (value.batchAreas?.some((text, index) => text !== value.stagedText?.[index]) || value.recipe?.dirty) throw new Error("This saved session contains unfinished retired bulk input; recover its text with the previous editor before restoring.");
+      if (value.nativeDraft && !Object.hasOwn(value.primary?.original || {}, "declarative")) {
+        let native;
+        try {
+          native = readStructuredValueDraft(value.nativeDraft);
+        } catch {
+          throw new Error("This saved session contains an unfinished native draft; recover it with the previous editor before restoring.");
+        }
+        if (!same(native, value.primary?.original?.rules || [])) throw new Error("This saved session contains an unfinished native draft; recover it with the previous editor before restoring.");
+      }
+      source = clone(value.source);
+      drafts = new Map(value.programs.map(([key, program]) => [key, { ...program, roots: program.roots.map((root) => restoreValidationDraft(root)) }]));
+      activeKey = value.activeKey;
+      model = { ...model, keys: [...drafts.keys()], key: activeKey, batchAreas: ["", "", ""], stagedText: ["", "", ""], importMode: "append", nativeOpen: false, nativeDraft: structuredValueDraft(value.primary?.original?.rules || []), recipe: { draft: structuredValueDraft({}), dirty: false, open: false }, open: value.open !== false, ready: false, status: value.status || "", maximumErrors: current().maximumErrors };
+      primary.restore(value.primary);
+      preview = null;
+      render();
+      if (value.hadPreview) previewNow();
+      return { restored: true, previewReady: Boolean(preview), programKey: activeKey };
+    },
+    addRule(overrides) {
+      if (!model.open) throw new Error("Open Validation requirements first.");
+      return primary.addRule(overrides).id;
+    },
+    applyRuleBatch(batch) {
+      if (!model.open) throw new Error("Open Validation requirements first.");
+      return primary.applyRuleBatch(batch);
+    },
+    updateRule(id, patch) {
+      primary.updateRule(id, patch);
+      return { updated: id };
+    },
+    removeRule(id) {
+      primary.removeRule(id);
+      return { removed: id };
+    },
+    preview: previewNow,
+    apply: applyNow,
+    close: commands.close,
+    get dialog() {
+      return dialog;
+    },
+    dispose() {
+      primary.dispose();
+      picker.dispose();
+      mounted.dispose();
+      host.remove();
+    }
+  };
+}
+export {
+  ValidationProgramTable,
+  createValidationProgramTableDialog,
+  validationProgramDraft2 as validationProgramDraft,
+  validationProgramWithImportedRules,
+  validationStatementFromDraft
+};
 
 //# sourceMappingURL=table-editor.js.map

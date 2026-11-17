@@ -1,4 +1,134 @@
 // Generated from widget.jsx by scripts/build-frontend.mjs.
-import{createValidationExpressionDialog as b}from"./expression-dialog.js";import{createValidationExpressionInput as C}from"./expression-input.js";import{validationOperationNames as A,validationTextCompletions as I,sameValidationExpression as S,parseValidationExpression as W,printableValidationExpression as O,losslessValidationExpression as w,validationExpressionVariables as K,validationExpressionReadTargets as M,validationAssertionEditIssue as j}from"./expression-language.js";import{validationEditDraftIssue as q,validationRulePointerParts as J,validationRuleAtPointer as L,documentWithValidationAssertion as N,documentWithValidationEdits as z}from"./expression-source.js";import{validationRuleRecipeFromRule as G,validationRuleFromRecipe as H,createValidationRuleRecipeTable as Q}from"./recipe-editor.js";import{semanticAssertions as X,createValidationProgramDesigner as Y}from"./runtime.js";import{createValidationProgramTableDialog as _,validationStatementFromDraft as $,validationProgramDraft as aa}from"./table-editor.js";import{validationRulesFromJson as ta,validationRuleImportTemplates as ia,validationRuleChangeCounts as ra}from"./json-import.js";import{validationProgramWithImportedRules as na}from"./table-editor.js";import{validationRuleRecipeTemplates as sa,createValidationRuleRecipeRow as da}from"./recipe-editor.js";import{validationProgramDiagnostics as ca,assertValidationProgramSemantics as pa}from"./semantic-validation.js";import{fullMetaValidationProgramKeys as ga,isFullMetaValidationProgram as fa,isFullMetaValidationProgramKey as va}from"./program-contract.js";import{declarativeValidationFormat as Va,declarativeRuleSources as Da,declarativeConstraintTypes as Ra,createDeclarativeObligation as Pa,compileDeclarativeValidation as Ea,declarativeValidationDiagnostics as ha,declarativeProgramState as Ta,equivalentDeclarativeObligations as ba,compareDeclarativeObligations as ya,compareConditions as Ca,programWithDeclarativeObligations as Fa,declarativeDocumentDiagnostics as Aa,assertDeclarativeDocument as Ia}from"./declarative-rules.js";import{createDeclarativeRuleAuthoring as Wa}from"./declarative-editor.js";import{declarativeValidationDefinitions as wa,declarativeValidationProgramSchema as Ka}from"./declarative-schema.js";import n,{useLayoutEffect as p,useReducer as u,useRef as i}from"../shared/react/react-runtime.js";import{mountReactComponent as g}from"../shared/react/mount.js";import{DeclarativeView as f,createDeclarativeRuleAuthoring as v}from"./declarative-editor.js";import{DeclarativeView as ja,sortDeclarativeRows as ka}from"./declarative-editor.js";import{ValidationProgramTable as Ja}from"./table-editor.js";import{ValidationDialog as Na,ValidationRecipeRow as za,ValidationRecipeTable as Ba}from"./recipe-editor.js";import{ValidationExpressionInput as Ha,validationExpressionTokens as Qa}from"./expression-input.js";import{ValidationExpressionDialog as Xa}from"./expression-dialog.js";import{ValidationDesignerTree as Za,ValidationDesignerSettings as _a}from"./designer.js";function x({view:a,onCommand:e,program:l,pickPath:m}){const[,c]=u(o=>o+1,0),s=i(null),t=i(null),r=i(!1),d=i(e);return d.current=e,t.current||(t.current=v({renderView(o){s.current=o,r.current&&c()},pickPath:m,onChange(){d.current?.({type:"widget.action",widget:"validationProgram",path:a?.path||[],action:"draftChanged",args:{snapshot:t.current.snapshot()}})}})),p(()=>(r.current=!0,t.current.load(a?.program||a?.value||l||{maximumErrors:80,rules:[]},{programKey:a?.programKey||"x-fullmeta-rules"}),()=>{r.current=!1}),[a?.program,a?.value,l]),n.createElement("section",{"data-jsx-widget":"validation-program"},n.createElement(f,{...s.current}))}function V(a){return n.createElement(x,{...a})}const E=(a,e)=>g(a,V,e);export{ja as DeclarativeView,_a as ValidationDesignerSettings,Za as ValidationDesignerTree,Na as ValidationDialog,Xa as ValidationExpressionDialog,Ha as ValidationExpressionInput,x as ValidationProgram,Ja as ValidationProgramTable,za as ValidationRecipeRow,Ba as ValidationRecipeTable,V as Widget,Ia as assertDeclarativeDocument,pa as assertValidationProgramSemantics,Ca as compareConditions,ya as compareDeclarativeObligations,Ea as compileDeclarativeValidation,Pa as createDeclarativeObligation,Wa as createDeclarativeRuleAuthoring,b as createValidationExpressionDialog,C as createValidationExpressionInput,Y as createValidationProgramDesigner,_ as createValidationProgramTableDialog,da as createValidationRuleRecipeRow,Q as createValidationRuleRecipeTable,Ra as declarativeConstraintTypes,Aa as declarativeDocumentDiagnostics,Ta as declarativeProgramState,Da as declarativeRuleSources,wa as declarativeValidationDefinitions,ha as declarativeValidationDiagnostics,Va as declarativeValidationFormat,Ka as declarativeValidationProgramSchema,N as documentWithValidationAssertion,z as documentWithValidationEdits,ba as equivalentDeclarativeObligations,ga as fullMetaValidationProgramKeys,fa as isFullMetaValidationProgram,va as isFullMetaValidationProgramKey,w as losslessValidationExpression,E as mountWidget,W as parseValidationExpression,O as printableValidationExpression,Fa as programWithDeclarativeObligations,S as sameValidationExpression,X as semanticAssertions,ka as sortDeclarativeRows,j as validationAssertionEditIssue,q as validationEditDraftIssue,M as validationExpressionReadTargets,Qa as validationExpressionTokens,K as validationExpressionVariables,A as validationOperationNames,ca as validationProgramDiagnostics,aa as validationProgramDraft,na as validationProgramWithImportedRules,L as validationRuleAtPointer,ra as validationRuleChangeCounts,H as validationRuleFromRecipe,ia as validationRuleImportTemplates,J as validationRulePointerParts,G as validationRuleRecipeFromRule,sa as validationRuleRecipeTemplates,ta as validationRulesFromJson,$ as validationStatementFromDraft,I as validationTextCompletions};
+import { createValidationExpressionDialog } from "./expression-dialog.js";
+import { createValidationExpressionInput } from "./expression-input.js";
+import { validationOperationNames, validationTextCompletions, sameValidationExpression, parseValidationExpression, printableValidationExpression, losslessValidationExpression, validationExpressionVariables, validationExpressionReadTargets, validationAssertionEditIssue } from "./expression-language.js";
+import { validationEditDraftIssue, validationRulePointerParts, validationRuleAtPointer, documentWithValidationAssertion, documentWithValidationEdits } from "./expression-source.js";
+import { validationRuleRecipeFromRule, validationRuleFromRecipe, createValidationRuleRecipeTable } from "./recipe-editor.js";
+import { semanticAssertions, createValidationProgramDesigner } from "./runtime.js";
+import { createValidationProgramTableDialog, validationStatementFromDraft, validationProgramDraft } from "./table-editor.js";
+import { validationRulesFromJson, validationRuleImportTemplates, validationRuleChangeCounts } from "./json-import.js";
+import { validationProgramWithImportedRules } from "./table-editor.js";
+import { validationRuleRecipeTemplates, createValidationRuleRecipeRow } from "./recipe-editor.js";
+import { validationProgramDiagnostics, assertValidationProgramSemantics } from "./semantic-validation.js";
+import { fullMetaValidationProgramKeys, isFullMetaValidationProgram, isFullMetaValidationProgramKey } from "./program-contract.js";
+import {
+  declarativeValidationFormat,
+  declarativeRuleSources,
+  declarativeConstraintTypes,
+  createDeclarativeObligation,
+  compileDeclarativeValidation,
+  declarativeValidationDiagnostics,
+  declarativeProgramState,
+  equivalentDeclarativeObligations,
+  compareDeclarativeObligations,
+  compareConditions,
+  programWithDeclarativeObligations,
+  declarativeDocumentDiagnostics,
+  assertDeclarativeDocument
+} from "./declarative-rules.js";
+import { createDeclarativeRuleAuthoring } from "./declarative-editor.js";
+import { declarativeValidationDefinitions, declarativeValidationProgramSchema } from "./declarative-schema.js";
+import React, { useLayoutEffect, useReducer, useRef } from "../shared/react/react-runtime.js";
+import { mountReactComponent } from "../shared/react/mount.js";
+import { DeclarativeView, createDeclarativeRuleAuthoring as createDeclarativeRuleAuthoring2 } from "./declarative-editor.js";
+import { DeclarativeView as DeclarativeView2, sortDeclarativeRows } from "./declarative-editor.js";
+import { ValidationProgramTable } from "./table-editor.js";
+import { ValidationDialog, ValidationRecipeRow, ValidationRecipeTable } from "./recipe-editor.js";
+import { ValidationExpressionInput, validationExpressionTokens } from "./expression-input.js";
+import { ValidationExpressionDialog } from "./expression-dialog.js";
+import { ValidationDesignerTree, ValidationDesignerSettings } from "./designer.js";
+function ValidationProgram({ view, onCommand, program, pickPath }) {
+  const [, refresh] = useReducer((value) => value + 1, 0), presentation = useRef(null), controller = useRef(null), live = useRef(false), command = useRef(onCommand);
+  command.current = onCommand;
+  if (!controller.current) controller.current = createDeclarativeRuleAuthoring2({
+    renderView(next) {
+      presentation.current = next;
+      if (live.current) refresh();
+    },
+    pickPath,
+    onChange() {
+      command.current?.({ type: "widget.action", widget: "validationProgram", path: view?.path || [], action: "draftChanged", args: { snapshot: controller.current.snapshot() } });
+    }
+  });
+  useLayoutEffect(() => {
+    live.current = true;
+    controller.current.load(view?.program || view?.value || program || { maximumErrors: 80, rules: [] }, { programKey: view?.programKey || "x-fullmeta-rules" });
+    return () => {
+      live.current = false;
+    };
+  }, [view?.program, view?.value, program]);
+  return /* @__PURE__ */ React.createElement("section", { "data-jsx-widget": "validation-program" }, /* @__PURE__ */ React.createElement(DeclarativeView, { ...presentation.current }));
+}
+function Widget(props) {
+  return /* @__PURE__ */ React.createElement(ValidationProgram, { ...props });
+}
+const mountWidget = (container, props) => mountReactComponent(container, Widget, props);
+export {
+  DeclarativeView2 as DeclarativeView,
+  ValidationDesignerSettings,
+  ValidationDesignerTree,
+  ValidationDialog,
+  ValidationExpressionDialog,
+  ValidationExpressionInput,
+  ValidationProgram,
+  ValidationProgramTable,
+  ValidationRecipeRow,
+  ValidationRecipeTable,
+  Widget,
+  assertDeclarativeDocument,
+  assertValidationProgramSemantics,
+  compareConditions,
+  compareDeclarativeObligations,
+  compileDeclarativeValidation,
+  createDeclarativeObligation,
+  createDeclarativeRuleAuthoring,
+  createValidationExpressionDialog,
+  createValidationExpressionInput,
+  createValidationProgramDesigner,
+  createValidationProgramTableDialog,
+  createValidationRuleRecipeRow,
+  createValidationRuleRecipeTable,
+  declarativeConstraintTypes,
+  declarativeDocumentDiagnostics,
+  declarativeProgramState,
+  declarativeRuleSources,
+  declarativeValidationDefinitions,
+  declarativeValidationDiagnostics,
+  declarativeValidationFormat,
+  declarativeValidationProgramSchema,
+  documentWithValidationAssertion,
+  documentWithValidationEdits,
+  equivalentDeclarativeObligations,
+  fullMetaValidationProgramKeys,
+  isFullMetaValidationProgram,
+  isFullMetaValidationProgramKey,
+  losslessValidationExpression,
+  mountWidget,
+  parseValidationExpression,
+  printableValidationExpression,
+  programWithDeclarativeObligations,
+  sameValidationExpression,
+  semanticAssertions,
+  sortDeclarativeRows,
+  validationAssertionEditIssue,
+  validationEditDraftIssue,
+  validationExpressionReadTargets,
+  validationExpressionTokens,
+  validationExpressionVariables,
+  validationOperationNames,
+  validationProgramDiagnostics,
+  validationProgramDraft,
+  validationProgramWithImportedRules,
+  validationRuleAtPointer,
+  validationRuleChangeCounts,
+  validationRuleFromRecipe,
+  validationRuleImportTemplates,
+  validationRulePointerParts,
+  validationRuleRecipeFromRule,
+  validationRuleRecipeTemplates,
+  validationRulesFromJson,
+  validationStatementFromDraft,
+  validationTextCompletions
+};
 
 //# sourceMappingURL=widget.js.map

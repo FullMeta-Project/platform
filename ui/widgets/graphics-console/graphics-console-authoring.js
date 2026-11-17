@@ -1,4 +1,31 @@
 // Generated from graphics-console-authoring.jsx by scripts/build-frontend.mjs.
-import t,{useState as h}from"../shared/react/react-runtime.js";import{mountReactComponent as y}from"../shared/react/mount.js";import{StructuredValueEditor as b,structuredValueDraft as C,readStructuredValueDraft as k}from"../shared/structured-value-editor.js";import{graphicsConsoleIssues as D}from"./contract.js";function w({definition:e,view:r,onCommand:d,onApply:m,onInspectWidget:g,onOpenSource:i,widgets:n=[],renderers:l={}}){const[u,f]=h(()=>C(r?.definition||e||r||{})),[s,p]=h("");return t.createElement("section",{className:"sd-graphics-authoring","data-jsx-widget":"graphics-console-authoring"},t.createElement("h3",null,"Graphics console"),t.createElement(b,{draft:u,label:"Graphics console",onDraftChange:f,error:s}),t.createElement("div",{className:"sd-widget-row-actions"},t.createElement("button",{type:"button",onClick:()=>{try{const o=k(u),c=D(o,Object.keys(l).length?l:n);if(c.length)throw new Error(c[0]);m?.(o),d?.({type:"widget.action",widget:"graphicsConsole",path:r?.path||[],action:"applyDeclaration",args:{value:o}}),p("")}catch(o){p(o.message)}}},"Apply console draft"),i?t.createElement("button",{type:"button",onClick:()=>i()},"Open source"):null),n.length?t.createElement("details",null,t.createElement("summary",null,"Registered renderers"),n.map(o=>t.createElement("button",{key:o,type:"button",onClick:()=>g?.(o)},o))):null,s?t.createElement("p",{role:"alert"},s):null)}const a=new WeakMap;function j({parent:e,...r}){a.get(e)?.inspect().mounted?a.get(e).update(r):a.set(e,y(e,w,r))}export{w as GraphicsConsoleAuthoring,j as renderGraphicsConsoleAuthoring};
+import React, { useState } from "../shared/react/react-runtime.js";
+import { mountReactComponent } from "../shared/react/mount.js";
+import { StructuredValueEditor, structuredValueDraft, readStructuredValueDraft } from "../shared/structured-value-editor.js";
+import { graphicsConsoleIssues } from "./contract.js";
+function GraphicsConsoleAuthoring({ definition, view, onCommand, onApply, onInspectWidget, onOpenSource, widgets = [], renderers = {} }) {
+  const [draft, setDraft] = useState(() => structuredValueDraft(view?.definition || definition || view || {})), [error, setError] = useState("");
+  const apply = () => {
+    try {
+      const next = readStructuredValueDraft(draft), issues = graphicsConsoleIssues(next, Object.keys(renderers).length ? renderers : widgets);
+      if (issues.length) throw new Error(issues[0]);
+      onApply?.(next);
+      onCommand?.({ type: "widget.action", widget: "graphicsConsole", path: view?.path || [], action: "applyDeclaration", args: { value: next } });
+      setError("");
+    } catch (failure) {
+      setError(failure.message);
+    }
+  };
+  return /* @__PURE__ */ React.createElement("section", { className: "sd-graphics-authoring", "data-jsx-widget": "graphics-console-authoring" }, /* @__PURE__ */ React.createElement("h3", null, "Graphics console"), /* @__PURE__ */ React.createElement(StructuredValueEditor, { draft, label: "Graphics console", onDraftChange: setDraft, error }), /* @__PURE__ */ React.createElement("div", { className: "sd-widget-row-actions" }, /* @__PURE__ */ React.createElement("button", { type: "button", onClick: apply }, "Apply console draft"), onOpenSource ? /* @__PURE__ */ React.createElement("button", { type: "button", onClick: () => onOpenSource() }, "Open source") : null), widgets.length ? /* @__PURE__ */ React.createElement("details", null, /* @__PURE__ */ React.createElement("summary", null, "Registered renderers"), widgets.map((id) => /* @__PURE__ */ React.createElement("button", { key: id, type: "button", onClick: () => onInspectWidget?.(id) }, id))) : null, error ? /* @__PURE__ */ React.createElement("p", { role: "alert" }, error) : null);
+}
+const mounted = /* @__PURE__ */ new WeakMap();
+function renderGraphicsConsoleAuthoring({ parent, ...props }) {
+  if (mounted.get(parent)?.inspect().mounted) mounted.get(parent).update(props);
+  else mounted.set(parent, mountReactComponent(parent, GraphicsConsoleAuthoring, props));
+}
+export {
+  GraphicsConsoleAuthoring,
+  renderGraphicsConsoleAuthoring
+};
 
 //# sourceMappingURL=graphics-console-authoring.js.map

@@ -1,4 +1,130 @@
 // Generated from surfaces.jsx by scripts/build-frontend.mjs.
-import a,{useLayoutEffect as N,useRef as f}from"./react-runtime.js";import{mountReactComponent as g}from"./mount.js";function b({node:e,nodes:n,className:s="",as:l="div",label:m}){const t=f(null);return N(()=>{const i=t.current,u=n||(e?[e]:[]);for(const o of u)o&&o.parentNode!==i&&i.append(o);return()=>{for(const o of u)o?.parentNode===i&&i.removeChild(o)}},[e,n]),a.createElement(l,{ref:t,className:s,"aria-label":m,"data-legacy-host":"true"})}function y({field:e,onChange:n}){const s=a.useId(),l=e.id||`${s}-${e.key}`,m=e.label||e.key,t={id:l,disabled:e.disabled||e.readOnly,readOnly:e.readOnly,"aria-label":m,title:e.reason||void 0,"aria-description":e.reason||void 0,"aria-invalid":e.error?!0:void 0,"data-setting-key":e.key,...e.path?{"data-source-path":JSON.stringify(e.path)}:{}},i=(r,d)=>n?.({key:e.key,path:e.path,value:r,...d===void 0?{}:{rawValue:d}}),u=r=>r!==null&&typeof r=="object"&&Object.hasOwn(r,"value")?r.value:r,o=Object.hasOwn(e,"rawValue")?e.rawValue:e.value,h=e.choices?.findIndex(r=>JSON.stringify(u(r))===JSON.stringify(o));let p;return e.type==="boolean"&&!e.choices?p=a.createElement("input",{...t,type:"checkbox",checked:!!e.value,onChange:r=>i(r.target.checked)}):e.choices?p=a.createElement("select",{...t,value:h<0?"":String(h),onChange:r=>i(structuredClone(u(e.choices[Number(r.target.value)])))},h<0?a.createElement("option",{value:""},"Choose a value"):null,e.choices.map((r,d)=>a.createElement("option",{key:String(d),value:String(d)},r?.label??String(u(r))))):e.multiline||e.type==="json"?p=a.createElement("textarea",{...t,rows:e.rows||3,value:o??"",onChange:r=>i(r.target.value),spellCheck:!1}):p=a.createElement("input",{...t,type:"text",inputMode:e.type==="number"||e.type==="integer"?"decimal":void 0,value:o??"",min:e.minimum,max:e.maximum,step:e.type==="integer"?1:e.step||"any",placeholder:e.placeholder,onChange:r=>{const d=r.target.value,c=e.type==="number"||e.type==="integer";i(c&&d.trim()&&Number.isFinite(Number(d))?Number(d):d,c?d:void 0)}}),a.createElement("label",{className:`jsx-setting-field${e.error?" has-error":""}`,htmlFor:l},a.createElement("span",null,m),p,e.help?a.createElement("small",null,e.help):null,e.error?a.createElement("small",{role:"alert"},e.error):null)}function v({fields:e=[],onChange:n}){return a.createElement("div",{className:"jsx-settings-fields","data-jsx-surface":"settings-fields"},e.filter(s=>!s.hidden).map(s=>a.createElement(y,{key:s.id||s.key,field:s,onChange:n})))}function k({title:e="Settings",titleId:n,description:s,fields:l,onChange:m,content:t,actions:i=[],onAction:u,state:o}){return a.createElement("section",{className:"jsx-settings-panel","data-jsx-surface":"settings","data-draft-state":o?.draft||"saved"},a.createElement("header",{className:"editor-head"},a.createElement("h2",{id:n},e),s?a.createElement("p",null,s):null),o?.message?a.createElement("p",{className:"jsx-surface-state",role:"status"},o.message):null,l?a.createElement(v,{fields:l,onChange:m}):null,t?a.createElement(b,{node:t,className:"jsx-settings-legacy"}):null,i.length?a.createElement(x,{actions:i,onAction:u}):null)}function x({actions:e=[],onAction:n}){return a.createElement("div",{className:"jsx-surface-actions"},e.map(s=>a.createElement("button",{key:s.id,type:"button",className:s.primary?"button primary":"button",disabled:!!s.disabled,title:s.description||s.label,"data-action-id":s.id,onClick:l=>n?.(s.id,l)},s.label)))}function C({title:e,description:n,content:s,actions:l=[],onAction:m,onClose:t,status:i,preview:u,className:o=""}){return a.createElement("div",{className:`schema-bulk-content jsx-dialog-frame ${o}`,"data-jsx-surface":"dialog"},a.createElement("header",{className:"schema-validation-dialog-head"},a.createElement("div",null,a.createElement("h2",null,e),n?a.createElement("p",null,n):null),a.createElement("button",{type:"button",className:"button","aria-label":"Close dialog",onClick:t},"\xD7")),s?a.createElement(b,{node:s,className:"schema-bulk-body"}):null,i?a.createElement("p",{className:"schema-validation-dialog-status",role:"status"},i):null,u!==void 0?a.createElement("details",{className:"schema-bulk-preview",open:!0},a.createElement("summary",null,"Generated candidate"),a.createElement("pre",null,typeof u=="string"?u:JSON.stringify(u,null,2))):null,a.createElement("footer",{className:"schema-validation-dialog-actions"},a.createElement(x,{actions:l,onAction:m})))}function j({controls:e=[],onChange:n,onAction:s,operation:l,serviceMode:m="live"}){return a.createElement("div",{className:"jsx-graphics-controls","data-jsx-surface":"graphics-controls","data-service-mode":m},e.map(t=>t.kind==="action"?a.createElement("button",{key:t.id,className:"button",type:"button",disabled:t.disabled,title:t.description||t.label,"data-action-id":t.id,onClick:i=>s?.(t.id,i)},t.label):a.createElement(y,{key:t.id||t.key,field:{...t,key:t.key||t.id},onChange:n})),l?a.createElement("output",{"aria-live":"polite"},l.message||l.status,Number.isFinite(l.progress)?` \xB7 ${Math.round(l.progress*100)}%`:""):null)}const F=(e,n)=>g(e,k,n,{identifierPrefix:"fullmeta-settings-"}),P=(e,n)=>g(e,v,n,{identifierPrefix:"fullmeta-fields-"}),$=(e,n)=>g(e,C,n,{identifierPrefix:"fullmeta-dialog-"}),w=(e,n)=>g(e,j,n,{identifierPrefix:"fullmeta-graphics-"});export{C as DialogFrame,j as GraphicsControls,b as LegacyHost,v as SettingsFields,k as SettingsPanel,x as SurfaceActions,$ as mountDialogFrame,w as mountGraphicsControls,P as mountSettingsFields,F as mountSettingsPanel};
+import React, { useLayoutEffect, useRef } from "./react-runtime.js";
+import { mountReactComponent } from "./mount.js";
+function LegacyHost({ node, nodes, className = "", as: Tag = "div", label }) {
+  const reference = useRef(null);
+  useLayoutEffect(() => {
+    const host = reference.current, children = nodes || (node ? [node] : []);
+    for (const child of children) if (child && child.parentNode !== host) host.append(child);
+    return () => {
+      for (const child of children) if (child?.parentNode === host) host.removeChild(child);
+    };
+  }, [node, nodes]);
+  return /* @__PURE__ */ React.createElement(Tag, { ref: reference, className, "aria-label": label, "data-legacy-host": "true" });
+}
+function Field({ field, onChange }) {
+  const generatedId = React.useId();
+  const id = field.id || `${generatedId}-${field.key}`, label = field.label || field.key;
+  const common = {
+    id,
+    disabled: field.disabled || field.readOnly,
+    readOnly: field.readOnly,
+    "aria-label": label,
+    title: field.reason || void 0,
+    "aria-description": field.reason || void 0,
+    "aria-invalid": field.error ? true : void 0,
+    "data-setting-key": field.key,
+    ...field.path ? { "data-source-path": JSON.stringify(field.path) } : {}
+  };
+  const emit = (value, rawValue) => onChange?.({ key: field.key, path: field.path, value, ...rawValue === void 0 ? {} : { rawValue } });
+  const choiceValue = (choice) => choice !== null && typeof choice === "object" && Object.hasOwn(choice, "value") ? choice.value : choice;
+  const actualValue = Object.hasOwn(field, "rawValue") ? field.rawValue : field.value;
+  const selectedChoice = field.choices?.findIndex((choice) => JSON.stringify(choiceValue(choice)) === JSON.stringify(actualValue));
+  let control;
+  if (field.type === "boolean" && !field.choices) control = /* @__PURE__ */ React.createElement("input", { ...common, type: "checkbox", checked: Boolean(field.value), onChange: (event) => emit(event.target.checked) });
+  else if (field.choices) control = /* @__PURE__ */ React.createElement(
+    "select",
+    {
+      ...common,
+      value: selectedChoice < 0 ? "" : String(selectedChoice),
+      onChange: (event) => emit(structuredClone(choiceValue(field.choices[Number(event.target.value)])))
+    },
+    selectedChoice < 0 ? /* @__PURE__ */ React.createElement("option", { value: "" }, "Choose a value") : null,
+    field.choices.map((choice, index) => /* @__PURE__ */ React.createElement("option", { key: String(index), value: String(index) }, choice?.label ?? String(choiceValue(choice))))
+  );
+  else if (field.multiline || field.type === "json") control = /* @__PURE__ */ React.createElement(
+    "textarea",
+    {
+      ...common,
+      rows: field.rows || 3,
+      value: actualValue ?? "",
+      onChange: (event) => emit(event.target.value),
+      spellCheck: false
+    }
+  );
+  else control = /* @__PURE__ */ React.createElement(
+    "input",
+    {
+      ...common,
+      type: "text",
+      inputMode: field.type === "number" || field.type === "integer" ? "decimal" : void 0,
+      value: actualValue ?? "",
+      min: field.minimum,
+      max: field.maximum,
+      step: field.type === "integer" ? 1 : field.step || "any",
+      placeholder: field.placeholder,
+      onChange: (event) => {
+        const raw = event.target.value, numeric = field.type === "number" || field.type === "integer";
+        emit(numeric && raw.trim() && Number.isFinite(Number(raw)) ? Number(raw) : raw, numeric ? raw : void 0);
+      }
+    }
+  );
+  return /* @__PURE__ */ React.createElement("label", { className: `jsx-setting-field${field.error ? " has-error" : ""}`, htmlFor: id }, /* @__PURE__ */ React.createElement("span", null, label), control, field.help ? /* @__PURE__ */ React.createElement("small", null, field.help) : null, field.error ? /* @__PURE__ */ React.createElement("small", { role: "alert" }, field.error) : null);
+}
+function SettingsFields({ fields = [], onChange }) {
+  return /* @__PURE__ */ React.createElement("div", { className: "jsx-settings-fields", "data-jsx-surface": "settings-fields" }, fields.filter((field) => !field.hidden).map((field) => /* @__PURE__ */ React.createElement(Field, { key: field.id || field.key, field, onChange })));
+}
+function SettingsPanel({ title = "Settings", titleId, description, fields, onChange, content, actions = [], onAction, state }) {
+  return /* @__PURE__ */ React.createElement("section", { className: "jsx-settings-panel", "data-jsx-surface": "settings", "data-draft-state": state?.draft || "saved" }, /* @__PURE__ */ React.createElement("header", { className: "editor-head" }, /* @__PURE__ */ React.createElement("h2", { id: titleId }, title), description ? /* @__PURE__ */ React.createElement("p", null, description) : null), state?.message ? /* @__PURE__ */ React.createElement("p", { className: "jsx-surface-state", role: "status" }, state.message) : null, fields ? /* @__PURE__ */ React.createElement(SettingsFields, { fields, onChange }) : null, content ? /* @__PURE__ */ React.createElement(LegacyHost, { node: content, className: "jsx-settings-legacy" }) : null, actions.length ? /* @__PURE__ */ React.createElement(SurfaceActions, { actions, onAction }) : null);
+}
+function SurfaceActions({ actions = [], onAction }) {
+  return /* @__PURE__ */ React.createElement("div", { className: "jsx-surface-actions" }, actions.map((action) => /* @__PURE__ */ React.createElement(
+    "button",
+    {
+      key: action.id,
+      type: "button",
+      className: action.primary ? "button primary" : "button",
+      disabled: Boolean(action.disabled),
+      title: action.description || action.label,
+      "data-action-id": action.id,
+      onClick: (event) => onAction?.(action.id, event)
+    },
+    action.label
+  )));
+}
+function DialogFrame({ title, description, content, actions = [], onAction, onClose, status, preview, className = "" }) {
+  return /* @__PURE__ */ React.createElement("div", { className: `schema-bulk-content jsx-dialog-frame ${className}`, "data-jsx-surface": "dialog" }, /* @__PURE__ */ React.createElement("header", { className: "schema-validation-dialog-head" }, /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement("h2", null, title), description ? /* @__PURE__ */ React.createElement("p", null, description) : null), /* @__PURE__ */ React.createElement("button", { type: "button", className: "button", "aria-label": "Close dialog", onClick: onClose }, "\xD7")), content ? /* @__PURE__ */ React.createElement(LegacyHost, { node: content, className: "schema-bulk-body" }) : null, status ? /* @__PURE__ */ React.createElement("p", { className: "schema-validation-dialog-status", role: "status" }, status) : null, preview !== void 0 ? /* @__PURE__ */ React.createElement("details", { className: "schema-bulk-preview", open: true }, /* @__PURE__ */ React.createElement("summary", null, "Generated candidate"), /* @__PURE__ */ React.createElement("pre", null, typeof preview === "string" ? preview : JSON.stringify(preview, null, 2))) : null, /* @__PURE__ */ React.createElement("footer", { className: "schema-validation-dialog-actions" }, /* @__PURE__ */ React.createElement(SurfaceActions, { actions, onAction })));
+}
+function GraphicsControls({ controls = [], onChange, onAction, operation, serviceMode = "live" }) {
+  return /* @__PURE__ */ React.createElement("div", { className: "jsx-graphics-controls", "data-jsx-surface": "graphics-controls", "data-service-mode": serviceMode }, controls.map((control) => control.kind === "action" ? /* @__PURE__ */ React.createElement(
+    "button",
+    {
+      key: control.id,
+      className: "button",
+      type: "button",
+      disabled: control.disabled,
+      title: control.description || control.label,
+      "data-action-id": control.id,
+      onClick: (event) => onAction?.(control.id, event)
+    },
+    control.label
+  ) : /* @__PURE__ */ React.createElement(Field, { key: control.id || control.key, field: { ...control, key: control.key || control.id }, onChange })), operation ? /* @__PURE__ */ React.createElement("output", { "aria-live": "polite" }, operation.message || operation.status, Number.isFinite(operation.progress) ? ` \xB7 ${Math.round(operation.progress * 100)}%` : "") : null);
+}
+const mountSettingsPanel = (container, props) => mountReactComponent(container, SettingsPanel, props, { identifierPrefix: "fullmeta-settings-" });
+const mountSettingsFields = (container, props) => mountReactComponent(container, SettingsFields, props, { identifierPrefix: "fullmeta-fields-" });
+const mountDialogFrame = (container, props) => mountReactComponent(container, DialogFrame, props, { identifierPrefix: "fullmeta-dialog-" });
+const mountGraphicsControls = (container, props) => mountReactComponent(container, GraphicsControls, props, { identifierPrefix: "fullmeta-graphics-" });
+export {
+  DialogFrame,
+  GraphicsControls,
+  LegacyHost,
+  SettingsFields,
+  SettingsPanel,
+  SurfaceActions,
+  mountDialogFrame,
+  mountGraphicsControls,
+  mountSettingsFields,
+  mountSettingsPanel
+};
 
 //# sourceMappingURL=surfaces.js.map

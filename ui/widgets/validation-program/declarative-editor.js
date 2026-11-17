@@ -1,4 +1,448 @@
 // Generated from declarative-editor.jsx by scripts/build-frontend.mjs.
-import e,{createRoot as T,flushSync as _}from"../shared/react/react-runtime.js";import{createDeclarativeObligation as F,declarativeConstraintTypes as x,declarativeRuleSources as V,compileDeclarativeValidation as B,declarativeProgramState as I,programWithDeclarativeObligations as W,equivalentDeclarativeObligations as G,compareDeclarativeObligations as U}from"./declarative-rules.js";const j=l=>structuredClone(l),C=l=>l!==null&&typeof l=="object"&&!Array.isArray(l),N=(l,a)=>Object.hasOwn(l,a),K=()=>({field:""}),J=()=>({type:"required",subject:K()}),M=l=>x.find(a=>a.type===l),Z=l=>N(l||{},"canonicalMap")?"canonicalMap":N(l||{},"select")?"select":N(l||{},"norm")?"norm":N(l||{},"object")?"object":N(l||{},"array")?"array":N(l||{},"literal")?"literal":N(l||{},"binding")?"binding":N(l||{},"ancestor")?"ancestor":N(l||{},"source")?"source":"field",L=l=>Array.isArray(l.scope?.nested)?l.scope.nested:[],O=(l,a=1/0)=>[l.scope?.path||"",...L(l).slice(0,a).map(c=>c?.path||"")].join("");function H(l,a="original"){const c=l.map((m,h)=>({item:m,index:h}));if(a==="original")return c;const p=m=>C(m)?`${m.scope?.source||""}:${O(m)}`:"";return c.sort((m,h)=>(a==="descending"?-1:1)*p(m.item).localeCompare(p(h.item))||m.index-h.index)}function f({label:l,children:a,hint:c}){return e.createElement("label",{className:"declarative-field"},e.createElement("span",null,l),a,c?e.createElement("small",null,c):null)}function P({label:l,value:a=K(),path:c,record:p,commands:m,model:h,depth:v=0}){if(v>16)return e.createElement("p",null,"Structured operand nesting exceeds 16 levels.");const n=Z(a),s=o=>m.setAt(p.id,c,o),i=`${p.id}|${c}`,u=/^scope\.nested\.(\d+)\.when(?:\.|$)/.exec(c),y=Math.min(16,L(p).length+[...c.matchAll(/\.select\.(?:where|value)(?=\.|$)/g)].length),S=c.startsWith("scope.when.")?O(p,0):u?O(p,Number(u[1])+1):O(p);return e.createElement("fieldset",{className:"declarative-operand"},e.createElement("legend",null,l),e.createElement(f,{label:`${l} source`},e.createElement("select",{"aria-label":`${l} source`,value:n,onChange:o=>{const b={...a};for(const w of["field","source","path","literal","binding","ancestor","object","array","norm","select","canonicalMap"])delete b[w];s({...b,...o.target.value==="literal"?{literal:null}:o.target.value==="source"?{source:"root",path:""}:o.target.value==="binding"?{binding:"",path:""}:o.target.value==="ancestor"?{ancestor:1,path:""}:o.target.value==="object"?{object:{}}:o.target.value==="array"?{array:[]}:o.target.value==="norm"?{norm:{field:""}}:o.target.value==="select"?{select:{kind:"items",from:{field:""}}}:o.target.value==="canonicalMap"?{canonicalMap:{value:{field:""},omitValue:{literal:null}}}:{field:""}}),m.clearLiteral(i)}},e.createElement("option",{value:"field"},"Selected subject field"),e.createElement("option",{value:"source"},"Another source / path"),e.createElement("option",{value:"binding"},"Named check result"),y?e.createElement("option",{value:"ancestor"},"Parent subject"):null,e.createElement("option",{value:"literal"},"Literal JSON value"),e.createElement("option",{value:"object"},"Object members"),e.createElement("option",{value:"array"},"Array items"),e.createElement("option",{value:"norm"},"Vector norm"),e.createElement("option",{value:"select"},"Select collection members"),e.createElement("option",{value:"canonicalMap"},"Map with default entries omitted"))),n==="canonicalMap"?e.createElement(e.Fragment,null,["value","omitValue"].map(o=>e.createElement(P,{key:o,label:`${l} ${o==="value"?"map":"omitted value"}`,value:a.canonicalMap[o],path:`${c}.canonicalMap.${o}`,record:p,commands:m,model:h,depth:v+1}))):null,n==="select"?e.createElement(e.Fragment,null,e.createElement(f,{label:`${l} flatten one level`,hint:"Combine selected arrays in order; null contributes no items and a scalar contributes itself."},e.createElement("input",{type:"checkbox",checked:a.select.flatten===!0,onChange:o=>s({select:{...a.select,flatten:o.target.checked}})})),e.createElement(f,{label:`${l} recursive children JSON Pointer`,hint:"Optional path relative to each member; include descendants in source order."},e.createElement("input",{value:a.select.childrenPath||"",onChange:o=>{const b={...a.select};o.target.value?b.childrenPath=o.target.value:delete b.childrenPath,s({select:b})}})),e.createElement(f,{label:`${l} require exactly one result`,hint:"Return the sole selected value, or null if none or several match."},e.createElement("input",{type:"checkbox",checked:a.select.single===!0,onChange:o=>s({select:{...a.select,single:o.target.checked}})})),e.createElement(f,{label:`${l} collection kind`},e.createElement("select",{value:a.select.kind,onChange:o=>s({select:{...a.select,kind:o.target.value}})},["items","keys","values","entries"].map(o=>e.createElement("option",{key:o,value:o},o)))),e.createElement(P,{label:`${l} collection`,value:a.select.from,path:`${c}.select.from`,record:p,commands:m,model:h,depth:v+1}),e.createElement(D,{label:`${l} member filter`,value:a.select.where,path:`${c}.select.where`,record:p,commands:m,model:h,depth:v+1}),e.createElement(f,{label:`${l} project a value`},e.createElement("input",{type:"checkbox",checked:!!a.select.value,onChange:o=>{const b={...a.select};o.target.checked?b.value={field:""}:delete b.value,s({select:b})}})),a.select.value?e.createElement(P,{label:`${l} selected value`,value:a.select.value,path:`${c}.select.value`,record:p,commands:m,model:h,depth:v+1}):null):null,n==="norm"?e.createElement(P,{label:`${l} vector`,value:a.norm,path:`${c}.norm`,record:p,commands:m,model:h,depth:v+1}):null,n==="object"?e.createElement(e.Fragment,null,Object.entries(a.object||{}).map(([o,b],w)=>e.createElement("div",{key:w},e.createElement(f,{label:`${l} member ${w+1} name`},e.createElement("input",{value:o,onChange:t=>{const r=t.target.value;/^[A-Za-z_][A-Za-z0-9_]*$/.test(r)&&!["__proto__","constructor","prototype"].includes(r)&&(r===o||!N(a.object,r))&&s({object:Object.fromEntries(Object.entries(a.object).map(([d,g])=>[d===o?r:d,g]))})}})),e.createElement(P,{label:`${l} ${o}`,value:b,path:`${c}.object.${o}`,record:p,commands:m,model:h,depth:v+1}),e.createElement("button",{type:"button",className:"button",onClick:()=>s({object:Object.fromEntries(Object.entries(a.object).filter(([t])=>t!==o))})},"Remove member"))),e.createElement("button",{type:"button",className:"button",disabled:Object.keys(a.object||{}).length>=64,onClick:()=>{let o=1;for(;N(a.object||{},`member${o}`);)o++;s({object:{...a.object,[`member${o}`]:{literal:null}}})}},"Add member")):n==="array"?e.createElement(e.Fragment,null,(a.array||[]).map((o,b)=>e.createElement("div",{key:b},e.createElement(P,{label:`${l} item ${b+1}`,value:o,path:`${c}.array.${b}`,record:p,commands:m,model:h,depth:v+1}),e.createElement("button",{type:"button",className:"button",onClick:()=>s({array:a.array.filter((w,t)=>t!==b)})},"Remove item"))),e.createElement("button",{type:"button",className:"button",disabled:(a.array||[]).length>=64,onClick:()=>s({array:[...a.array,{literal:null}]})},"Add item")):null,n==="canonicalMap"||n==="select"||n==="norm"||n==="object"||n==="array"?null:n==="literal"?e.createElement(f,{label:`${l} literal JSON`},e.createElement("textarea",{"aria-label":`${l} literal JSON`,rows:2,value:N(h.literalDrafts,i)?h.literalDrafts[i]:JSON.stringify(a.literal,null,2)??"null",onChange:o=>m.setLiteral(i,o.target.value),spellCheck:!1})):e.createElement(e.Fragment,null,n==="source"?e.createElement(f,{label:`${l} explicit source`},e.createElement("select",{"aria-label":`${l} explicit source`,value:a.source||"root",onChange:o=>s({...a,source:o.target.value})},V.map(o=>e.createElement("option",{key:o,value:o},o)))):null,n==="binding"?e.createElement(f,{label:`${l} result name`,hint:"Use the name declared by another semantic check; row order does not matter."},e.createElement("input",{"aria-label":`${l} result name`,value:a.binding||"",onChange:o=>s({...a,binding:o.target.value})})):null,n==="binding"?e.createElement(f,{label:`${l} allow failed check result`,hint:"Read the result even if its check failed or was skipped. Handle null or errors explicitly."},e.createElement("input",{type:"checkbox",checked:a.allowErrors===!0,onChange:o=>s({...a,allowErrors:o.target.checked})})):null,n==="ancestor"?e.createElement(f,{label:`${l} parent levels`,hint:"One means the immediate enclosing selection or subject."},e.createElement("input",{type:"number",min:"1",max:y,"aria-label":`${l} parent levels`,value:a.ancestor??1,onChange:o=>s({...a,ancestor:Number(o.target.value)})})):null,e.createElement(f,{label:`${l} JSON Pointer`,hint:n==="field"?"Relative to the selected subject; empty reads the subject.":n==="binding"?"Relative to the named check result.":"Relative to the explicit source; * selects collection members."},e.createElement("input",{"aria-label":`${l} JSON Pointer`,value:n==="field"?a.field??"":a.path??"",onChange:o=>s({...a,[n==="field"?"field":"path"]:o.target.value})})),n!=="binding"&&n!=="ancestor"?e.createElement("button",{type:"button",className:"button",onClick:()=>m.pick(p,n==="field"?S:"",o=>s({...a,[n==="field"?"field":"path"]:o}))},"Choose ",l.toLowerCase()," path\u2026"):null))}function z({value:l,path:a,record:c,commands:p,model:m,prefix:h="Requirement"}){const v=M(l?.type)||x[0],n=s=>p.setAt(c.id,a,s);return e.createElement("div",{className:"declarative-constraint-fields"},e.createElement(f,{label:`${h} constraint type`},e.createElement("select",{"aria-label":`${h} constraint type`,value:l?.type||"required",onChange:s=>{const i={...l,type:s.target.value},u=M(s.target.value);u.other&&!i.other&&(i.other={literal:null}),u.other||delete i.other,u.excluded&&!i.excluded&&(i.excluded={literal:null}),u.excluded||delete i.excluded,u.projection&&typeof i.itemPath!="string"&&(i.itemPath="/id"),u.projection||delete i.itemPath,u.omitMapValue?i.omitValue??="":delete i.omitValue,u.aggregate?(i.countPath??="",i.collectionPath??=""):(delete i.countPath,delete i.collectionPath),u.keyed||delete i.entryWhen,u.semantic?(i.check||="quantity",i.subjectInput||="value",i.inputs||=[]):(delete i.check,delete i.subjectInput,delete i.inputs,delete i.expose,delete i.gate);for(const y of["minimum","maximum"])u.bounds===y||u.bounds==="range"?typeof i[y]!="number"&&(i[y]=0):delete i[y];n(i)}},x.filter(s=>h==="Requirement"||!s.semantic&&!s.keyed).map(s=>e.createElement("option",{key:s.type,value:s.type},s.label)))),e.createElement("div",{className:"declarative-operands"},e.createElement(P,{label:`${h} operand`,value:l?.subject,path:`${a}.subject`,record:c,commands:p,model:m}),v.other?e.createElement(P,{label:`${h} comparison`,value:l?.other,path:`${a}.other`,record:c,commands:p,model:m}):null,v.excluded?e.createElement(P,{label:`${h} excluded collection`,value:l?.excluded,path:`${a}.excluded`,record:c,commands:p,model:m}):null),v.projection?e.createElement(f,{label:`${h} item field JSON Pointer`,hint:"Relative to each collection item; empty compares the complete item."},e.createElement("input",{"aria-label":`${h} item field JSON Pointer`,value:l?.itemPath??"",onChange:s=>n({...l,itemPath:s.target.value})})):null,v.omitMapValue?e.createElement(f,{label:`${h} omitted map value`,hint:"Entries with this text value are ignored when comparing maps; stored data is preserved."},e.createElement("input",{"aria-label":`${h} omitted map value`,value:l?.omitValue??"",onChange:s=>n({...l,omitValue:s.target.value})})):null,v.aggregate?e.createElement(e.Fragment,null,e.createElement(f,{label:"Item count JSON Pointer",hint:"Relative to each item; use this nonnegative integer when present."},e.createElement("input",{"aria-label":"Item count JSON Pointer",value:l?.countPath??"",onChange:s=>n({...l,countPath:s.target.value})})),e.createElement(f,{label:"Item collection JSON Pointer",hint:"Relative to each item; its size supplies the count when the count field is absent."},e.createElement("input",{"aria-label":"Item collection JSON Pointer",value:l?.collectionPath??"",onChange:s=>n({...l,collectionPath:s.target.value})}))):null,v.keyed?e.createElement(D,{value:l.entryWhen,path:`${a}.entryWhen`,record:c,commands:p,model:m,label:"Entry applicability"}):null,v.semantic?e.createElement("fieldset",{className:"declarative-semantic-inputs"},e.createElement("legend",null,"Semantic check inputs"),e.createElement(f,{label:"Semantic check kind"},e.createElement("select",{"aria-label":"Semantic check kind",value:l.check||"quantity",onChange:s=>n({...l,check:s.target.value})},e.createElement("option",{value:"quantity"},"Quantity"),e.createElement("option",{value:"expression"},"Expression"),e.createElement("option",{value:"uniqueIds"},"Unique IDs"),e.createElement("option",{value:"rules"},"Validation program"),e.createElement("option",{value:"collection"},"Collection relations"))),e.createElement(f,{label:"Program prerequisite",hint:"An unconditional root-scope check can stop later validation if it fails."},e.createElement("input",{type:"checkbox","aria-label":"Program prerequisite",checked:l.gate===!0,onChange:s=>{const i={...l};s.target.checked?i.gate=!0:delete i.gate,n(i)}})),e.createElement(f,{label:"Reusable result name",hint:"Optional. Name an unconditional check result for this subject or its nested children; root results are available everywhere."},e.createElement("input",{"aria-label":"Reusable result name",value:l.expose||"",onChange:s=>{const i={...l};s.target.value?i.expose=s.target.value:delete i.expose,n(i)}})),e.createElement(f,{label:"Subject input name",hint:"The selected requirement operand supplies this named check input."},e.createElement("input",{"aria-label":"Subject input name",value:l.subjectInput||"",onChange:s=>n({...l,subjectInput:s.target.value})})),(l.inputs||[]).map((s,i)=>e.createElement("div",{key:i},e.createElement(f,{label:`Semantic input ${i+1} name`},e.createElement("input",{"aria-label":`Semantic input ${i+1} name`,value:s.name||"",onChange:u=>n({...l,inputs:l.inputs.map((y,S)=>S===i?{...y,name:u.target.value}:y)})})),e.createElement(P,{label:`Semantic input ${i+1}`,value:s.operand,path:`${a}.inputs.${i}.operand`,record:c,commands:p,model:m}),e.createElement("button",{type:"button",className:"button",onClick:()=>{p.clearLiteralPrefix(`${c.id}|${a}.inputs`),n({...l,inputs:l.inputs.filter((u,y)=>y!==i)})}},"Remove semantic input"))),e.createElement("button",{type:"button",className:"button",onClick:()=>n({...l,inputs:[...l.inputs||[],{name:"",operand:{literal:null}}]})},"Add semantic input")):null,["minimum","maximum"].filter(s=>v.bounds===s||v.bounds==="range").map(s=>e.createElement(f,{key:s,label:`${h} ${s}`},e.createElement("input",{type:"number","aria-label":`${h} ${s}`,value:l?.[s]??"",step:/Count$|^countRange$/.test(l?.type)?1:"any",min:/Count$|^countRange$/.test(l?.type)?0:void 0,onChange:i=>n({...l,[s]:i.target.value===""?"":Number(i.target.value)})}))))}function D({value:l,path:a="when",record:c,commands:p,model:m,depth:h=0,label:v="Applicability"}){const n=l?N(l,"all")?"all":N(l,"any")?"any":N(l,"not")?"not":"predicate":"none",s=i=>p.setAt(c.id,a,i);return e.createElement("fieldset",{className:"declarative-condition"},e.createElement("legend",null,v),e.createElement(f,{label:`${v} condition`},e.createElement("select",{"aria-label":`${v} condition`,value:n,onChange:i=>{const u=i.target.value;s(u==="none"?void 0:u==="predicate"?J():u==="not"?{not:J()}:{[u]:[J()]}),p.clearLiteralPrefix(`${c.id}|${a}`)}},e.createElement("option",{value:"none"},"Always applies"),e.createElement("option",{value:"predicate"},"When a requirement holds"),h<15?e.createElement(e.Fragment,null,e.createElement("option",{value:"all"},"When all conditions hold"),e.createElement("option",{value:"any"},"When any condition holds"),e.createElement("option",{value:"not"},"When a condition does not hold")):null)),n==="predicate"?e.createElement(z,{value:l,path:a,record:c,commands:p,model:m,prefix:v}):null,n==="not"?e.createElement(D,{value:l.not,path:`${a}.not`,record:c,commands:p,model:m,depth:h+1,label:`${v} negated`}):null,n==="all"||n==="any"?e.createElement(e.Fragment,null,(Array.isArray(l[n])?l[n]:[]).map((i,u)=>e.createElement("div",{key:u,className:"declarative-condition-child"},e.createElement(D,{value:i,path:`${a}.${n}.${u}`,record:c,commands:p,model:m,depth:h+1,label:`${v} ${u+1}`}),e.createElement("button",{type:"button",className:"button",onClick:()=>{s({...l,[n]:l[n].filter((y,S)=>S!==u)}),p.clearLiteralPrefix(`${c.id}|${a}`)}},"Remove condition"))),e.createElement("button",{type:"button",className:"button",onClick:()=>s({...l,[n]:[...Array.isArray(l[n])?l[n]:[],J()]})},"Add condition")):null)}function Q({model:l,commands:a}){const c=e.useRef(null),[p,m]=e.useState(""),[h,v]=e.useState(!1),[n,s]=e.useState("original"),i=l.records.find(t=>C(t)&&t.id===l.selectedId),u=I(l.original);let y,S;try{y=B(a.materialize())}catch(t){S=t.message}const o=u.kind==="legacy"&&l.original.rules?.length>0&&!l.convertLegacy,b=["stale","invalid"].includes(u.kind)&&!l.resolveStale,w=G(l.records);return e.createElement("section",{className:"declarative-rule-authoring","data-jsx-surface":"declarative-validation"},e.createElement("header",null,e.createElement("h3",null,"Declarative requirements"),e.createElement("p",null,"One independent obligation per row. Select subjects and reusable predicates; traversal is generated. Stage names document the externally selected program boundary.")),e.createElement("p",{className:"declarative-state",role:"status"},"Target ",l.programKey," \xB7 ",l.records.length," obligations \xB7 ",o?"Legacy program unchanged":b?"Source/output mismatch needs review":l.dirty?"Edited authoring draft":"No pending authoring changes"),w.map((t,r)=>e.createElement("p",{className:"declarative-feedback",role:"status",key:`${t.first}-${t.second}-${r}`},"Requirements ",t.first," and ",t.second," have the same scope and predicate. Review their diagnostics before deciding whether both are needed.")),o?e.createElement("div",{className:"declarative-compatibility"},e.createElement("p",null,"This existing native program is preserved and can be inspected in Schema source. It will not be converted automatically. Starting a declarative replacement replaces its executable rules only after Preview and Apply."),e.createElement("button",{type:"button",className:"button",onClick:a.startReplacement},"Start declarative replacement")):null,b?e.createElement("div",{className:"declarative-compatibility"},e.createElement("p",null,"Authored records and generated output do not match, or records require correction. Review the source and generated candidate; Apply and Save must not silently overwrite a mismatch."),e.createElement("button",{type:"button",className:"button",disabled:u.diagnostics.some(t=>t.code==="unsupported-format"),onClick:a.regenerate},"Regenerate derived rules"),u.diagnostics.map((t,r)=>e.createElement("p",{key:r,role:"alert"},t.path,": ",t.message))):null,e.createElement("div",{className:"declarative-actions"},e.createElement("button",{type:"button",className:"button primary",disabled:o,onClick:()=>a.addRule()},"Add rule"),e.createElement("button",{type:"button",className:"button",disabled:!l.dirty,onClick:a.reset},"Reset declarative draft")),l.records.length?e.createElement("div",{className:"declarative-table-wrap"},e.createElement("table",{className:"schema-structure-table declarative-obligations-table"},e.createElement("thead",null,e.createElement("tr",null,e.createElement("th",null,"Requirement"),e.createElement("th",null,"Stage"),e.createElement("th",{"aria-sort":n==="original"?"none":n},e.createElement("button",{type:"button",className:"button","aria-label":"Sort by Subject scope",onClick:()=>s(n==="original"?"ascending":n==="ascending"?"descending":"original")},"Subject scope",n==="ascending"?" \u2191":n==="descending"?" \u2193":"")),e.createElement("th",null,"Predicate"),e.createElement("th",null,"Diagnostic"),e.createElement("th",null,"Actions"))),e.createElement("tbody",null,H(l.records,n).map(({item:t,index:r})=>C(t)?e.createElement("tr",{key:t.id||`row-${r}`,"aria-selected":t.id===l.selectedId},e.createElement("td",null,e.createElement("button",{type:"button",className:"button",onClick:()=>{a.select(t.id),c.current?.scrollIntoView?.({block:"start",inline:"nearest"})}},t.name||t.id),e.createElement("code",null,t.id)),e.createElement("td",null,t.stage),e.createElement("td",null,e.createElement("code",null,t.scope?.source,":",O(t)||"(root)")),e.createElement("td",null,M(t.constraint?.type)?.label||t.constraint?.type),e.createElement("td",null,t.diagnostic?.message),e.createElement("td",null,e.createElement("button",{type:"button",className:"button","aria-label":`Delete rule ${t.name||t.id}`,onClick:()=>a.removeRule(t.id)},"Delete"))):e.createElement("tr",{key:`invalid-${r}`},e.createElement("td",{colSpan:5},"Malformed obligation at row ",r+1,"; correct or explicitly remove this row."),e.createElement("td",null,e.createElement("button",{type:"button",className:"button",onClick:()=>a.removeRuleAt(r)},"Delete malformed row"))))))):e.createElement("p",{className:"schema-bulk-note"},"Add a rule to state what must be true."),i&&!o?e.createElement("section",{ref:c,className:"declarative-record-editor","aria-label":`Edit declarative rule ${i.id}`},e.createElement("div",{className:"declarative-form-grid"},e.createElement(f,{label:"Rule identifier"},e.createElement("input",{"aria-label":"Rule identifier",value:l.idDrafts[i.id]??i.id??"",onChange:t=>a.updateRule(i.id,{id:t.target.value})})),e.createElement(f,{label:"Rule name"},e.createElement("input",{"aria-label":"Rule name",value:i.name||"",onChange:t=>a.updateRule(i.id,{name:t.target.value})})),e.createElement(f,{label:"Validation stage",hint:"All obligations in this target program share one externally selected stage."},e.createElement("input",{"aria-label":"Validation stage",value:i.stage||"",onChange:t=>a.updateRule(i.id,{stage:t.target.value})})),e.createElement(f,{label:"Scope source"},e.createElement("select",{"aria-label":"Scope source",value:i.scope?.source||"root",onChange:t=>a.updateRule(i.id,{scope:{...i.scope,source:t.target.value}})},V.map(t=>e.createElement("option",{key:t,value:t},t)))),e.createElement(f,{label:"Subject scope JSON Pointer",hint:"Empty selects the source root once; * selects every collection item."},e.createElement("input",{"aria-label":"Subject scope JSON Pointer",value:i.scope?.path??"",onChange:t=>a.updateRule(i.id,{scope:{...i.scope,path:t.target.value}})})),e.createElement("button",{type:"button",className:"button",onClick:()=>a.pick(i,"",t=>a.updateRule(i.id,{scope:{...i.scope,path:t}}))},"Choose subject scope\u2026"),e.createElement("label",null,e.createElement("input",{type:"checkbox","aria-label":"Include recursive descendants",checked:N(i.scope||{},"childrenPath"),onChange:t=>{const r={...i.scope};t.target.checked?r.childrenPath="/children/*":delete r.childrenPath,a.updateRule(i.id,{scope:r})}})," Include recursive descendants"),N(i.scope||{},"childrenPath")?e.createElement(f,{label:"Recursive child JSON Pointer",hint:"Relative to each visited subject; use * to visit collection items."},e.createElement("input",{"aria-label":"Recursive child JSON Pointer",value:i.scope.childrenPath,onChange:t=>a.updateRule(i.id,{scope:{...i.scope,childrenPath:t.target.value}})})):null),e.createElement(D,{value:i.scope?.when,path:"scope.when",record:i,commands:a,model:l,label:"Subject scope filter"}),e.createElement("fieldset",{className:"declarative-nested"},e.createElement("legend",null,"Nested subject relationships"),L(i).map((t,r)=>e.createElement("div",{className:"declarative-nested-row",key:r},e.createElement(f,{label:`Nested scope ${r+1} JSON Pointer`,hint:"Relative to each parent subject."},e.createElement("input",{"aria-label":`Nested scope ${r+1} JSON Pointer`,value:t?.path??"",onChange:d=>a.setNested(i.id,r,{...t,path:d.target.value})})),e.createElement("label",null,e.createElement("input",{type:"checkbox","aria-label":`Include recursive descendants in nested scope ${r+1}`,checked:N(t||{},"childrenPath"),onChange:d=>{const g={...t};d.target.checked?g.childrenPath="/children/*":delete g.childrenPath,a.setNested(i.id,r,g)}})," Include recursive descendants"),N(t||{},"childrenPath")?e.createElement(f,{label:`Nested scope ${r+1} recursive child JSON Pointer`},e.createElement("input",{"aria-label":`Nested scope ${r+1} recursive child JSON Pointer`,value:t.childrenPath,onChange:d=>a.setNested(i.id,r,{...t,childrenPath:d.target.value})})):null,e.createElement(D,{value:t.when,path:`scope.nested.${r}.when`,record:i,commands:a,model:l,label:`Nested scope ${r+1} filter`}),e.createElement("button",{type:"button",className:"button",onClick:()=>a.pick(i,O(i,r),d=>a.setNested(i.id,r,{...t,path:d}))},"Choose nested path\u2026"),e.createElement("button",{type:"button",className:"button",onClick:()=>a.removeNested(i.id,r)},"Remove nested scope"))),e.createElement("button",{type:"button",className:"button",disabled:L(i).length>=16,onClick:()=>a.addNested(i.id)},"Add nested scope")),e.createElement(z,{value:i.constraint,path:"constraint",record:i,commands:a,model:l}),e.createElement("div",{className:"declarative-form-grid"},e.createElement(f,{label:"Diagnostic JSON Pointer",hint:i.constraint?.type==="keyMatchesField"?"Relative to each keyed entry; empty identifies the entry.":"Relative to the final subject, without wildcards; empty identifies the subject."},e.createElement("input",{"aria-label":"Diagnostic JSON Pointer",value:i.diagnostic?.path??"",onChange:t=>a.updateRule(i.id,{diagnostic:{...i.diagnostic,path:t.target.value}})})),e.createElement("button",{type:"button",className:"button",onClick:()=>a.pick(i,O(i),t=>a.updateRule(i.id,{diagnostic:{...i.diagnostic,path:t}}))},"Choose diagnostic path\u2026"),e.createElement(f,{label:"Diagnostic message"},e.createElement("input",{"aria-label":"Diagnostic message",value:i.diagnostic?.message||"",onChange:t=>a.updateRule(i.id,{diagnostic:{...i.diagnostic,message:t.target.value}})}))),e.createElement(D,{value:i.when,record:i,commands:a,model:l}),e.createElement("fieldset",{className:"declarative-condition"},e.createElement("legend",null,"Compare requirements"),e.createElement(f,{label:"Compare with",hint:"Compares validation conditions and scope; diagnostics can differ."},e.createElement("select",{"aria-label":"Compare with",value:p,onChange:t=>m(t.target.value)},e.createElement("option",{value:""},"Choose another requirement"),l.records.filter(t=>C(t)&&t.id!==i.id).map(t=>e.createElement("option",{key:t.id,value:t.id},t.name||t.id," (",t.id,")")))),p&&l.records.some(t=>t?.id===p)?e.createElement("p",{role:"status"},U(i,l.records.find(t=>t?.id===p))==="equivalent"?"Equivalent validation requirements. Review their diagnostic locations and messages.":"Cannot determine equivalence with the supported identities."):null)):null,l.feedback||S?e.createElement("p",{className:"declarative-feedback",role:"alert"},l.feedback||S):null,e.createElement("details",{className:"declarative-generated",open:h,onToggle:t=>v(t.currentTarget.open)},e.createElement("summary",null,"Generated executable rules \xB7 read only"),h?e.createElement("pre",null,y?JSON.stringify(y,null,2):"Correct the authored record diagnostics to generate executable rules."):null))}function R({onChange:l=()=>{},onError:a=()=>{},pickPath:c,getProgramKey:p=()=>"x-fullmeta-rules",renderView:m}={}){const h=m?null:document.createElement("div");h&&(h.className="declarative-rule-authoring-host");const v=h?T(h):null;let n={original:{maximumErrors:80,rules:[]},records:[],selectedId:null,programKey:p(),dirty:!1,convertLegacy:!1,resolveStale:!1,literalDrafts:{},idDrafts:{},feedback:""},s=0;const i=()=>{if(!s)return m?m({model:n,commands:b}):_(()=>v.render(e.createElement(Q,{model:n,commands:b})))},u=()=>{n={...n,dirty:!0,feedback:""},i(),s||l()},y=t=>{const r=n.records.find(d=>C(d)&&d.id===t);if(!r)throw new Error(`Rule ${t} is not in this draft.`);return r},S=(t,r)=>{const d=y(t);for(const g of Object.keys(n.literalDrafts)){if(!g.startsWith(`${t}|`))continue;const $=g.slice(t.length+1).split("."),k=$.reduce((q,E)=>q?.[E],d),A=$.reduce((q,E)=>q?.[E],r);JSON.stringify(k)!==JSON.stringify(A)&&delete n.literalDrafts[g]}n.records=n.records.map(g=>C(g)&&g.id===t?r:g),n.selectedId===t&&(n.selectedId=r.id),u()},o=t=>{n.feedback=t.message||String(t),i(),a(t)},b={materialize(){const t=j(n.records);for(const r of t)if(C(r)){for(const[d,g]of Object.entries(n.literalDrafts)){if(!d.startsWith(`${r.id}|`))continue;const $=d.slice(r.id.length+1).split("."),k=$.reduce((A,q)=>A?.[q],r);if(!(!C(k)||!N(k,"literal")))try{k.literal=JSON.parse(g)}catch{throw new Error(`Rule ${r.id}, ${$.join(".")}: literal must be valid JSON.`)}}N(n.idDrafts,r.id)&&(r.id=n.idDrafts[r.id])}return t},select(t){y(t),n.selectedId=t,i()},addRule(t={}){if(I(n.original).kind==="legacy"&&n.original.rules?.length&&!n.convertLegacy)throw new Error("Choose Start declarative replacement before replacing a legacy program.");let d=n.records.length+1;for(;n.records.some($=>C($)&&($.id===`requirement_${d}`||n.idDrafts[$.id]===`requirement_${d}`));)d++;const g=F({id:`requirement_${d}`,name:`Requirement ${d}`,stage:n.records[0]?.stage||"model",...t});return n.records=[...n.records,g],n.selectedId=g.id,u(),j(g)},updateRule(t,r){const d=y(t),g=j(r);N(g,"id")&&(n.idDrafts={...n.idDrafts,[t]:g.id},delete g.id),S(t,{...d,...g})},removeRule(t){y(t),n.records=n.records.filter(r=>!C(r)||r.id!==t),n.selectedId=n.records.find(C)?.id||null,u()},removeRuleAt(t){n.records=n.records.filter((r,d)=>d!==t),n.selectedId=n.records.find(C)?.id||null,u()},setAt(t,r,d){const g=j(y(t)),$=r.split(".");let k=g;for(const A of $.slice(0,-1))k=k[A];d===void 0?delete k[$.at(-1)]:k[$.at(-1)]=j(d),S(t,g)},setLiteral(t,r){n.literalDrafts={...n.literalDrafts,[t]:r},u()},clearLiteral(t){N(n.literalDrafts,t)&&(delete n.literalDrafts[t],i())},clearLiteralPrefix(t){for(const r of Object.keys(n.literalDrafts))r.startsWith(t)&&delete n.literalDrafts[r];i()},addNested(t){const r=y(t);b.updateRule(t,{scope:{...r.scope,nested:[...L(r),{path:""}]}})},setNested(t,r,d){const g=y(t);b.updateRule(t,{scope:{...g.scope,nested:L(g).map(($,k)=>k===r?d:$)}})},removeNested(t,r){const d=y(t);b.updateRule(t,{scope:{...d.scope,nested:L(d).filter((g,$)=>$!==r)}})},pick(t,r,d){if(!c){o(new Error("The host has no path picker; enter a JSON Pointer directly."));return}c({representation:"dataPointer",onPick:g=>{const $=g.dataPointer;if(typeof $=="string"){if(r&&$!==r&&!$.startsWith(`${r}/`)){o(new Error("Choose a path inside the selected subject, or enter its relative JSON Pointer directly."));return}d(r?$.slice(r.length):$)}}})},startReplacement(){n.convertLegacy=!0,n.records=[],n.selectedId=null,u()},regenerate(){n.resolveStale=!0,u()},reset(){w.load(n.original,{programKey:n.programKey}),l()}},w={element:h,load(t,{programKey:r=p()}={}){const d=C(t)?j(t):{maximumErrors:80,rules:[]},g=I(d,{programKey:r});n={original:d,records:j(g.obligations),selectedId:g.obligations[0]?.id||null,programKey:r,dirty:!1,convertLegacy:!1,resolveStale:!1,literalDrafts:{},idDrafts:{},feedback:""},i()},read(){try{const t=I(n.original,{programKey:n.programKey});return!n.dirty&&t.kind==="legacy"?j(n.original):W(n.original,b.materialize(),{programKey:n.programKey,convertLegacy:n.convertLegacy,resolveStale:n.resolveStale})}catch(t){throw o(t),t}},isDirty:()=>n.dirty,reset:b.reset,addRule:b.addRule,updateRule:b.updateRule,removeRule:b.removeRule,applyRuleBatch({add:t=[],update:r=[],remove:d=[]}={}){const g=j(n),$=[];s++;try{for(const k of d)b.removeRule(k);for(const k of r)b.updateRule(k.id,k.patch);for(const k of t)$.push(b.addRule(k).id);W(n.original,b.materialize(),{programKey:n.programKey,convertLegacy:n.convertLegacy,resolveStale:n.resolveStale})}catch(k){throw n=g,k}finally{s--,i()}return l(),{added:$,updated:r.map(k=>k.id),removed:[...d]}},selectRule:b.select,startReplacement:b.startReplacement,regenerate:b.regenerate,snapshot:()=>({format:"fullmeta-declarative-authoring-state/1",...j(n)}),restore(t){if(t?.format!=="fullmeta-declarative-authoring-state/1"||!C(t.original)||!Array.isArray(t.records))throw new Error("Invalid declarative authoring state.");const{format:r,...d}=j(t);n={...d,idDrafts:d.idDrafts||{},literalDrafts:d.literalDrafts||{}},i(),l()},dispose(){v&&_(()=>v.unmount())}};return i(),w}export{Q as DeclarativeView,R as createDeclarativeRuleAuthoring,H as sortDeclarativeRows};
+import React, { createRoot, flushSync } from "../shared/react/react-runtime.js";
+import {
+  createDeclarativeObligation,
+  declarativeConstraintTypes,
+  declarativeRuleSources,
+  compileDeclarativeValidation,
+  declarativeProgramState,
+  programWithDeclarativeObligations,
+  equivalentDeclarativeObligations,
+  compareDeclarativeObligations
+} from "./declarative-rules.js";
+const clone = (value) => structuredClone(value);
+const object = (value) => value !== null && typeof value === "object" && !Array.isArray(value);
+const own = (value, key) => Object.hasOwn(value, key);
+const fieldOperand = () => ({ field: "" });
+const defaultCondition = () => ({ type: "required", subject: fieldOperand() });
+const descriptor = (type) => declarativeConstraintTypes.find((item) => item.type === type);
+const operandMode = (value) => own(value || {}, "canonicalMap") ? "canonicalMap" : own(value || {}, "select") ? "select" : own(value || {}, "norm") ? "norm" : own(value || {}, "object") ? "object" : own(value || {}, "array") ? "array" : own(value || {}, "literal") ? "literal" : own(value || {}, "binding") ? "binding" : own(value || {}, "ancestor") ? "ancestor" : own(value || {}, "source") ? "source" : "field";
+const nestedScopes = (record) => Array.isArray(record.scope?.nested) ? record.scope.nested : [];
+const pointerPrefix = (record, before = Infinity) => [record.scope?.path || "", ...nestedScopes(record).slice(0, before).map((scope) => scope?.path || "")].join("");
+function sortDeclarativeRows(records, direction = "original") {
+  const rows = records.map((item, index) => ({ item, index }));
+  if (direction === "original") return rows;
+  const scope = (item) => object(item) ? `${item.scope?.source || ""}:${pointerPrefix(item)}` : "";
+  return rows.sort((a, b) => (direction === "descending" ? -1 : 1) * scope(a.item).localeCompare(scope(b.item)) || a.index - b.index);
+}
+function Labeled({ label, children, hint }) {
+  return /* @__PURE__ */ React.createElement("label", { className: "declarative-field" }, /* @__PURE__ */ React.createElement("span", null, label), children, hint ? /* @__PURE__ */ React.createElement("small", null, hint) : null);
+}
+function OperandFields({ label, value = fieldOperand(), path, record, commands, model, depth = 0 }) {
+  if (depth > 16) return /* @__PURE__ */ React.createElement("p", null, "Structured operand nesting exceeds 16 levels.");
+  const mode = operandMode(value), change = (next) => commands.setAt(record.id, path, next);
+  const key = `${record.id}|${path}`;
+  const scopeFilter = /^scope\.nested\.(\d+)\.when(?:\.|$)/.exec(path);
+  const parentLevels = Math.min(16, nestedScopes(record).length + [...path.matchAll(/\.select\.(?:where|value)(?=\.|$)/g)].length);
+  const subjectPrefix = path.startsWith("scope.when.") ? pointerPrefix(record, 0) : scopeFilter ? pointerPrefix(record, Number(scopeFilter[1]) + 1) : pointerPrefix(record);
+  return /* @__PURE__ */ React.createElement("fieldset", { className: "declarative-operand" }, /* @__PURE__ */ React.createElement("legend", null, label), /* @__PURE__ */ React.createElement(Labeled, { label: `${label} source` }, /* @__PURE__ */ React.createElement("select", { "aria-label": `${label} source`, value: mode, onChange: (event) => {
+    const next = { ...value };
+    for (const field of ["field", "source", "path", "literal", "binding", "ancestor", "object", "array", "norm", "select", "canonicalMap"]) delete next[field];
+    change({ ...next, ...event.target.value === "literal" ? { literal: null } : event.target.value === "source" ? { source: "root", path: "" } : event.target.value === "binding" ? { binding: "", path: "" } : event.target.value === "ancestor" ? { ancestor: 1, path: "" } : event.target.value === "object" ? { object: {} } : event.target.value === "array" ? { array: [] } : event.target.value === "norm" ? { norm: { field: "" } } : event.target.value === "select" ? { select: { kind: "items", from: { field: "" } } } : event.target.value === "canonicalMap" ? { canonicalMap: { value: { field: "" }, omitValue: { literal: null } } } : { field: "" } });
+    commands.clearLiteral(key);
+  } }, /* @__PURE__ */ React.createElement("option", { value: "field" }, "Selected subject field"), /* @__PURE__ */ React.createElement("option", { value: "source" }, "Another source / path"), /* @__PURE__ */ React.createElement("option", { value: "binding" }, "Named check result"), parentLevels ? /* @__PURE__ */ React.createElement("option", { value: "ancestor" }, "Parent subject") : null, /* @__PURE__ */ React.createElement("option", { value: "literal" }, "Literal JSON value"), /* @__PURE__ */ React.createElement("option", { value: "object" }, "Object members"), /* @__PURE__ */ React.createElement("option", { value: "array" }, "Array items"), /* @__PURE__ */ React.createElement("option", { value: "norm" }, "Vector norm"), /* @__PURE__ */ React.createElement("option", { value: "select" }, "Select collection members"), /* @__PURE__ */ React.createElement("option", { value: "canonicalMap" }, "Map with default entries omitted"))), mode === "canonicalMap" ? /* @__PURE__ */ React.createElement(React.Fragment, null, ["value", "omitValue"].map((part) => /* @__PURE__ */ React.createElement(OperandFields, { key: part, label: `${label} ${part === "value" ? "map" : "omitted value"}`, value: value.canonicalMap[part], path: `${path}.canonicalMap.${part}`, record, commands, model, depth: depth + 1 }))) : null, mode === "select" ? /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement(Labeled, { label: `${label} flatten one level`, hint: "Combine selected arrays in order; null contributes no items and a scalar contributes itself." }, /* @__PURE__ */ React.createElement("input", { type: "checkbox", checked: value.select.flatten === true, onChange: (event) => change({ select: { ...value.select, flatten: event.target.checked } }) })), /* @__PURE__ */ React.createElement(Labeled, { label: `${label} recursive children JSON Pointer`, hint: "Optional path relative to each member; include descendants in source order." }, /* @__PURE__ */ React.createElement("input", { value: value.select.childrenPath || "", onChange: (event) => {
+    const query = { ...value.select };
+    if (event.target.value) query.childrenPath = event.target.value;
+    else delete query.childrenPath;
+    change({ select: query });
+  } })), /* @__PURE__ */ React.createElement(Labeled, { label: `${label} require exactly one result`, hint: "Return the sole selected value, or null if none or several match." }, /* @__PURE__ */ React.createElement("input", { type: "checkbox", checked: value.select.single === true, onChange: (event) => change({ select: { ...value.select, single: event.target.checked } }) })), /* @__PURE__ */ React.createElement(Labeled, { label: `${label} collection kind` }, /* @__PURE__ */ React.createElement("select", { value: value.select.kind, onChange: (event) => change({ select: { ...value.select, kind: event.target.value } }) }, ["items", "keys", "values", "entries"].map((kind) => /* @__PURE__ */ React.createElement("option", { key: kind, value: kind }, kind)))), /* @__PURE__ */ React.createElement(OperandFields, { label: `${label} collection`, value: value.select.from, path: `${path}.select.from`, record, commands, model, depth: depth + 1 }), /* @__PURE__ */ React.createElement(ConditionFields, { label: `${label} member filter`, value: value.select.where, path: `${path}.select.where`, record, commands, model, depth: depth + 1 }), /* @__PURE__ */ React.createElement(Labeled, { label: `${label} project a value` }, /* @__PURE__ */ React.createElement("input", { type: "checkbox", checked: Boolean(value.select.value), onChange: (event) => {
+    const query = { ...value.select };
+    if (event.target.checked) query.value = { field: "" };
+    else delete query.value;
+    change({ select: query });
+  } })), value.select.value ? /* @__PURE__ */ React.createElement(OperandFields, { label: `${label} selected value`, value: value.select.value, path: `${path}.select.value`, record, commands, model, depth: depth + 1 }) : null) : null, mode === "norm" ? /* @__PURE__ */ React.createElement(OperandFields, { label: `${label} vector`, value: value.norm, path: `${path}.norm`, record, commands, model, depth: depth + 1 }) : null, mode === "object" ? /* @__PURE__ */ React.createElement(React.Fragment, null, Object.entries(value.object || {}).map(([name, child], index) => /* @__PURE__ */ React.createElement("div", { key: index }, /* @__PURE__ */ React.createElement(Labeled, { label: `${label} member ${index + 1} name` }, /* @__PURE__ */ React.createElement("input", { value: name, onChange: (event) => {
+    const next = event.target.value;
+    if (/^[A-Za-z_][A-Za-z0-9_]*$/.test(next) && !["__proto__", "constructor", "prototype"].includes(next) && (next === name || !own(value.object, next))) change({ object: Object.fromEntries(Object.entries(value.object).map(([key2, item]) => [key2 === name ? next : key2, item])) });
+  } })), /* @__PURE__ */ React.createElement(OperandFields, { label: `${label} ${name}`, value: child, path: `${path}.object.${name}`, record, commands, model, depth: depth + 1 }), /* @__PURE__ */ React.createElement("button", { type: "button", className: "button", onClick: () => change({ object: Object.fromEntries(Object.entries(value.object).filter(([key2]) => key2 !== name)) }) }, "Remove member"))), /* @__PURE__ */ React.createElement("button", { type: "button", className: "button", disabled: Object.keys(value.object || {}).length >= 64, onClick: () => {
+    let serial = 1;
+    while (own(value.object || {}, `member${serial}`)) serial++;
+    change({ object: { ...value.object, [`member${serial}`]: { literal: null } } });
+  } }, "Add member")) : mode === "array" ? /* @__PURE__ */ React.createElement(React.Fragment, null, (value.array || []).map((child, index) => /* @__PURE__ */ React.createElement("div", { key: index }, /* @__PURE__ */ React.createElement(OperandFields, { label: `${label} item ${index + 1}`, value: child, path: `${path}.array.${index}`, record, commands, model, depth: depth + 1 }), /* @__PURE__ */ React.createElement("button", { type: "button", className: "button", onClick: () => change({ array: value.array.filter((_, i) => i !== index) }) }, "Remove item"))), /* @__PURE__ */ React.createElement("button", { type: "button", className: "button", disabled: (value.array || []).length >= 64, onClick: () => change({ array: [...value.array, { literal: null }] }) }, "Add item")) : null, mode === "canonicalMap" || mode === "select" || mode === "norm" || mode === "object" || mode === "array" ? null : mode === "literal" ? /* @__PURE__ */ React.createElement(Labeled, { label: `${label} literal JSON` }, /* @__PURE__ */ React.createElement(
+    "textarea",
+    {
+      "aria-label": `${label} literal JSON`,
+      rows: 2,
+      value: own(model.literalDrafts, key) ? model.literalDrafts[key] : JSON.stringify(value.literal, null, 2) ?? "null",
+      onChange: (event) => commands.setLiteral(key, event.target.value),
+      spellCheck: false
+    }
+  )) : /* @__PURE__ */ React.createElement(React.Fragment, null, mode === "source" ? /* @__PURE__ */ React.createElement(Labeled, { label: `${label} explicit source` }, /* @__PURE__ */ React.createElement(
+    "select",
+    {
+      "aria-label": `${label} explicit source`,
+      value: value.source || "root",
+      onChange: (event) => change({ ...value, source: event.target.value })
+    },
+    declarativeRuleSources.map((source) => /* @__PURE__ */ React.createElement("option", { key: source, value: source }, source))
+  )) : null, mode === "binding" ? /* @__PURE__ */ React.createElement(Labeled, { label: `${label} result name`, hint: "Use the name declared by another semantic check; row order does not matter." }, /* @__PURE__ */ React.createElement("input", { "aria-label": `${label} result name`, value: value.binding || "", onChange: (event) => change({ ...value, binding: event.target.value }) })) : null, mode === "binding" ? /* @__PURE__ */ React.createElement(Labeled, { label: `${label} allow failed check result`, hint: "Read the result even if its check failed or was skipped. Handle null or errors explicitly." }, /* @__PURE__ */ React.createElement("input", { type: "checkbox", checked: value.allowErrors === true, onChange: (event) => change({ ...value, allowErrors: event.target.checked }) })) : null, mode === "ancestor" ? /* @__PURE__ */ React.createElement(Labeled, { label: `${label} parent levels`, hint: "One means the immediate enclosing selection or subject." }, /* @__PURE__ */ React.createElement("input", { type: "number", min: "1", max: parentLevels, "aria-label": `${label} parent levels`, value: value.ancestor ?? 1, onChange: (event) => change({ ...value, ancestor: Number(event.target.value) }) })) : null, /* @__PURE__ */ React.createElement(Labeled, { label: `${label} JSON Pointer`, hint: mode === "field" ? "Relative to the selected subject; empty reads the subject." : mode === "binding" ? "Relative to the named check result." : "Relative to the explicit source; * selects collection members." }, /* @__PURE__ */ React.createElement(
+    "input",
+    {
+      "aria-label": `${label} JSON Pointer`,
+      value: mode === "field" ? value.field ?? "" : value.path ?? "",
+      onChange: (event) => change({ ...value, [mode === "field" ? "field" : "path"]: event.target.value })
+    }
+  )), mode !== "binding" && mode !== "ancestor" ? /* @__PURE__ */ React.createElement("button", { type: "button", className: "button", onClick: () => commands.pick(
+    record,
+    mode === "field" ? subjectPrefix : "",
+    (selected) => change({ ...value, [mode === "field" ? "field" : "path"]: selected })
+  ) }, "Choose ", label.toLowerCase(), " path\u2026") : null));
+}
+function ConstraintFields({ value, path, record, commands, model, prefix = "Requirement" }) {
+  const info = descriptor(value?.type) || declarativeConstraintTypes[0];
+  const change = (next) => commands.setAt(record.id, path, next);
+  return /* @__PURE__ */ React.createElement("div", { className: "declarative-constraint-fields" }, /* @__PURE__ */ React.createElement(Labeled, { label: `${prefix} constraint type` }, /* @__PURE__ */ React.createElement("select", { "aria-label": `${prefix} constraint type`, value: value?.type || "required", onChange: (event) => {
+    const next = { ...value, type: event.target.value }, chosen = descriptor(event.target.value);
+    if (chosen.other && !next.other) next.other = { literal: null };
+    if (!chosen.other) delete next.other;
+    if (chosen.excluded && !next.excluded) next.excluded = { literal: null };
+    if (!chosen.excluded) delete next.excluded;
+    if (chosen.projection && typeof next.itemPath !== "string") next.itemPath = "/id";
+    if (!chosen.projection) delete next.itemPath;
+    if (chosen.omitMapValue) next.omitValue ??= "";
+    else delete next.omitValue;
+    if (chosen.aggregate) {
+      next.countPath ??= "";
+      next.collectionPath ??= "";
+    } else {
+      delete next.countPath;
+      delete next.collectionPath;
+    }
+    if (!chosen.keyed) delete next.entryWhen;
+    if (chosen.semantic) {
+      next.check ||= "quantity";
+      next.subjectInput ||= "value";
+      next.inputs ||= [];
+    } else {
+      delete next.check;
+      delete next.subjectInput;
+      delete next.inputs;
+      delete next.expose;
+      delete next.gate;
+    }
+    for (const bound of ["minimum", "maximum"]) {
+      if (chosen.bounds === bound || chosen.bounds === "range") {
+        if (typeof next[bound] !== "number") next[bound] = 0;
+      } else delete next[bound];
+    }
+    change(next);
+  } }, declarativeConstraintTypes.filter((type) => prefix === "Requirement" || !type.semantic && !type.keyed).map((type) => /* @__PURE__ */ React.createElement("option", { key: type.type, value: type.type }, type.label)))), /* @__PURE__ */ React.createElement("div", { className: "declarative-operands" }, /* @__PURE__ */ React.createElement(OperandFields, { label: `${prefix} operand`, value: value?.subject, path: `${path}.subject`, record, commands, model }), info.other ? /* @__PURE__ */ React.createElement(OperandFields, { label: `${prefix} comparison`, value: value?.other, path: `${path}.other`, record, commands, model }) : null, info.excluded ? /* @__PURE__ */ React.createElement(OperandFields, { label: `${prefix} excluded collection`, value: value?.excluded, path: `${path}.excluded`, record, commands, model }) : null), info.projection ? /* @__PURE__ */ React.createElement(Labeled, { label: `${prefix} item field JSON Pointer`, hint: "Relative to each collection item; empty compares the complete item." }, /* @__PURE__ */ React.createElement("input", { "aria-label": `${prefix} item field JSON Pointer`, value: value?.itemPath ?? "", onChange: (event) => change({ ...value, itemPath: event.target.value }) })) : null, info.omitMapValue ? /* @__PURE__ */ React.createElement(Labeled, { label: `${prefix} omitted map value`, hint: "Entries with this text value are ignored when comparing maps; stored data is preserved." }, /* @__PURE__ */ React.createElement("input", { "aria-label": `${prefix} omitted map value`, value: value?.omitValue ?? "", onChange: (event) => change({ ...value, omitValue: event.target.value }) })) : null, info.aggregate ? /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement(Labeled, { label: "Item count JSON Pointer", hint: "Relative to each item; use this nonnegative integer when present." }, /* @__PURE__ */ React.createElement("input", { "aria-label": "Item count JSON Pointer", value: value?.countPath ?? "", onChange: (event) => change({ ...value, countPath: event.target.value }) })), /* @__PURE__ */ React.createElement(Labeled, { label: "Item collection JSON Pointer", hint: "Relative to each item; its size supplies the count when the count field is absent." }, /* @__PURE__ */ React.createElement("input", { "aria-label": "Item collection JSON Pointer", value: value?.collectionPath ?? "", onChange: (event) => change({ ...value, collectionPath: event.target.value }) }))) : null, info.keyed ? /* @__PURE__ */ React.createElement(ConditionFields, { value: value.entryWhen, path: `${path}.entryWhen`, record, commands, model, label: "Entry applicability" }) : null, info.semantic ? /* @__PURE__ */ React.createElement("fieldset", { className: "declarative-semantic-inputs" }, /* @__PURE__ */ React.createElement("legend", null, "Semantic check inputs"), /* @__PURE__ */ React.createElement(Labeled, { label: "Semantic check kind" }, /* @__PURE__ */ React.createElement("select", { "aria-label": "Semantic check kind", value: value.check || "quantity", onChange: (event) => change({ ...value, check: event.target.value }) }, /* @__PURE__ */ React.createElement("option", { value: "quantity" }, "Quantity"), /* @__PURE__ */ React.createElement("option", { value: "expression" }, "Expression"), /* @__PURE__ */ React.createElement("option", { value: "uniqueIds" }, "Unique IDs"), /* @__PURE__ */ React.createElement("option", { value: "rules" }, "Validation program"), /* @__PURE__ */ React.createElement("option", { value: "collection" }, "Collection relations"))), /* @__PURE__ */ React.createElement(Labeled, { label: "Program prerequisite", hint: "An unconditional root-scope check can stop later validation if it fails." }, /* @__PURE__ */ React.createElement("input", { type: "checkbox", "aria-label": "Program prerequisite", checked: value.gate === true, onChange: (event) => {
+    const next = { ...value };
+    if (event.target.checked) next.gate = true;
+    else delete next.gate;
+    change(next);
+  } })), /* @__PURE__ */ React.createElement(Labeled, { label: "Reusable result name", hint: "Optional. Name an unconditional check result for this subject or its nested children; root results are available everywhere." }, /* @__PURE__ */ React.createElement("input", { "aria-label": "Reusable result name", value: value.expose || "", onChange: (event) => {
+    const next = { ...value };
+    if (event.target.value) next.expose = event.target.value;
+    else delete next.expose;
+    change(next);
+  } })), /* @__PURE__ */ React.createElement(Labeled, { label: "Subject input name", hint: "The selected requirement operand supplies this named check input." }, /* @__PURE__ */ React.createElement("input", { "aria-label": "Subject input name", value: value.subjectInput || "", onChange: (event) => change({ ...value, subjectInput: event.target.value }) })), (value.inputs || []).map((input, index) => /* @__PURE__ */ React.createElement("div", { key: index }, /* @__PURE__ */ React.createElement(Labeled, { label: `Semantic input ${index + 1} name` }, /* @__PURE__ */ React.createElement("input", { "aria-label": `Semantic input ${index + 1} name`, value: input.name || "", onChange: (event) => change({ ...value, inputs: value.inputs.map((row, i) => i === index ? { ...row, name: event.target.value } : row) }) })), /* @__PURE__ */ React.createElement(OperandFields, { label: `Semantic input ${index + 1}`, value: input.operand, path: `${path}.inputs.${index}.operand`, record, commands, model }), /* @__PURE__ */ React.createElement("button", { type: "button", className: "button", onClick: () => {
+    commands.clearLiteralPrefix(`${record.id}|${path}.inputs`);
+    change({ ...value, inputs: value.inputs.filter((_, i) => i !== index) });
+  } }, "Remove semantic input"))), /* @__PURE__ */ React.createElement("button", { type: "button", className: "button", onClick: () => change({ ...value, inputs: [...value.inputs || [], { name: "", operand: { literal: null } }] }) }, "Add semantic input")) : null, ["minimum", "maximum"].filter((bound) => info.bounds === bound || info.bounds === "range").map((bound) => /* @__PURE__ */ React.createElement(Labeled, { key: bound, label: `${prefix} ${bound}` }, /* @__PURE__ */ React.createElement(
+    "input",
+    {
+      type: "number",
+      "aria-label": `${prefix} ${bound}`,
+      value: value?.[bound] ?? "",
+      step: /Count$|^countRange$/.test(value?.type) ? 1 : "any",
+      min: /Count$|^countRange$/.test(value?.type) ? 0 : void 0,
+      onChange: (event) => change({ ...value, [bound]: event.target.value === "" ? "" : Number(event.target.value) })
+    }
+  ))));
+}
+function ConditionFields({ value, path = "when", record, commands, model, depth = 0, label = "Applicability" }) {
+  const kind = !value ? "none" : own(value, "all") ? "all" : own(value, "any") ? "any" : own(value, "not") ? "not" : "predicate";
+  const change = (next) => commands.setAt(record.id, path, next);
+  return /* @__PURE__ */ React.createElement("fieldset", { className: "declarative-condition" }, /* @__PURE__ */ React.createElement("legend", null, label), /* @__PURE__ */ React.createElement(Labeled, { label: `${label} condition` }, /* @__PURE__ */ React.createElement("select", { "aria-label": `${label} condition`, value: kind, onChange: (event) => {
+    const selected = event.target.value;
+    change(selected === "none" ? void 0 : selected === "predicate" ? defaultCondition() : selected === "not" ? { not: defaultCondition() } : { [selected]: [defaultCondition()] });
+    commands.clearLiteralPrefix(`${record.id}|${path}`);
+  } }, /* @__PURE__ */ React.createElement("option", { value: "none" }, "Always applies"), /* @__PURE__ */ React.createElement("option", { value: "predicate" }, "When a requirement holds"), depth < 15 ? /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement("option", { value: "all" }, "When all conditions hold"), /* @__PURE__ */ React.createElement("option", { value: "any" }, "When any condition holds"), /* @__PURE__ */ React.createElement("option", { value: "not" }, "When a condition does not hold")) : null)), kind === "predicate" ? /* @__PURE__ */ React.createElement(ConstraintFields, { value, path, record, commands, model, prefix: label }) : null, kind === "not" ? /* @__PURE__ */ React.createElement(ConditionFields, { value: value.not, path: `${path}.not`, record, commands, model, depth: depth + 1, label: `${label} negated` }) : null, kind === "all" || kind === "any" ? /* @__PURE__ */ React.createElement(React.Fragment, null, (Array.isArray(value[kind]) ? value[kind] : []).map((child, index) => /* @__PURE__ */ React.createElement("div", { key: index, className: "declarative-condition-child" }, /* @__PURE__ */ React.createElement(ConditionFields, { value: child, path: `${path}.${kind}.${index}`, record, commands, model, depth: depth + 1, label: `${label} ${index + 1}` }), /* @__PURE__ */ React.createElement("button", { type: "button", className: "button", onClick: () => {
+    change({ ...value, [kind]: value[kind].filter((_, child2) => child2 !== index) });
+    commands.clearLiteralPrefix(`${record.id}|${path}`);
+  } }, "Remove condition"))), /* @__PURE__ */ React.createElement("button", { type: "button", className: "button", onClick: () => change({ ...value, [kind]: [...Array.isArray(value[kind]) ? value[kind] : [], defaultCondition()] }) }, "Add condition")) : null);
+}
+function DeclarativeView({ model, commands }) {
+  const editorRef = React.useRef(null);
+  const [comparisonId, setComparisonId] = React.useState("");
+  const [generatedOpen, setGeneratedOpen] = React.useState(false);
+  const [scopeSort, setScopeSort] = React.useState(
+    /** @type {'original' | 'ascending' | 'descending'} */
+    "original"
+  );
+  const record = model.records.find((item) => object(item) && item.id === model.selectedId), source = declarativeProgramState(model.original);
+  let generated, diagnostic;
+  try {
+    generated = compileDeclarativeValidation(commands.materialize());
+  } catch (error) {
+    diagnostic = error.message;
+  }
+  const legacy = source.kind === "legacy" && model.original.rules?.length > 0 && !model.convertLegacy;
+  const mismatch = ["stale", "invalid"].includes(source.kind) && !model.resolveStale;
+  const equivalent = equivalentDeclarativeObligations(model.records);
+  return /* @__PURE__ */ React.createElement("section", { className: "declarative-rule-authoring", "data-jsx-surface": "declarative-validation" }, /* @__PURE__ */ React.createElement("header", null, /* @__PURE__ */ React.createElement("h3", null, "Declarative requirements"), /* @__PURE__ */ React.createElement("p", null, "One independent obligation per row. Select subjects and reusable predicates; traversal is generated. Stage names document the externally selected program boundary.")), /* @__PURE__ */ React.createElement("p", { className: "declarative-state", role: "status" }, "Target ", model.programKey, " \xB7 ", model.records.length, " obligations \xB7 ", legacy ? "Legacy program unchanged" : mismatch ? "Source/output mismatch needs review" : model.dirty ? "Edited authoring draft" : "No pending authoring changes"), equivalent.map((pair, index) => /* @__PURE__ */ React.createElement("p", { className: "declarative-feedback", role: "status", key: `${pair.first}-${pair.second}-${index}` }, "Requirements ", pair.first, " and ", pair.second, " have the same scope and predicate. Review their diagnostics before deciding whether both are needed.")), legacy ? /* @__PURE__ */ React.createElement("div", { className: "declarative-compatibility" }, /* @__PURE__ */ React.createElement("p", null, "This existing native program is preserved and can be inspected in Schema source. It will not be converted automatically. Starting a declarative replacement replaces its executable rules only after Preview and Apply."), /* @__PURE__ */ React.createElement("button", { type: "button", className: "button", onClick: commands.startReplacement }, "Start declarative replacement")) : null, mismatch ? /* @__PURE__ */ React.createElement("div", { className: "declarative-compatibility" }, /* @__PURE__ */ React.createElement("p", null, "Authored records and generated output do not match, or records require correction. Review the source and generated candidate; Apply and Save must not silently overwrite a mismatch."), /* @__PURE__ */ React.createElement("button", { type: "button", className: "button", disabled: source.diagnostics.some((item) => item.code === "unsupported-format"), onClick: commands.regenerate }, "Regenerate derived rules"), source.diagnostics.map((item, index) => /* @__PURE__ */ React.createElement("p", { key: index, role: "alert" }, item.path, ": ", item.message))) : null, /* @__PURE__ */ React.createElement("div", { className: "declarative-actions" }, /* @__PURE__ */ React.createElement("button", { type: "button", className: "button primary", disabled: legacy, onClick: () => commands.addRule() }, "Add rule"), /* @__PURE__ */ React.createElement("button", { type: "button", className: "button", disabled: !model.dirty, onClick: commands.reset }, "Reset declarative draft")), model.records.length ? /* @__PURE__ */ React.createElement("div", { className: "declarative-table-wrap" }, /* @__PURE__ */ React.createElement("table", { className: "schema-structure-table declarative-obligations-table" }, /* @__PURE__ */ React.createElement("thead", null, /* @__PURE__ */ React.createElement("tr", null, /* @__PURE__ */ React.createElement("th", null, "Requirement"), /* @__PURE__ */ React.createElement("th", null, "Stage"), /* @__PURE__ */ React.createElement("th", { "aria-sort": scopeSort === "original" ? "none" : scopeSort }, /* @__PURE__ */ React.createElement("button", { type: "button", className: "button", "aria-label": "Sort by Subject scope", onClick: () => setScopeSort(scopeSort === "original" ? "ascending" : scopeSort === "ascending" ? "descending" : "original") }, "Subject scope", scopeSort === "ascending" ? " \u2191" : scopeSort === "descending" ? " \u2193" : "")), /* @__PURE__ */ React.createElement("th", null, "Predicate"), /* @__PURE__ */ React.createElement("th", null, "Diagnostic"), /* @__PURE__ */ React.createElement("th", null, "Actions"))), /* @__PURE__ */ React.createElement("tbody", null, sortDeclarativeRows(model.records, scopeSort).map(({ item, index }) => !object(item) ? /* @__PURE__ */ React.createElement("tr", { key: `invalid-${index}` }, /* @__PURE__ */ React.createElement("td", { colSpan: 5 }, "Malformed obligation at row ", index + 1, "; correct or explicitly remove this row."), /* @__PURE__ */ React.createElement("td", null, /* @__PURE__ */ React.createElement("button", { type: "button", className: "button", onClick: () => commands.removeRuleAt(index) }, "Delete malformed row"))) : /* @__PURE__ */ React.createElement("tr", { key: item.id || `row-${index}`, "aria-selected": item.id === model.selectedId }, /* @__PURE__ */ React.createElement("td", null, /* @__PURE__ */ React.createElement("button", { type: "button", className: "button", onClick: () => {
+    commands.select(item.id);
+    editorRef.current?.scrollIntoView?.({ block: "start", inline: "nearest" });
+  } }, item.name || item.id), /* @__PURE__ */ React.createElement("code", null, item.id)), /* @__PURE__ */ React.createElement("td", null, item.stage), /* @__PURE__ */ React.createElement("td", null, /* @__PURE__ */ React.createElement("code", null, item.scope?.source, ":", pointerPrefix(item) || "(root)")), /* @__PURE__ */ React.createElement("td", null, descriptor(item.constraint?.type)?.label || item.constraint?.type), /* @__PURE__ */ React.createElement("td", null, item.diagnostic?.message), /* @__PURE__ */ React.createElement("td", null, /* @__PURE__ */ React.createElement("button", { type: "button", className: "button", "aria-label": `Delete rule ${item.name || item.id}`, onClick: () => commands.removeRule(item.id) }, "Delete"))))))) : /* @__PURE__ */ React.createElement("p", { className: "schema-bulk-note" }, "Add a rule to state what must be true."), record && !legacy ? /* @__PURE__ */ React.createElement("section", { ref: editorRef, className: "declarative-record-editor", "aria-label": `Edit declarative rule ${record.id}` }, /* @__PURE__ */ React.createElement("div", { className: "declarative-form-grid" }, /* @__PURE__ */ React.createElement(Labeled, { label: "Rule identifier" }, /* @__PURE__ */ React.createElement("input", { "aria-label": "Rule identifier", value: model.idDrafts[record.id] ?? record.id ?? "", onChange: (event) => commands.updateRule(record.id, { id: event.target.value }) })), /* @__PURE__ */ React.createElement(Labeled, { label: "Rule name" }, /* @__PURE__ */ React.createElement("input", { "aria-label": "Rule name", value: record.name || "", onChange: (event) => commands.updateRule(record.id, { name: event.target.value }) })), /* @__PURE__ */ React.createElement(Labeled, { label: "Validation stage", hint: "All obligations in this target program share one externally selected stage." }, /* @__PURE__ */ React.createElement("input", { "aria-label": "Validation stage", value: record.stage || "", onChange: (event) => commands.updateRule(record.id, { stage: event.target.value }) })), /* @__PURE__ */ React.createElement(Labeled, { label: "Scope source" }, /* @__PURE__ */ React.createElement("select", { "aria-label": "Scope source", value: record.scope?.source || "root", onChange: (event) => commands.updateRule(record.id, { scope: { ...record.scope, source: event.target.value } }) }, declarativeRuleSources.map((item) => /* @__PURE__ */ React.createElement("option", { key: item, value: item }, item)))), /* @__PURE__ */ React.createElement(Labeled, { label: "Subject scope JSON Pointer", hint: "Empty selects the source root once; * selects every collection item." }, /* @__PURE__ */ React.createElement("input", { "aria-label": "Subject scope JSON Pointer", value: record.scope?.path ?? "", onChange: (event) => commands.updateRule(record.id, { scope: { ...record.scope, path: event.target.value } }) })), /* @__PURE__ */ React.createElement("button", { type: "button", className: "button", onClick: () => commands.pick(record, "", (path) => commands.updateRule(record.id, { scope: { ...record.scope, path } })) }, "Choose subject scope\u2026"), /* @__PURE__ */ React.createElement("label", null, /* @__PURE__ */ React.createElement("input", { type: "checkbox", "aria-label": "Include recursive descendants", checked: own(record.scope || {}, "childrenPath"), onChange: (event) => {
+    const scope = { ...record.scope };
+    if (event.target.checked) scope.childrenPath = "/children/*";
+    else delete scope.childrenPath;
+    commands.updateRule(record.id, { scope });
+  } }), " Include recursive descendants"), own(record.scope || {}, "childrenPath") ? /* @__PURE__ */ React.createElement(Labeled, { label: "Recursive child JSON Pointer", hint: "Relative to each visited subject; use * to visit collection items." }, /* @__PURE__ */ React.createElement("input", { "aria-label": "Recursive child JSON Pointer", value: record.scope.childrenPath, onChange: (event) => commands.updateRule(record.id, { scope: { ...record.scope, childrenPath: event.target.value } }) })) : null), /* @__PURE__ */ React.createElement(ConditionFields, { value: record.scope?.when, path: "scope.when", record, commands, model, label: "Subject scope filter" }), /* @__PURE__ */ React.createElement("fieldset", { className: "declarative-nested" }, /* @__PURE__ */ React.createElement("legend", null, "Nested subject relationships"), nestedScopes(record).map((scope, index) => /* @__PURE__ */ React.createElement("div", { className: "declarative-nested-row", key: index }, /* @__PURE__ */ React.createElement(Labeled, { label: `Nested scope ${index + 1} JSON Pointer`, hint: "Relative to each parent subject." }, /* @__PURE__ */ React.createElement("input", { "aria-label": `Nested scope ${index + 1} JSON Pointer`, value: scope?.path ?? "", onChange: (event) => commands.setNested(record.id, index, { ...scope, path: event.target.value }) })), /* @__PURE__ */ React.createElement("label", null, /* @__PURE__ */ React.createElement("input", { type: "checkbox", "aria-label": `Include recursive descendants in nested scope ${index + 1}`, checked: own(scope || {}, "childrenPath"), onChange: (event) => {
+    const next = { ...scope };
+    if (event.target.checked) next.childrenPath = "/children/*";
+    else delete next.childrenPath;
+    commands.setNested(record.id, index, next);
+  } }), " Include recursive descendants"), own(scope || {}, "childrenPath") ? /* @__PURE__ */ React.createElement(Labeled, { label: `Nested scope ${index + 1} recursive child JSON Pointer` }, /* @__PURE__ */ React.createElement("input", { "aria-label": `Nested scope ${index + 1} recursive child JSON Pointer`, value: scope.childrenPath, onChange: (event) => commands.setNested(record.id, index, { ...scope, childrenPath: event.target.value }) })) : null, /* @__PURE__ */ React.createElement(ConditionFields, { value: scope.when, path: `scope.nested.${index}.when`, record, commands, model, label: `Nested scope ${index + 1} filter` }), /* @__PURE__ */ React.createElement("button", { type: "button", className: "button", onClick: () => commands.pick(record, pointerPrefix(record, index), (path) => commands.setNested(record.id, index, { ...scope, path })) }, "Choose nested path\u2026"), /* @__PURE__ */ React.createElement("button", { type: "button", className: "button", onClick: () => commands.removeNested(record.id, index) }, "Remove nested scope"))), /* @__PURE__ */ React.createElement("button", { type: "button", className: "button", disabled: nestedScopes(record).length >= 16, onClick: () => commands.addNested(record.id) }, "Add nested scope")), /* @__PURE__ */ React.createElement(ConstraintFields, { value: record.constraint, path: "constraint", record, commands, model }), /* @__PURE__ */ React.createElement("div", { className: "declarative-form-grid" }, /* @__PURE__ */ React.createElement(Labeled, { label: "Diagnostic JSON Pointer", hint: record.constraint?.type === "keyMatchesField" ? "Relative to each keyed entry; empty identifies the entry." : "Relative to the final subject, without wildcards; empty identifies the subject." }, /* @__PURE__ */ React.createElement("input", { "aria-label": "Diagnostic JSON Pointer", value: record.diagnostic?.path ?? "", onChange: (event) => commands.updateRule(record.id, { diagnostic: { ...record.diagnostic, path: event.target.value } }) })), /* @__PURE__ */ React.createElement("button", { type: "button", className: "button", onClick: () => commands.pick(record, pointerPrefix(record), (path) => commands.updateRule(record.id, { diagnostic: { ...record.diagnostic, path } })) }, "Choose diagnostic path\u2026"), /* @__PURE__ */ React.createElement(Labeled, { label: "Diagnostic message" }, /* @__PURE__ */ React.createElement("input", { "aria-label": "Diagnostic message", value: record.diagnostic?.message || "", onChange: (event) => commands.updateRule(record.id, { diagnostic: { ...record.diagnostic, message: event.target.value } }) }))), /* @__PURE__ */ React.createElement(ConditionFields, { value: record.when, record, commands, model }), /* @__PURE__ */ React.createElement("fieldset", { className: "declarative-condition" }, /* @__PURE__ */ React.createElement("legend", null, "Compare requirements"), /* @__PURE__ */ React.createElement(Labeled, { label: "Compare with", hint: "Compares validation conditions and scope; diagnostics can differ." }, /* @__PURE__ */ React.createElement("select", { "aria-label": "Compare with", value: comparisonId, onChange: (event) => setComparisonId(event.target.value) }, /* @__PURE__ */ React.createElement("option", { value: "" }, "Choose another requirement"), model.records.filter((item) => object(item) && item.id !== record.id).map((item) => /* @__PURE__ */ React.createElement("option", { key: item.id, value: item.id }, item.name || item.id, " (", item.id, ")")))), comparisonId && model.records.some((item) => item?.id === comparisonId) ? /* @__PURE__ */ React.createElement("p", { role: "status" }, compareDeclarativeObligations(record, model.records.find((item) => item?.id === comparisonId)) === "equivalent" ? "Equivalent validation requirements. Review their diagnostic locations and messages." : "Cannot determine equivalence with the supported identities.") : null)) : null, model.feedback || diagnostic ? /* @__PURE__ */ React.createElement("p", { className: "declarative-feedback", role: "alert" }, model.feedback || diagnostic) : null, /* @__PURE__ */ React.createElement("details", { className: "declarative-generated", open: generatedOpen, onToggle: (event) => setGeneratedOpen(event.currentTarget.open) }, /* @__PURE__ */ React.createElement("summary", null, "Generated executable rules \xB7 read only"), generatedOpen ? /* @__PURE__ */ React.createElement("pre", null, generated ? JSON.stringify(generated, null, 2) : "Correct the authored record diagnostics to generate executable rules.") : null));
+}
+function createDeclarativeRuleAuthoring({ onChange = () => {
+}, onError = () => {
+}, pickPath, getProgramKey = () => "x-fullmeta-rules", renderView } = {}) {
+  const element = renderView ? null : document.createElement("div");
+  if (element) element.className = "declarative-rule-authoring-host";
+  const root = element ? createRoot(element) : null;
+  let model = {
+    original: { maximumErrors: 80, rules: [] },
+    records: [],
+    selectedId: null,
+    programKey: getProgramKey(),
+    dirty: false,
+    convertLegacy: false,
+    resolveStale: false,
+    literalDrafts: {},
+    idDrafts: {},
+    feedback: ""
+  };
+  let batchDepth = 0;
+  const render = () => {
+    if (batchDepth) return;
+    return renderView ? renderView({ model, commands }) : flushSync(() => root.render(/* @__PURE__ */ React.createElement(DeclarativeView, { model, commands })));
+  };
+  const changed = () => {
+    model = { ...model, dirty: true, feedback: "" };
+    render();
+    if (!batchDepth) onChange();
+  };
+  const find = (id) => {
+    const record = model.records.find((record2) => object(record2) && record2.id === id);
+    if (!record) throw new Error(`Rule ${id} is not in this draft.`);
+    return record;
+  };
+  const replaceRecord = (id, next) => {
+    const previous = find(id);
+    for (const key of Object.keys(model.literalDrafts)) {
+      if (!key.startsWith(`${id}|`)) continue;
+      const parts = key.slice(id.length + 1).split(".");
+      const before = parts.reduce((value, part) => value?.[part], previous), after = parts.reduce((value, part) => value?.[part], next);
+      if (JSON.stringify(before) !== JSON.stringify(after)) delete model.literalDrafts[key];
+    }
+    model.records = model.records.map((record) => object(record) && record.id === id ? next : record);
+    if (model.selectedId === id) model.selectedId = next.id;
+    changed();
+  };
+  const fail = (error) => {
+    model.feedback = error.message || String(error);
+    render();
+    onError(error);
+  };
+  const commands = {
+    materialize() {
+      const records = clone(model.records);
+      for (const record of records) {
+        if (!object(record)) continue;
+        for (const [key, text] of Object.entries(model.literalDrafts)) {
+          if (!key.startsWith(`${record.id}|`)) continue;
+          const parts = key.slice(record.id.length + 1).split(".");
+          const operand = parts.reduce((value, part) => value?.[part], record);
+          if (!object(operand) || !own(operand, "literal")) continue;
+          try {
+            operand.literal = JSON.parse(text);
+          } catch {
+            throw new Error(`Rule ${record.id}, ${parts.join(".")}: literal must be valid JSON.`);
+          }
+        }
+        if (own(model.idDrafts, record.id)) record.id = model.idDrafts[record.id];
+      }
+      return records;
+    },
+    select(id) {
+      find(id);
+      model.selectedId = id;
+      render();
+    },
+    addRule(overrides = {}) {
+      const state = declarativeProgramState(model.original);
+      if (state.kind === "legacy" && model.original.rules?.length && !model.convertLegacy)
+        throw new Error("Choose Start declarative replacement before replacing a legacy program.");
+      let serial = model.records.length + 1;
+      while (model.records.some((item) => object(item) && (item.id === `requirement_${serial}` || model.idDrafts[item.id] === `requirement_${serial}`))) serial++;
+      const record = createDeclarativeObligation({ id: `requirement_${serial}`, name: `Requirement ${serial}`, stage: model.records[0]?.stage || "model", ...overrides });
+      model.records = [...model.records, record];
+      model.selectedId = record.id;
+      changed();
+      return clone(record);
+    },
+    updateRule(id, patch) {
+      const record = find(id), updates = clone(patch);
+      if (own(updates, "id")) {
+        model.idDrafts = { ...model.idDrafts, [id]: updates.id };
+        delete updates.id;
+      }
+      replaceRecord(id, { ...record, ...updates });
+    },
+    removeRule(id) {
+      find(id);
+      model.records = model.records.filter((record) => !object(record) || record.id !== id);
+      model.selectedId = model.records.find(object)?.id || null;
+      changed();
+    },
+    removeRuleAt(index) {
+      model.records = model.records.filter((_, row) => row !== index);
+      model.selectedId = model.records.find(object)?.id || null;
+      changed();
+    },
+    setAt(id, path, value) {
+      const record = clone(find(id)), parts = path.split(".");
+      let target = record;
+      for (const part of parts.slice(0, -1)) target = target[part];
+      if (value === void 0) delete target[parts.at(-1)];
+      else target[parts.at(-1)] = clone(value);
+      replaceRecord(id, record);
+    },
+    setLiteral(key, value) {
+      model.literalDrafts = { ...model.literalDrafts, [key]: value };
+      changed();
+    },
+    clearLiteral(key) {
+      if (own(model.literalDrafts, key)) {
+        delete model.literalDrafts[key];
+        render();
+      }
+    },
+    clearLiteralPrefix(prefix) {
+      for (const key of Object.keys(model.literalDrafts)) if (key.startsWith(prefix)) delete model.literalDrafts[key];
+      render();
+    },
+    addNested(id) {
+      const record = find(id);
+      commands.updateRule(id, { scope: { ...record.scope, nested: [...nestedScopes(record), { path: "" }] } });
+    },
+    setNested(id, index, value) {
+      const record = find(id);
+      commands.updateRule(id, { scope: { ...record.scope, nested: nestedScopes(record).map((scope, row) => row === index ? value : scope) } });
+    },
+    removeNested(id, index) {
+      const record = find(id);
+      commands.updateRule(id, { scope: { ...record.scope, nested: nestedScopes(record).filter((_, row) => row !== index) } });
+    },
+    pick(record, prefix, apply) {
+      if (!pickPath) {
+        fail(new Error("The host has no path picker; enter a JSON Pointer directly."));
+        return;
+      }
+      pickPath({ representation: "dataPointer", onPick: (picked) => {
+        const path = picked.dataPointer;
+        if (typeof path !== "string") return;
+        if (prefix && path !== prefix && !path.startsWith(`${prefix}/`)) {
+          fail(new Error("Choose a path inside the selected subject, or enter its relative JSON Pointer directly."));
+          return;
+        }
+        apply(prefix ? path.slice(prefix.length) : path);
+      } });
+    },
+    startReplacement() {
+      model.convertLegacy = true;
+      model.records = [];
+      model.selectedId = null;
+      changed();
+    },
+    regenerate() {
+      model.resolveStale = true;
+      changed();
+    },
+    reset() {
+      api.load(model.original, { programKey: model.programKey });
+      onChange();
+    }
+  };
+  const api = {
+    element,
+    load(program, { programKey = getProgramKey() } = {}) {
+      const original = object(program) ? clone(program) : { maximumErrors: 80, rules: [] };
+      const state = declarativeProgramState(original, { programKey });
+      model = {
+        original,
+        records: clone(state.obligations),
+        selectedId: state.obligations[0]?.id || null,
+        programKey,
+        dirty: false,
+        convertLegacy: false,
+        resolveStale: false,
+        literalDrafts: {},
+        idDrafts: {},
+        feedback: ""
+      };
+      render();
+    },
+    read() {
+      try {
+        const state = declarativeProgramState(model.original, { programKey: model.programKey });
+        if (!model.dirty && state.kind === "legacy") return clone(model.original);
+        return programWithDeclarativeObligations(model.original, commands.materialize(), {
+          programKey: model.programKey,
+          convertLegacy: model.convertLegacy,
+          resolveStale: model.resolveStale
+        });
+      } catch (error) {
+        fail(error);
+        throw error;
+      }
+    },
+    isDirty: () => model.dirty,
+    reset: commands.reset,
+    addRule: commands.addRule,
+    updateRule: commands.updateRule,
+    removeRule: commands.removeRule,
+    applyRuleBatch({ add = [], update = [], remove = [] } = {}) {
+      const before = clone(model), ids = [];
+      batchDepth++;
+      try {
+        for (const id of remove) commands.removeRule(id);
+        for (const change of update) commands.updateRule(change.id, change.patch);
+        for (const record of add) ids.push(commands.addRule(record).id);
+        programWithDeclarativeObligations(model.original, commands.materialize(), { programKey: model.programKey, convertLegacy: model.convertLegacy, resolveStale: model.resolveStale });
+      } catch (error) {
+        model = before;
+        throw error;
+      } finally {
+        batchDepth--;
+        render();
+      }
+      onChange();
+      return { added: ids, updated: update.map((change) => change.id), removed: [...remove] };
+    },
+    selectRule: commands.select,
+    startReplacement: commands.startReplacement,
+    regenerate: commands.regenerate,
+    snapshot: () => ({ format: "fullmeta-declarative-authoring-state/1", ...clone(model) }),
+    restore(snapshot) {
+      if (snapshot?.format !== "fullmeta-declarative-authoring-state/1" || !object(snapshot.original) || !Array.isArray(snapshot.records)) throw new Error("Invalid declarative authoring state.");
+      const { format, ...restored } = clone(snapshot);
+      model = { ...restored, idDrafts: restored.idDrafts || {}, literalDrafts: restored.literalDrafts || {} };
+      render();
+      onChange();
+    },
+    dispose() {
+      if (root) flushSync(() => root.unmount());
+    }
+  };
+  render();
+  return api;
+}
+export {
+  DeclarativeView,
+  createDeclarativeRuleAuthoring,
+  sortDeclarativeRows
+};
 
 //# sourceMappingURL=declarative-editor.js.map

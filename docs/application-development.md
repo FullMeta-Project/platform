@@ -36,7 +36,7 @@ The folder name must match `id`. IDs use lowercase letters, numbers, and hyphens
 
 Schema-only applications need no JavaScript runtime package. For a runtime application, set `runtimePackage` to `true`; `schemaLoader` and `package` default to `applications/<id>/schema-documents.js` and `applications/<id>/package.js`. An optional `runtimeBuild` points to a native build plan; for runtime packages it defaults to `applications/<id>/runtime-build.json`.
 
-The application package can expose launcher profiles and `createModelDocument` for project creation. Application widgets belong in `applications/<id>/ui/widgets/` and are included by the frontend build. See [the application folder convention](../../applications/README.md).
+The application package can expose launcher profiles and `createModelDocument` for project creation. Application widgets belong in `applications/<id>/ui/widgets/` and are included by the frontend build. See the application folder convention.
 
 ## Define the project schema
 

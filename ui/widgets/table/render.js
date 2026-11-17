@@ -1,4 +1,36 @@
 // Generated from render.jsx by scripts/build-frontend.mjs.
-import r,{renderToStaticMarkup as k}from"../shared/react/react-runtime.js";import{columnLabel as A,formatTableValue as h}from"../shared/tables/data.js";function T({view:l={columns:[],rows:[]},columns:m,resizeKey:p=l.resizeKey||"",className:c="result-grid"}){const y=l.value||l.data||l,s=m??y?.columns,o=y?.rows,t=Array.isArray(s)?s:[],n=Array.isArray(o)?o:[],b=new Set;let a=y?.error??l?.error??"";if(!a&&(s!=null&&!Array.isArray(s)||o!=null&&!Array.isArray(o))&&(a="Table rows and columns must be arrays."),!a)for(const e of t){if(!e||typeof e!="object"||Array.isArray(e)||typeof e.key!="string"||!e.key||b.has(e.key)||e.displayScale!=null&&(!Number.isFinite(e.displayScale)||e.displayScale<=0)){a="Table columns must have unique keys and positive finite display scales.";break}b.add(e.key)}!a&&n.some(e=>!e||typeof e!="object"||Array.isArray(e))&&(a="Every table row must be an object."),!a&&n.length&&!t.length&&(a="Table rows require at least one column.");const d=typeof a=="string"?a:a?.message||"Table data is unavailable.",i=a?{role:"alert",label:`Table error: ${d}`}:n.length?null:{role:"status",label:"No table data is available."};return r.createElement("table",{className:c,"data-column-resize-key":p},r.createElement("thead",null,r.createElement("tr",null,t.map(e=>r.createElement("th",{key:e.key},A(e))))),r.createElement("tbody",null,i?r.createElement("tr",null,r.createElement("td",{colSpan:Math.max(1,t.length)},r.createElement("span",{role:i.role,"aria-label":i.label},i.role==="alert"?d:"No table data is available."))):n.map((e,f)=>r.createElement("tr",{key:f},t.map(u=>r.createElement("td",{key:u.key},h(u,e[u.key])))))))}function N(l){return k(r.createElement(T,{...l}))}export{T as Table,N as renderTabularTable};
+import React, { renderToStaticMarkup } from "../shared/react/react-runtime.js";
+import { columnLabel, formatTableValue } from "../shared/tables/data.js";
+function Table({ view = { columns: [], rows: [] }, columns: selectedColumns, resizeKey = view.resizeKey || "", className = "result-grid" }) {
+  const data = view.value || view.data || view;
+  const suppliedColumns = selectedColumns ?? data?.columns;
+  const suppliedRows = data?.rows;
+  const columns = Array.isArray(suppliedColumns) ? suppliedColumns : [];
+  const rows = Array.isArray(suppliedRows) ? suppliedRows : [];
+  const keys = /* @__PURE__ */ new Set();
+  let error = data?.error ?? view?.error ?? "";
+  if (!error && (suppliedColumns != null && !Array.isArray(suppliedColumns) || suppliedRows != null && !Array.isArray(suppliedRows)))
+    error = "Table rows and columns must be arrays.";
+  if (!error) for (const column of columns) {
+    if (!column || typeof column !== "object" || Array.isArray(column) || typeof column.key !== "string" || !column.key || keys.has(column.key) || column.displayScale != null && (!Number.isFinite(column.displayScale) || column.displayScale <= 0)) {
+      error = "Table columns must have unique keys and positive finite display scales.";
+      break;
+    }
+    keys.add(column.key);
+  }
+  if (!error && rows.some((row) => !row || typeof row !== "object" || Array.isArray(row)))
+    error = "Every table row must be an object.";
+  if (!error && rows.length && !columns.length) error = "Table rows require at least one column.";
+  const message = typeof error === "string" ? error : error?.message || "Table data is unavailable.";
+  const status = error ? { role: "alert", label: `Table error: ${message}` } : !rows.length ? { role: "status", label: "No table data is available." } : null;
+  return /* @__PURE__ */ React.createElement("table", { className, "data-column-resize-key": resizeKey }, /* @__PURE__ */ React.createElement("thead", null, /* @__PURE__ */ React.createElement("tr", null, columns.map((column) => /* @__PURE__ */ React.createElement("th", { key: column.key }, columnLabel(column))))), /* @__PURE__ */ React.createElement("tbody", null, status ? /* @__PURE__ */ React.createElement("tr", null, /* @__PURE__ */ React.createElement("td", { colSpan: Math.max(1, columns.length) }, /* @__PURE__ */ React.createElement("span", { role: status.role, "aria-label": status.label }, status.role === "alert" ? message : "No table data is available."))) : rows.map((row, index) => /* @__PURE__ */ React.createElement("tr", { key: index }, columns.map((column) => /* @__PURE__ */ React.createElement("td", { key: column.key }, formatTableValue(column, row[column.key])))))));
+}
+function renderTabularTable(props) {
+  return renderToStaticMarkup(/* @__PURE__ */ React.createElement(Table, { ...props }));
+}
+export {
+  Table,
+  renderTabularTable
+};
 
 //# sourceMappingURL=render.js.map

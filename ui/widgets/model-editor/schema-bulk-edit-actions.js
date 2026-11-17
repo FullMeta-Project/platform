@@ -1,4 +1,113 @@
 // Generated from schema-bulk-edit-actions.jsx by scripts/build-frontend.mjs.
-import t from"../shared/react/react-runtime.js";import{schemaObjectTables as A}from"./schema-bulk-authoring.js";import{createCandidateDialog as D}from"./candidate-dialog.js";import{schemaWithBulkEditActions as I,insertionEffectDraft as y,insertionEffectFromDraft as B,insertionEffectsFromTsv as N,setString as T}from"./schema-bulk-edit-actions.model.js";import{bulkState as $,updateBulkState as P,cleanBulkData as O,bulkPointer as k,BulkText as v,BulkSelect as C,BulkToggle as j,BulkButton as g}from"./bulk-dialog-controls.js";import{schemaWithBulkEditActions as K}from"./schema-bulk-edit-actions.model.js";const x=(a,h)=>h.reduce((l,d)=>l?.[d],a),f=a=>a&&typeof a=="object"&&!Array.isArray(a),b=(a,h)=>[...new Set([...a,h])],S=a=>A(a).filter(h=>Object.values(x(a,h.path)?.properties||{}).some(l=>f(l)&&(l.type==="array"||f(l.items)||f(l["x-fullmeta-edit"]))));function J(a,h=[],l=null){const d=S(a);if(!d.length)throw new Error("This schema has no collection fields.");const n=Array.isArray(h)?h:h?.path||[],c=d.filter(r=>r.path.every((s,e)=>n[e]===s)).sort((r,s)=>s.path.length-r.path.length)[0]||d[0],p=d.flatMap(r=>Object.entries(x(a,r.path).properties).filter(([,s])=>f(s)&&(s.type==="array"||f(s.items)||f(s["x-fullmeta-edit"]))).map(([s,e])=>{const i=[...r.path,"properties",s],o=f(e["x-fullmeta-edit"])?e["x-fullmeta-edit"]:{},m=f(o.move)?o.move:null;return{path:i,key:s,target:JSON.stringify(r.path),expanded:!1,locked:!!(l?.(a,i)||l?.(a,[...i,"x-fullmeta-edit"])),edit:o,dirty:[],moveEnabled:!!m,group:typeof m?.group=="string"?m.group:"",itemSchema:typeof m?.itemSchema=="string"?m.itemSchema:"",scope:typeof m?.scope=="string"?m.scope:"",effects:(Array.isArray(o.onInsert)?o.onInsert:[]).map(u=>y(f(u)?u:{})),batchText:"",batchPending:!1,batchError:""}}));return O({target:JSON.stringify(c.path),rows:p})}function M(a,h,l=null){if(h.rows.some(n=>n.batchPending))throw new Error("Load or Clear pending batch text before Preview.");const d=[];for(const n of h.rows){if(n.locked)continue;const c=n.effects.some(r=>r.dirty.length||r.matchesChanged||r.matches.some(s=>s.dirty.length));if(!n.dirty.length&&!c)continue;const p={path:n.path};if(["moveEnabled","group","itemSchema","scope"].some(r=>n.dirty.includes(r)))if(!n.moveEnabled)p.move=null;else{const r=f(n.edit.move)?structuredClone(n.edit.move):{};for(const s of["group","itemSchema","scope"])n.dirty.includes(s)&&T(r,s,n[s]);if(!Object.keys(r).length)throw new Error(`${k(n.path)}: set a move group, item schema, or scope.`);p.move=r}(n.dirty.includes("effects")||c)&&(p.onInsert=n.effects.map((r,s)=>B(r,`${k(n.path)} effect ${s+1}`))),d.push(p)}return{candidate:I(a,d,l),changes:d}}function q({effect:a,index:h,disabled:l,onChange:d,onDuplicate:n,onRemove:c}){const p=(s,e)=>d({...a,values:{...a.values,[s]:e},dirty:b(a.dirty,s)}),r=s=>d({...a,matches:s,matchesChanged:!0});return t.createElement("section",{className:"schema-bulk-edit-rule"},t.createElement("header",null,t.createElement("strong",null,"Insertion effect ",h+1),t.createElement(g,{disabled:l,onClick:n},"Duplicate effect"),t.createElement(g,{disabled:l,onClick:c},"Remove effect")),t.createElement("div",{className:"schema-bulk-edit-grid"},[["operation","Insertion operation"],["scope","Insertion scope"],["targetPath","Insertion target path"],["valuePath","Insertion value path"],["requireValidReference","Required valid reference"],["relatedPath","Related collection path"],["relatedScope","Related scope"]].map(([s,e])=>t.createElement(v,{key:s,label:e,value:a.values[s],disabled:l,onChange:i=>p(s,i)})),t.createElement(C,{label:"Create missing target",value:a.values.create,disabled:l,choices:[["","Unspecified"],["true","Create target"],["false","Do not create"]],onChange:s=>p("create",s)})),t.createElement("h4",null,"Related item matches"),a.matches.map((s,e)=>t.createElement("div",{key:e,className:"schema-bulk-edit-match"},[["path",`Match ${e+1} path`],["equalsTargetParent",`Match ${e+1} target parent path`]].map(([i,o])=>t.createElement(v,{key:i,label:o,value:s[i],disabled:l,onChange:m=>r(a.matches.map((u,E)=>E===e?{...u,[i]:m,dirty:b(u.dirty,i)}:u))})),t.createElement(g,{disabled:l,onClick:()=>r(a.matches.filter((i,o)=>o!==e))},"Remove match"))),t.createElement(g,{disabled:l,onClick:()=>r([...a.matches,{base:{},dirty:[],path:"",equalsTargetParent:""}])},"Add match"),t.createElement("details",null,t.createElement("summary",null,"Existing effect code"),t.createElement("pre",null,JSON.stringify(a.base,null,2))))}function F({source:a,draft:h,onDraftChange:l}){if(!a)return null;const d=$(h),n=e=>P(l,e),c=(e,i)=>n({...d,rows:d.rows.map(o=>o===e?{...e,...i}:o)}),p=(e,i)=>c(e,{effects:i,dirty:b(e.dirty,"effects"),batchError:""}),r=e=>{try{const i=N(e.batchText).map(y);c(e,{effects:[...e.effects,...i],dirty:b(e.dirty,"effects"),batchText:"",batchPending:!1,batchError:""})}catch(i){c(e,{batchError:i.message})}},s=(e,i)=>{try{const o=[...e.effects];o.splice(i+1,0,y(B(o[i],"Insertion effect",!1))),p(e,o)}catch(o){c(e,{batchError:o.message})}};return t.createElement("section",null,t.createElement("p",null,"Edit move behavior and insertion effects. Unknown settings are preserved. Edits across declarations remain staged together."),t.createElement(C,{label:"Object declaration",value:d.target,choices:S(a).map(e=>[JSON.stringify(e.path),`${k(e.path)} \xB7 ${e.title}`]),onChange:e=>n({...d,target:e})}),t.createElement("div",{className:"schema-bulk-table-wrap"},t.createElement("table",{className:"schema-structure-table schema-bulk-table schema-bulk-edit-table"},t.createElement("thead",null,t.createElement("tr",null,["Collection field","Move","Move group","Item schema","Scope","On insert"].map(e=>t.createElement("th",{key:e},e)))),t.createElement("tbody",null,d.rows.filter(e=>e.target===d.target).map(e=>t.createElement(t.Fragment,{key:k(e.path)},t.createElement("tr",null,t.createElement("td",null,t.createElement("strong",null,e.key),t.createElement("code",null,k(e.path)),e.locked?t.createElement("span",null,"Generated \xB7 read only"):null),t.createElement("td",null,t.createElement(j,{label:`${e.key} enable move`,value:e.moveEnabled,disabled:e.locked,onChange:i=>c(e,{moveEnabled:i,dirty:b(e.dirty,"moveEnabled")})})),[["group","move group"],["itemSchema","move item schema"],["scope","move scope"]].map(([i,o])=>t.createElement("td",{key:i},t.createElement(v,{label:`${e.key} ${o}`,value:e[i],disabled:e.locked,onChange:m=>c(e,{[i]:m,dirty:b(e.dirty,i)})}))),t.createElement("td",null,t.createElement(g,{"aria-expanded":e.expanded,onClick:()=>c(e,{expanded:!e.expanded})},"Edit ",e.effects.length," effects"))),e.expanded?t.createElement("tr",{className:"schema-bulk-edit-detail"},t.createElement("td",{colSpan:6},e.effects.map((i,o)=>t.createElement(q,{key:o,effect:i,index:o,disabled:e.locked,onChange:m=>p(e,e.effects.map((u,E)=>E===o?m:u)),onDuplicate:()=>s(e,o),onRemove:()=>p(e,e.effects.filter((m,u)=>u!==o))})),t.createElement(g,{disabled:e.locked,onClick:()=>p(e,[...e.effects,y({})])},"Add insertion effect"),t.createElement("details",null,t.createElement("summary",null,"Paste multiple effects\u2026"),t.createElement("p",null,"TSV columns: operation, scope, target path, value path, optional create target, optional reference key. Paths use dotted keys."),t.createElement(v,{multiline:!0,label:`${e.key} tab-separated insertion effects`,value:e.batchText,disabled:e.locked,onChange:i=>c(e,{batchText:i,batchPending:!!i})}),t.createElement(g,{disabled:e.locked,onClick:()=>r(e)},"Add rows"),t.createElement(g,{disabled:e.locked,onClick:()=>c(e,{batchText:"",batchPending:!1,batchError:""})},"Clear batch text"),e.batchError?t.createElement("p",{role:"alert"},e.batchError):null),t.createElement("details",null,t.createElement("summary",null,"Existing collection action code"),t.createElement("pre",null,JSON.stringify(e.edit,null,2))))):null))))))}function L({getDocument:a,validateCandidate:h,applyCandidate:l,generatedOwnerAtPath:d=null}){return D({title:"Bulk collection actions",toolId:"bulkEditActions",className:"schema-bulk-edit-dialog",getDocument:a,validateCandidate:h,applyCandidate:l,initialDraft:(n,c)=>J(n,c,d),buildCandidate:(n,c)=>M(n,c,d),Editor:F,message:"Applied collection actions. Save the schema to keep the changes."})}export{F as BulkEditActionsEditor,q as InsertionEffectEditor,M as bulkEditActionsDialogCandidate,J as bulkEditActionsDialogDraft,L as createBulkEditActionsDialog,K as schemaWithBulkEditActions};
+import React from "../shared/react/react-runtime.js";
+import { schemaObjectTables } from "./schema-bulk-authoring.js";
+import { createCandidateDialog } from "./candidate-dialog.js";
+import { schemaWithBulkEditActions, insertionEffectDraft, insertionEffectFromDraft, insertionEffectsFromTsv, setString } from "./schema-bulk-edit-actions.model.js";
+import { bulkState, updateBulkState, cleanBulkData, bulkPointer, BulkText, BulkSelect, BulkToggle, BulkButton } from "./bulk-dialog-controls.js";
+import { schemaWithBulkEditActions as schemaWithBulkEditActions2 } from "./schema-bulk-edit-actions.model.js";
+const at = (source, path) => path.reduce((value, key) => value?.[key], source);
+const object = (value) => value && typeof value === "object" && !Array.isArray(value);
+const mark = (values, name) => [.../* @__PURE__ */ new Set([...values, name])];
+const declarations = (source) => schemaObjectTables(source).filter((table) => Object.values(at(source, table.path)?.properties || {}).some((value) => object(value) && (value.type === "array" || object(value.items) || object(value["x-fullmeta-edit"]))));
+function bulkEditActionsDialogDraft(source, initialPath = [], generatedOwnerAtPath = null) {
+  const tables = declarations(source);
+  if (!tables.length) throw new Error("This schema has no collection fields.");
+  const path = Array.isArray(initialPath) ? initialPath : initialPath?.path || [];
+  const current = tables.filter((table) => table.path.every((part, index) => path[index] === part)).sort((left, right) => right.path.length - left.path.length)[0] || tables[0];
+  const rows = tables.flatMap((table) => Object.entries(at(source, table.path).properties).filter(([, value]) => object(value) && (value.type === "array" || object(value.items) || object(value["x-fullmeta-edit"]))).map(([key, declaration]) => {
+    const path2 = [...table.path, "properties", key], edit = object(declaration["x-fullmeta-edit"]) ? declaration["x-fullmeta-edit"] : {}, move = object(edit.move) ? edit.move : null;
+    return {
+      path: path2,
+      key,
+      target: JSON.stringify(table.path),
+      expanded: false,
+      locked: Boolean(generatedOwnerAtPath?.(source, path2) || generatedOwnerAtPath?.(source, [...path2, "x-fullmeta-edit"])),
+      edit,
+      dirty: [],
+      moveEnabled: Boolean(move),
+      group: typeof move?.group === "string" ? move.group : "",
+      itemSchema: typeof move?.itemSchema === "string" ? move.itemSchema : "",
+      scope: typeof move?.scope === "string" ? move.scope : "",
+      effects: (Array.isArray(edit.onInsert) ? edit.onInsert : []).map((rule) => insertionEffectDraft(object(rule) ? rule : {})),
+      batchText: "",
+      batchPending: false,
+      batchError: ""
+    };
+  }));
+  return cleanBulkData({ target: JSON.stringify(current.path), rows });
+}
+function bulkEditActionsDialogCandidate(source, state, generatedOwnerAtPath = null) {
+  if (state.rows.some((row) => row.batchPending)) throw new Error("Load or Clear pending batch text before Preview.");
+  const edits = [];
+  for (const row of state.rows) {
+    if (row.locked) continue;
+    const effectDirty = row.effects.some((effect) => effect.dirty.length || effect.matchesChanged || effect.matches.some((match) => match.dirty.length));
+    if (!row.dirty.length && !effectDirty) continue;
+    const changes = { path: row.path };
+    if (["moveEnabled", "group", "itemSchema", "scope"].some((key) => row.dirty.includes(key))) {
+      if (!row.moveEnabled) changes.move = null;
+      else {
+        const move = object(row.edit.move) ? structuredClone(row.edit.move) : {};
+        for (const key of ["group", "itemSchema", "scope"]) if (row.dirty.includes(key)) setString(move, key, row[key]);
+        if (!Object.keys(move).length) throw new Error(`${bulkPointer(row.path)}: set a move group, item schema, or scope.`);
+        changes.move = move;
+      }
+    }
+    if (row.dirty.includes("effects") || effectDirty) changes.onInsert = row.effects.map((effect, index) => insertionEffectFromDraft(effect, `${bulkPointer(row.path)} effect ${index + 1}`));
+    edits.push(changes);
+  }
+  return { candidate: schemaWithBulkEditActions(source, edits, generatedOwnerAtPath), changes: edits };
+}
+function InsertionEffectEditor({ effect, index, disabled, onChange, onDuplicate, onRemove }) {
+  const field = (name, value) => onChange({ ...effect, values: { ...effect.values, [name]: value }, dirty: mark(effect.dirty, name) });
+  const matches = (next) => onChange({ ...effect, matches: next, matchesChanged: true });
+  return /* @__PURE__ */ React.createElement("section", { className: "schema-bulk-edit-rule" }, /* @__PURE__ */ React.createElement("header", null, /* @__PURE__ */ React.createElement("strong", null, "Insertion effect ", index + 1), /* @__PURE__ */ React.createElement(BulkButton, { disabled, onClick: onDuplicate }, "Duplicate effect"), /* @__PURE__ */ React.createElement(BulkButton, { disabled, onClick: onRemove }, "Remove effect")), /* @__PURE__ */ React.createElement("div", { className: "schema-bulk-edit-grid" }, [["operation", "Insertion operation"], ["scope", "Insertion scope"], ["targetPath", "Insertion target path"], ["valuePath", "Insertion value path"], ["requireValidReference", "Required valid reference"], ["relatedPath", "Related collection path"], ["relatedScope", "Related scope"]].map(([name, label]) => /* @__PURE__ */ React.createElement(BulkText, { key: name, label, value: effect.values[name], disabled, onChange: (value) => field(name, value) })), /* @__PURE__ */ React.createElement(BulkSelect, { label: "Create missing target", value: effect.values.create, disabled, choices: [["", "Unspecified"], ["true", "Create target"], ["false", "Do not create"]], onChange: (value) => field("create", value) })), /* @__PURE__ */ React.createElement("h4", null, "Related item matches"), effect.matches.map((match, at2) => /* @__PURE__ */ React.createElement("div", { key: at2, className: "schema-bulk-edit-match" }, [["path", `Match ${at2 + 1} path`], ["equalsTargetParent", `Match ${at2 + 1} target parent path`]].map(([name, label]) => /* @__PURE__ */ React.createElement(BulkText, { key: name, label, value: match[name], disabled, onChange: (value) => matches(effect.matches.map((item, position) => position === at2 ? { ...item, [name]: value, dirty: mark(item.dirty, name) } : item)) })), /* @__PURE__ */ React.createElement(BulkButton, { disabled, onClick: () => matches(effect.matches.filter((_, position) => position !== at2)) }, "Remove match"))), /* @__PURE__ */ React.createElement(BulkButton, { disabled, onClick: () => matches([...effect.matches, { base: {}, dirty: [], path: "", equalsTargetParent: "" }]) }, "Add match"), /* @__PURE__ */ React.createElement("details", null, /* @__PURE__ */ React.createElement("summary", null, "Existing effect code"), /* @__PURE__ */ React.createElement("pre", null, JSON.stringify(effect.base, null, 2))));
+}
+function BulkEditActionsEditor({ source, draft, onDraftChange }) {
+  if (!source) return null;
+  const state = bulkState(draft), change = (next) => updateBulkState(onDraftChange, next);
+  const patch = (row, values) => change({ ...state, rows: state.rows.map((item) => item === row ? { ...row, ...values } : item) });
+  const setEffects = (row, effects) => patch(row, { effects, dirty: mark(row.dirty, "effects"), batchError: "" });
+  const load = (row) => {
+    try {
+      const additions = insertionEffectsFromTsv(row.batchText).map(insertionEffectDraft);
+      patch(row, { effects: [...row.effects, ...additions], dirty: mark(row.dirty, "effects"), batchText: "", batchPending: false, batchError: "" });
+    } catch (error) {
+      patch(row, { batchError: error.message });
+    }
+  };
+  const duplicate = (row, index) => {
+    try {
+      const effects = [...row.effects];
+      effects.splice(index + 1, 0, insertionEffectDraft(insertionEffectFromDraft(effects[index], "Insertion effect", false)));
+      setEffects(row, effects);
+    } catch (error) {
+      patch(row, { batchError: error.message });
+    }
+  };
+  return /* @__PURE__ */ React.createElement("section", null, /* @__PURE__ */ React.createElement("p", null, "Edit move behavior and insertion effects. Unknown settings are preserved. Edits across declarations remain staged together."), /* @__PURE__ */ React.createElement(BulkSelect, { label: "Object declaration", value: state.target, choices: declarations(source).map((table) => [JSON.stringify(table.path), `${bulkPointer(table.path)} \xB7 ${table.title}`]), onChange: (target) => change({ ...state, target }) }), /* @__PURE__ */ React.createElement("div", { className: "schema-bulk-table-wrap" }, /* @__PURE__ */ React.createElement("table", { className: "schema-structure-table schema-bulk-table schema-bulk-edit-table" }, /* @__PURE__ */ React.createElement("thead", null, /* @__PURE__ */ React.createElement("tr", null, ["Collection field", "Move", "Move group", "Item schema", "Scope", "On insert"].map((name) => /* @__PURE__ */ React.createElement("th", { key: name }, name)))), /* @__PURE__ */ React.createElement("tbody", null, state.rows.filter((row) => row.target === state.target).map((row) => /* @__PURE__ */ React.createElement(React.Fragment, { key: bulkPointer(row.path) }, /* @__PURE__ */ React.createElement("tr", null, /* @__PURE__ */ React.createElement("td", null, /* @__PURE__ */ React.createElement("strong", null, row.key), /* @__PURE__ */ React.createElement("code", null, bulkPointer(row.path)), row.locked ? /* @__PURE__ */ React.createElement("span", null, "Generated \xB7 read only") : null), /* @__PURE__ */ React.createElement("td", null, /* @__PURE__ */ React.createElement(BulkToggle, { label: `${row.key} enable move`, value: row.moveEnabled, disabled: row.locked, onChange: (moveEnabled) => patch(row, { moveEnabled, dirty: mark(row.dirty, "moveEnabled") }) })), [["group", "move group"], ["itemSchema", "move item schema"], ["scope", "move scope"]].map(([name, label]) => /* @__PURE__ */ React.createElement("td", { key: name }, /* @__PURE__ */ React.createElement(BulkText, { label: `${row.key} ${label}`, value: row[name], disabled: row.locked, onChange: (value) => patch(row, { [name]: value, dirty: mark(row.dirty, name) }) }))), /* @__PURE__ */ React.createElement("td", null, /* @__PURE__ */ React.createElement(BulkButton, { "aria-expanded": row.expanded, onClick: () => patch(row, { expanded: !row.expanded }) }, "Edit ", row.effects.length, " effects"))), row.expanded ? /* @__PURE__ */ React.createElement("tr", { className: "schema-bulk-edit-detail" }, /* @__PURE__ */ React.createElement("td", { colSpan: 6 }, row.effects.map((effect, index) => /* @__PURE__ */ React.createElement(InsertionEffectEditor, { key: index, effect, index, disabled: row.locked, onChange: (next) => setEffects(row, row.effects.map((item, at2) => at2 === index ? next : item)), onDuplicate: () => duplicate(row, index), onRemove: () => setEffects(row, row.effects.filter((_, at2) => at2 !== index)) })), /* @__PURE__ */ React.createElement(BulkButton, { disabled: row.locked, onClick: () => setEffects(row, [...row.effects, insertionEffectDraft({})]) }, "Add insertion effect"), /* @__PURE__ */ React.createElement("details", null, /* @__PURE__ */ React.createElement("summary", null, "Paste multiple effects\u2026"), /* @__PURE__ */ React.createElement("p", null, "TSV columns: operation, scope, target path, value path, optional create target, optional reference key. Paths use dotted keys."), /* @__PURE__ */ React.createElement(BulkText, { multiline: true, label: `${row.key} tab-separated insertion effects`, value: row.batchText, disabled: row.locked, onChange: (batchText) => patch(row, { batchText, batchPending: Boolean(batchText) }) }), /* @__PURE__ */ React.createElement(BulkButton, { disabled: row.locked, onClick: () => load(row) }, "Add rows"), /* @__PURE__ */ React.createElement(BulkButton, { disabled: row.locked, onClick: () => patch(row, { batchText: "", batchPending: false, batchError: "" }) }, "Clear batch text"), row.batchError ? /* @__PURE__ */ React.createElement("p", { role: "alert" }, row.batchError) : null), /* @__PURE__ */ React.createElement("details", null, /* @__PURE__ */ React.createElement("summary", null, "Existing collection action code"), /* @__PURE__ */ React.createElement("pre", null, JSON.stringify(row.edit, null, 2))))) : null))))));
+}
+function createBulkEditActionsDialog({ getDocument, validateCandidate, applyCandidate, generatedOwnerAtPath = null }) {
+  return createCandidateDialog({
+    title: "Bulk collection actions",
+    toolId: "bulkEditActions",
+    className: "schema-bulk-edit-dialog",
+    getDocument,
+    validateCandidate,
+    applyCandidate,
+    initialDraft: (source, context) => bulkEditActionsDialogDraft(source, context, generatedOwnerAtPath),
+    buildCandidate: (source, state) => bulkEditActionsDialogCandidate(source, state, generatedOwnerAtPath),
+    Editor: BulkEditActionsEditor,
+    message: "Applied collection actions. Save the schema to keep the changes."
+  });
+}
+export {
+  BulkEditActionsEditor,
+  InsertionEffectEditor,
+  bulkEditActionsDialogCandidate,
+  bulkEditActionsDialogDraft,
+  createBulkEditActionsDialog,
+  schemaWithBulkEditActions2 as schemaWithBulkEditActions
+};
 
 //# sourceMappingURL=schema-bulk-edit-actions.js.map

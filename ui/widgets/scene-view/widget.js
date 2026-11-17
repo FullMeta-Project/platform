@@ -1,4 +1,44 @@
 // Generated from widget.jsx by scripts/build-frontend.mjs.
-import i from"../shared/react/react-runtime.js";import{mountReactComponent as u}from"../shared/react/mount.js";import{drawSceneView as w}from"./runtime.js";import{CanvasSurface as d}from"./canvas-surface.js";import{drawLayeredScene as l}from"./compositor.js";import{drawSceneView as E,sceneViewRenderer as N}from"./runtime.js";import{CanvasSurface as v}from"./canvas-surface.js";import{drawLayeredScene as k}from"./compositor.js";function S({label:e="Scene view",className:o="",width:r,height:n,style:t,onDraw:a,onError:m,...c}){return i.createElement(d,{draw:w,options:c,label:e,className:o,width:r,height:n,style:t,onDraw:a,onError:m})}function s({view:e,onCommand:o,...r}){return i.createElement(S,{...r,...e,scene:e?.scene||e?.value||r.scene})}function L({view:e,onCommand:o,label:r="Layered scene",width:n,height:t,style:a,className:m,onDraw:c,onError:f,...p}){return i.createElement(d,{draw:l,options:{...p,...e},label:e?.label||r,width:n,height:t,style:a,className:m,onDraw:c,onError:f})}const V=(e,o)=>u(e,s,o);export{v as CanvasSurface,L as LayeredScene,s as SceneView,s as Widget,k as drawLayeredScene,E as drawSceneView,V as mountWidget,N as sceneViewRenderer};
+import React from "../shared/react/react-runtime.js";
+import { mountReactComponent } from "../shared/react/mount.js";
+import { drawSceneView } from "./runtime.js";
+import { CanvasSurface } from "./canvas-surface.js";
+import { drawLayeredScene } from "./compositor.js";
+import { drawSceneView as drawSceneView2, sceneViewRenderer } from "./runtime.js";
+import { CanvasSurface as CanvasSurface2 } from "./canvas-surface.js";
+import { drawLayeredScene as drawLayeredScene2 } from "./compositor.js";
+function SceneSurface({ label = "Scene view", className = "", width, height, style, onDraw, onError, ...options }) {
+  return /* @__PURE__ */ React.createElement(
+    CanvasSurface,
+    {
+      draw: drawSceneView,
+      options,
+      label,
+      className,
+      width,
+      height,
+      style,
+      onDraw,
+      onError
+    }
+  );
+}
+function SceneView({ view, onCommand, ...props }) {
+  return /* @__PURE__ */ React.createElement(SceneSurface, { ...props, ...view, scene: view?.scene || view?.value || props.scene });
+}
+function LayeredScene({ view, onCommand, label = "Layered scene", width, height, style, className, onDraw, onError, ...props }) {
+  return /* @__PURE__ */ React.createElement(CanvasSurface, { draw: drawLayeredScene, options: { ...props, ...view }, label: view?.label || label, width, height, style, className, onDraw, onError });
+}
+const mountWidget = (container, props) => mountReactComponent(container, SceneView, props);
+export {
+  CanvasSurface2 as CanvasSurface,
+  LayeredScene,
+  SceneView,
+  SceneView as Widget,
+  drawLayeredScene2 as drawLayeredScene,
+  drawSceneView2 as drawSceneView,
+  mountWidget,
+  sceneViewRenderer
+};
 
 //# sourceMappingURL=widget.js.map

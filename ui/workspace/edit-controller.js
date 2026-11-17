@@ -22,7 +22,8 @@ function checkedRecommendedApplications(value){
     const repository=checkedApplicationRepository(entry.repository),releases=`https://github.com/${repository.owner}/${repository.repository}/releases`;
     if(entry.releases!==undefined&&entry.releases!==releases)throw new Error(`The releases page for ${entry.id} does not match its repository.`);
     if(entry.description!==undefined&&(typeof entry.description!=='string'||entry.description.length>500))throw new Error(`The description for ${entry.id} is invalid.`);
-    return {id:entry.id,name:entry.name.trim(),description:entry.description?.trim()||'',repository:repository.url,releases,...repository};
+    if(entry.hiddenReleases!==undefined&&(!Array.isArray(entry.hiddenReleases)||entry.hiddenReleases.length>1000||entry.hiddenReleases.some(tag=>typeof tag!=='string'||!tag.length||tag.length>128||/[\x00-\x1f\x7f]/.test(tag))))throw new Error(`The hidden releases for ${entry.id} are invalid.`);
+    return {id:entry.id,name:entry.name.trim(),description:entry.description?.trim()||'',repository:repository.url,releases,hiddenReleases:entry.hiddenReleases||[],...repository};
   });
 }
 /** One ordinary menu bar for every host; native summaries keep their normal toggle behavior. */
@@ -40,23 +41,23 @@ function createMenuBar(root){
   return {closeAll,dispose(){for(const cleanup of cleanups)cleanup();observer.disconnect();closeAll();}};
 }
 export function validateStandardMenuState(value){if(!value||value.format!=='fullmeta-standard-menus/1'||!value.help||typeof value.help.open!=='boolean'||!['docs','about'].includes(value.help.section))throw new Error('Invalid Help presentation state.');return value;}
-/** Resolve the guide beside the actual interpreting schema, never from an app ID or model location. */
+/** Resolve the platform workspace guide or the guide beside the actual interpreting schema. */
 export function interpretingSchemaDocumentation(context,workspaceUrl){
   if(!context||!(context.schemaUrl||context.schemaPath))throw new Error('The current interpreting schema is unavailable; its local documentation cannot be resolved.');
   if(!context.schemaUrl&&canonicalWorkspacePath(context.schemaPath,{root:false})!==context.schemaPath)throw new Error('The interpreting schema path must be canonical inside FullMeta.');
   const base=new URL(workspaceUrl),schema=new URL(context.schemaUrl||context.schemaPath,base);
   if(!['http:','https:','file:'].includes(base.protocol)||schema.protocol!==base.protocol||schema.origin!==base.origin||schema.username||schema.password||schema.search||schema.hash||!schema.pathname.startsWith(base.pathname)||!schema.pathname.toLowerCase().endsWith('.json'))throw new Error('The interpreting schema must be a local JSON file inside the FullMeta workspace.');
-  const schemaPath=canonicalWorkspacePath(decodeURIComponent(schema.pathname.slice(base.pathname.length)),{root:false}),documentationUrl=new URL('docs/README.md',schema);
+  const schemaPath=canonicalWorkspacePath(decodeURIComponent(schema.pathname.slice(base.pathname.length)),{root:false}),documentationUrl=schemaPath==='platform/workspace/workspace.schema.json'?new URL('platform/docs/README.md',base):new URL('docs/README.md',schema);
   const documentationPath=canonicalWorkspacePath(decodeURIComponent(documentationUrl.pathname.slice(base.pathname.length)),{root:false});
   return {schemaPath,documentationPath,documentationUrl:documentationUrl.href,key:JSON.stringify([schema.href,context.revision??null])};
 }
-export function createStandardMenuController({root,fetcher=globalThis.fetch,requestJson,workspaceUrl,getInterpretingSchema=()=>null,clipboard=globalThis.navigator?.clipboard,onStatus=()=>{}}){
+export function createStandardMenuController({root,fetcher=globalThis.fetch,requestJson,workspaceUrl,getInterpretingSchema=()=>null,clipboard=globalThis.navigator?.clipboard,onApplicationInstalled,onStatus=()=>{}}){
   const document=root.ownerDocument,window=document.defaultView,dialog=root.querySelector('#help-dialog'),host=root.querySelector('#help-dialog-host'),applicationsDialog=root.querySelector('#recommended-applications-dialog'),applicationsHost=root.querySelector('#recommended-applications-host'),versionsDialog=root.querySelector('#recommended-versions-dialog'),versionsHost=root.querySelector('#recommended-versions-host');
   if(!dialog||!host||!applicationsDialog||!applicationsHost||!versionsDialog||!versionsHost)throw new Error('Standard menus need their in-application Help and Applications dialogs.');
   const workspaceRoot=new URL(workspaceUrl||'/',window.location.href);if(!workspaceRoot.pathname.endsWith('/'))workspaceRoot.pathname+='/';
   const docsCache=new Map();
   let target=null,remembered=null,disposed=false,epoch=0,opener=null,aboutPromise=null;
-  let state={open:false,section:'docs',loading:false,error:'',text:'',about:null,documentationUrl:null,documentationPath:null,schemaPath:null,workspaceRoot:workspaceRoot.href,generalDocumentationUrl:new URL('platform/workspace/docs/README.md',workspaceRoot).href};
+  let state={open:false,section:'docs',loading:false,error:'',text:'',about:null,documentationUrl:null,documentationPath:null,schemaPath:null,workspaceRoot:workspaceRoot.href,generalDocumentationUrl:new URL('platform/docs/README.md',workspaceRoot).href};
   const listeners=[],listen=(node,type,callback,options)=>{node?.addEventListener(type,callback,options);listeners.push(()=>node?.removeEventListener(type,callback,options));};
   let applicationsMount=null,versionsMount=null,applicationsOpener=null,inventoryEpoch=0,versionsEpoch=0;
   let applicationsState={open:false,loading:false,error:'',applications:[]};
@@ -85,7 +86,8 @@ export function createStandardMenuController({root,fetcher=globalThis.fetch,requ
     if(!disposed)render();return inspect();
   };
   const renderApplications=()=>applicationsMount?.update({state:{...applicationsState,applications:[...applicationsState.applications]},onRefresh:()=>void refreshApplications(),onSelect:application=>void openVersions(application),onClose:()=>closeApplications()});
-  const renderVersions=()=>versionsMount?.update({state:{...versionsState,releases:[...versionsState.releases]},onSelectVersion:tag=>{versionsState={...versionsState,selectedTag:tag};renderVersions();},onDownload:downloadSelectedVersion,onBack:returnToApplications,onClose:()=>closeVersionPicker(false)});
+  const versionProps=()=>({state:{...versionsState,releases:[...versionsState.releases]},onSelectVersion:tag=>{versionsState={...versionsState,selectedTag:tag};renderVersions();},onDownload:downloadSelectedVersion,onBack:returnToApplications,onClose:()=>closeVersionPicker(false),onReplace:()=>void installSavedArchive(true),onKeep:keepExistingApplication});
+  const renderVersions=()=>versionsMount?.update(versionProps());
   async function refreshApplications(){
     const request=++inventoryEpoch;applicationsState={...applicationsState,loading:true,error:''};renderApplications();
     try{
@@ -106,14 +108,15 @@ export function createStandardMenuController({root,fetcher=globalThis.fetch,requ
   async function openVersions(application){
     if(!application||typeof application.id!=='string')throw new Error('Choose an application from the current catalog.');
     closeApplications(false);const request=++versionsEpoch;
-    versionsState={open:true,loading:true,error:'',application,releases:[],selectedTag:''};renderVersions();if(!versionsDialog.open)versionsDialog.showModal();
+    versionsState={open:true,loading:true,error:'',application,releases:[],selectedTag:'',phase:'',confirmReplace:false,archiveName:''};renderVersions();if(!versionsDialog.open)versionsDialog.showModal();
     try{
       const endpoint=`https://api.github.com/repos/${encodeURIComponent(application.owner)}/${encodeURIComponent(application.repository)}/releases?per_page=100`;
       const response=await fetcher(endpoint,{cache:'no-store',headers:{Accept:'application/vnd.github+json'}});
       if(!response.ok)throw new Error(`GitHub releases request failed (${response.status}).`);
       const text=await response.text();if(new TextEncoder().encode(text).length>5*1024*1024)throw new Error('The GitHub releases response is too large to display.');
       const body=JSON.parse(text);if(!Array.isArray(body))throw new Error('GitHub returned an invalid releases list.');
-      const releases=body.filter(release=>release&&!release.draft&&typeof release.tag_name==='string'&&release.tag_name.length>0&&release.tag_name.length<=128&&!/[\x00-\x1f\x7f]/.test(release.tag_name))
+      const hiddenReleases=new Set(application.hiddenReleases);
+      const releases=body.filter(release=>release&&!release.draft&&typeof release.tag_name==='string'&&release.tag_name.length>0&&release.tag_name.length<=128&&!/[\x00-\x1f\x7f]/.test(release.tag_name)&&!hiddenReleases.has(release.tag_name))
         .map(release=>({tag:release.tag_name,name:typeof release.name==='string'&&release.name.trim()?release.name.trim():release.tag_name,publishedAt:typeof release.published_at==='string'?release.published_at:'',prerelease:release.prerelease===true}));
       if(disposed||request!==versionsEpoch)return inspect();
       versionsState={...versionsState,loading:false,error:'',releases,selectedTag:releases[0]?.tag||''};
@@ -121,10 +124,12 @@ export function createStandardMenuController({root,fetcher=globalThis.fetch,requ
     renderVersions();return inspect();
   }
   function returnToApplications(){
+    if(versionsState.phase)return;
     versionsEpoch++;versionsState={...versionsState,open:false,loading:false};if(versionsDialog.open)versionsDialog.close();renderVersions();
     applicationsState={...applicationsState,open:true};renderApplications();if(!applicationsDialog.open)applicationsDialog.showModal();
   }
   function closeVersionPicker(returnToCatalog=true){
+    if(versionsState.phase)return;
     if(returnToCatalog){returnToApplications();return;}
     versionsEpoch++;versionsState={...versionsState,open:false,loading:false};if(versionsDialog.open)versionsDialog.close();renderVersions();closeApplications(true);
   }
@@ -132,22 +137,45 @@ export function createStandardMenuController({root,fetcher=globalThis.fetch,requ
     const release=versionsState.releases.find(item=>item.tag===versionsState.selectedTag);
     if(!release||!versionsState.application)throw new Error('Choose a published version to download.');
     const application=versionsState.application,request=++versionsEpoch;
-    versionsState={...versionsState,loading:true,error:''};renderVersions();
+    versionsState={...versionsState,loading:false,error:'',phase:'download'};renderVersions();
     try{
       const response=await fetcher(new URL('api/applications/release-archive',workspaceRoot).href,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({owner:application.owner,repository:application.repository,tag:release.tag})});
       if(!response.ok){let message='';try{message=(await response.json()).error||'';}catch{}throw new Error(message||`Download failed (${response.status}).`);}
-      const data=await response.arrayBuffer();if(data.byteLength>256*1024*1024)throw new Error('The application ZIP is too large to download.');
+      const total=Number(response.headers?.get('content-length'))||0,chunks=[];let received=0;
+      if(total>256*1024*1024)throw new Error('The application ZIP is too large to download.');
+      if(response.body?.getReader){const reader=response.body.getReader();try{while(true){const {done,value}=await reader.read();if(done)break;received+=value.byteLength;if(received>256*1024*1024){await reader.cancel();throw new Error('The application ZIP is too large to download.');}chunks.push(value);if(disposed||request!==versionsEpoch){await reader.cancel();return {downloaded:false};}}}finally{reader.releaseLock();}}
+      else{const data=await response.arrayBuffer();received=data.byteLength;if(received>256*1024*1024)throw new Error('The application ZIP is too large to download.');chunks.push(new Uint8Array(data));}
+      const data=new Uint8Array(received);let offset=0;for(const chunk of chunks){data.set(chunk,offset);offset+=chunk.byteLength;}
       const normalized=renameRepositoryZip(data,application.repository);
       if(disposed||request!==versionsEpoch)return {downloaded:false};
-      const url=window.URL.createObjectURL(new Blob([normalized],{type:'application/zip'}));
-      const anchor=document.createElement('a');anchor.href=url;anchor.download=`${application.repository}-${release.tag.replace(/[^A-Za-z0-9_.-]/g,'_')}.zip`;anchor.tabIndex=-1;anchor.setAttribute('aria-hidden','true');document.body.append(anchor);anchor.click();anchor.remove();
-      window.setTimeout(()=>window.URL.revokeObjectURL(url),60000);
-      closeVersionPicker(false);return {downloaded:true,application:application.id,version:release.tag};
+      const archiveName=`${application.id}-${release.tag.replace(/[^A-Za-z0-9_.-]/g,'_')}.zip`;
+      versionsState={...versionsState,phase:'save',archiveName};renderVersions();
+      const saved=await fetcher(new URL(`api/applications/save-archive?name=${encodeURIComponent(archiveName)}`,workspaceRoot).href,{method:'POST',headers:{'Content-Type':'application/zip'},body:normalized});
+      const savedValue=await saved.json();if(!saved.ok)throw new Error(savedValue.error||`Could not save ZIP (${saved.status}).`);
+      if(savedValue.path!==`applications/${archiveName}`)throw new Error('The server returned an invalid ZIP path.');
+      if(disposed||request!==versionsEpoch)return {downloaded:false};
+      return await installSavedArchive(false);
     }catch(error){
-      if(!disposed&&request===versionsEpoch){versionsState={...versionsState,loading:false,error:`Could not download ${application.name}. ${error.message}`};renderVersions();}
+      if(!disposed&&request===versionsEpoch){versionsState={...versionsState,loading:false,phase:'',error:`Could not download ${application.name}. ${error.message}`};renderVersions();}
       return {downloaded:false};
     }
   }
+  async function installSavedArchive(replace){
+    const application=versionsState.application,archiveName=versionsState.archiveName,request=versionsEpoch;
+    versionsState={...versionsState,phase:'extract',error:'',confirmReplace:false};renderVersions();
+    try{
+      const response=await fetcher(new URL('api/applications/install-archive',workspaceRoot).href,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id:application.id,archive:archiveName,replace})});
+      const value=await response.json();if(disposed||request!==versionsEpoch)return {installed:false};
+      if(response.status===409&&value.code==='APPLICATION_EXISTS'){versionsState={...versionsState,phase:'',confirmReplace:true};renderVersions();return {installed:false,confirmationRequired:true};}
+      if(!response.ok)throw new Error(value.error||`Extraction failed (${response.status}).`);
+      if(value.folder!==`applications/${application.id}`||value.archive!==`applications/${archiveName}`)throw new Error('The server returned an invalid installation result.');
+      versionsState={...versionsState,phase:''};closeVersionPicker(false);onStatus(`Installed ${value.folder}. ZIP saved at ${value.archive}. Reloading…`);
+      try{if(onApplicationInstalled)await onApplicationInstalled({id:application.id,folder:value.folder,archive:value.archive,replaced:replace});else window.location.reload();}
+      catch(error){onStatus(`Installed ${value.folder}, but the page could not reload. Please refresh it. ${error.message}`,'error');}
+      return {installed:true};
+    }catch(error){if(!disposed&&request===versionsEpoch){versionsState={...versionsState,phase:'',error:`Could not extract ${application.name}. ZIP saved at applications/${archiveName}. ${error.message}`};renderVersions();}return {installed:false};}
+  }
+  function keepExistingApplication(){const archive=versionsState.archiveName;versionsState={...versionsState,confirmReplace:false};closeVersionPicker(false);onStatus(`ZIP saved at applications/${archive}. Existing application was kept.`);}
   const writeClipboard=async text=>{if(clipboard?.writeText){await clipboard.writeText(text);return;}if(document.execCommand?.('copy'))return;throw new Error('Clipboard access is unavailable. Use the normal keyboard shortcut in the selected text control.');};
   const replace=(node,text,inputType)=>{if(node.readOnly)throw new Error('This text control is read only.');const range=selection(node);if(node.maxLength>=0)text=text.slice(0,Math.max(0,node.maxLength-(node.value.length-(range.end-range.start))));const value=node.value.slice(0,range.start)+text+node.value.slice(range.end);if(value===node.value)return {changed:false,inserted:0};const prototype=node.tagName==='TEXTAREA'?window.HTMLTextAreaElement.prototype:window.HTMLInputElement.prototype;Object.getOwnPropertyDescriptor(prototype,'value').set.call(node,value);const EventClass=window.InputEvent||window.Event;flushSync(()=>node.dispatchEvent(new EventClass('input',{bubbles:true,inputType,data:text})));const caret=range.start+text.length;if(node.isConnected){node.focus();node.setSelectionRange(caret,caret);setTarget(node);}return {changed:true,inserted:text.length};};
   const dispatch=async(name,args={},options={})=>{
@@ -162,7 +190,7 @@ export function createStandardMenuController({root,fetcher=globalThis.fetch,requ
   };
   const mount=mountReactComponent(host,HelpContent,{state,onClose:closeHelp});
   applicationsMount=mountReactComponent(applicationsHost,RecommendedApplicationsContent,{state:applicationsState,onRefresh:()=>void refreshApplications(),onSelect:application=>void openVersions(application),onClose:()=>closeApplications()});
-  versionsMount=mountReactComponent(versionsHost,RecommendedVersionsContent,{state:versionsState,onSelectVersion:tag=>{versionsState={...versionsState,selectedTag:tag};renderVersions();},onDownload:downloadSelectedVersion,onBack:returnToApplications,onClose:()=>closeVersionPicker(false)});
+  versionsMount=mountReactComponent(versionsHost,RecommendedVersionsContent,versionProps());
   listen(root,'focusin',event=>{if(candidate(event.target))setTarget(event.target);else if(!menuNode(event.target)&&!dialog.contains(event.target))target=null;refresh();});
   listen(root,'focusout',event=>{if(event.target===target)remembered=selection(target);});
   listen(root,'pointerdown',event=>{if(!candidate(event.target)&&!menuNode(event.target)&&!dialog.contains(event.target))target=null;});

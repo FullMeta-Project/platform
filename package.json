@@ -1,0 +1,14 @@
+{
+  "name": "fullmeta-platform",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Standalone FullMeta platform build",
+  "scripts": {
+    "build:frontend": "node scripts/build-frontend.mjs",
+    "watch:frontend": "node scripts/frontend-watch.mjs",
+    "build:kernel-server": "node scripts/build-kernel-server.mjs",
+    "build:core-wasm": "node core-rust/build-wasm.mjs",
+    "build:model-wasm": "node model-rust/build-wasm.mjs"
+  }
+}

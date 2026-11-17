@@ -1,6 +1,146 @@
 // Generated from workspace-controller.jsx by scripts/build-frontend.mjs.
-import{applicationExtension as p,editorDomain as b,editorEndpoint as o,editorFactory as m,editorOptions as h,editorAllows as s,applicationResultAdapter as f,activateApplicationPackage as y,resizeWidthsFor as c,applyResizeWidths as v,restoreResizeWidths as S,beginColumnResize as w,nudgeColumnBoundary as g,prepareResizableTable as P,prepareResizableTables as R,setStatus as A,updateWorkflowPanels as I,currentSelectionIsLoaded as E,commitVisibleEditorState as L,updateBuildButtons as F,updatePreviewRunbar as T,editorWorkflow as W,invalidatePreviewArtifacts as $,esc as M,valueAt as D,componentVariantSource as N,hasEditorRole as z,editorRolePath as B,editorRolePathAt as O,isEditorRoleRoot as V,isEditorRoleItem as q,hasAnyEditorRole as k,profileCopy as G,profileCopyFormat as U,sharedUiCopy as J,formatChoiceLabel as j,profileDataLabel as H,activeScenario as K,activeScenarioDimension as Q,applyProfileAttributes as X,applyProfileVisibility as Y,applyUiProfile as Z,loadUiProfile as _,pathLabel as C,compatibleUnitsFor as x,commitInputsBeforeRowMove as ee,addItem as le,samePath as ie,uniqueId as re,uniqueName as ae,uniqueSymbol as de,componentForArray as ne,activeComponentId as ue,clearPreviewForComponentChange as te,cloneWithUniqueIds as pe,defaultArrayItem as be,displayItemName as oe,referenceItemLabel as me,insertionIndexFor as he,checkArrayInsertionLimit as se,insertArrayItem as fe,isToggleEnabledItemPath as ye,availableMenuButton as ce,panelLayoutDefaults as ve,readPanelSize as Se,setGraphicsHeight as we,bindWidthSplitter as ge,bindGraphicsHeightSplitter as Pe,restorePanelLayout as Re,applicationRequestOptions as Ae,configureGraphicsWidget as Ie,enablePreviewLayer as Ee,showDefaultGraphicsScene as Le,showGeometryView as Fe,renderSweepTable as Te,restoreApplicationPreview as We,exitEditor as $e,setTab as Me}from"./workspace-controller-actions.js";import l from"../../shared/react/react-runtime.js";import{renderOwnedView as n}from"../../../runtime/owned-view.js";import{SchemaField as De}from"../schema-form.js";import"../../shared/react/collection-controls.js";function Ne(e,r,a,d,i=null,u={}){const t=e.schemaFieldContext(u);return l.createElement(De,{label:r,value:a,path:d,schemaNode:i,context:t})}function ze(e){e.reactTreeMount?.dispose(),e.reactTreeMount=null,e.reactTreeProjection=null,e.selectedPath=null,e.selectedCollection=null,e.selectedLabel="",e.settingsDraft=null,e.settingsDraftDirty=!1,e.updateFieldSummary({overview:!1}),e.settingsTable.classList.remove("hidden"),e.resultRenderSequence++,e.activeResultActionId=null,e.lastSweepRender=null,e.fieldPlotState=null,e.fullJson.value=JSON.stringify(e.model,null,2),e.jsonDraftDirty=!1,n(e.treeContent,l.createElement("div",{className:"settings-empty"},e.profileCopy("repairSchemaNotice","This manifest does not satisfy {schema}. Select Validate to see the schema issues.").replaceAll("{schema}",e.model?.modelFormat||e.activeApplicationPackage?.modelSchema?.title||"the model schema"))),n(e.settingsTable.tBodies[0],l.createElement(l.Fragment,null,l.createElement("tr",null,l.createElement("td",{colSpan:2,className:"settings-empty"},"Model settings are unavailable until the JSON structure is repaired.")))),e.$("#resolved-values").textContent=`Model JSON has ${e.modelRepairErrors.length} issue(s):
-${e.modelRepairErrors.slice(0,80).join(`
-`)}`,e.$("#selection-title").textContent=e.model?.metadata?.name||e.loadedModelFile||"Invalid model",e.$("#selection-path").textContent="Model JSON needs repair",e.$("#editor-note").textContent="This model cannot be edited here because its structure does not match the active schema. Correct the model file in its project folder, then select Refresh.",e.updateSelectionActionVisibility(),e.applicationExtension("resultSettings")&&(e.applicationExtension("resultSettings").hidden=!0),e.updateWorkflowPanels(),e.$("#result-chart").hidden=!0,e.$("#result-legend").replaceChildren(),e.$("#results-toolbar").replaceChildren(),e.$("#geometry-view").hidden=!1,e.$("#geometry-note").hidden=!1,e.$("#geometry-note").textContent="The graphics preview is unavailable until this model JSON is repaired.",e.$("#geometry-controls").hidden=!0,e.$("#results-view").hidden=!0,e.$("#results-note").hidden=!0,e.$("#result-message").hidden=!0,e.$("#preview-summary").textContent="Model JSON needs repair",e.previewContext.clearRect(0,0,e.previewCanvas.width,e.previewCanvas.height),e.setTab(),e.syncModelActionAvailability(),e.updateModelEditState()}function Be(e,r,a,{disabled:d=!1,reason:i=""}={}){return l.createElement(l.Fragment,null,l.createElement("button",{className:"context-menu-item",type:"button",role:"menuitem","data-action":a,...d?{disabled:!0,"aria-disabled":"true"}:{},...i?{title:i}:{}},r))}function Ke(e){return{applicationExtension:p.bind(null,e),editorDomain:b.bind(null,e),editorEndpoint:o.bind(null,e),editorFactory:m.bind(null,e),editorOptions:h.bind(null,e),editorAllows:s.bind(null,e),applicationResultAdapter:f.bind(null,e),activateApplicationPackage:y.bind(null,e),resizeWidthsFor:c.bind(null,e),applyResizeWidths:v.bind(null,e),restoreResizeWidths:S.bind(null,e),beginColumnResize:w.bind(null,e),nudgeColumnBoundary:g.bind(null,e),prepareResizableTable:P.bind(null,e),prepareResizableTables:R.bind(null,e),setStatus:A.bind(null,e),updateWorkflowPanels:I.bind(null,e),currentSelectionIsLoaded:E.bind(null,e),commitVisibleEditorState:L.bind(null,e),updateBuildButtons:F.bind(null,e),updatePreviewRunbar:T.bind(null,e),editorWorkflow:W.bind(null,e),invalidatePreviewArtifacts:$.bind(null,e),esc:M.bind(null,e),valueAt:D.bind(null,e),componentVariantSource:N.bind(null,e),hasEditorRole:z.bind(null,e),editorRolePath:B.bind(null,e),editorRolePathAt:O.bind(null,e),isEditorRoleRoot:V.bind(null,e),isEditorRoleItem:q.bind(null,e),hasAnyEditorRole:k.bind(null,e),profileCopy:G.bind(null,e),profileCopyFormat:U.bind(null,e),sharedUiCopy:J.bind(null,e),formatChoiceLabel:j.bind(null,e),profileDataLabel:H.bind(null,e),activeScenario:K.bind(null,e),activeScenarioDimension:Q.bind(null,e),applyProfileAttributes:X.bind(null,e),applyProfileVisibility:Y.bind(null,e),applyUiProfile:Z.bind(null,e),loadUiProfile:_.bind(null,e),pathLabel:C.bind(null,e),addSettingRow:Ne.bind(null,e),compatibleUnitsFor:x.bind(null,e),commitInputsBeforeRowMove:ee.bind(null,e),addItem:le.bind(null,e),samePath:ie.bind(null,e),renderRepairMode:ze.bind(null,e),uniqueId:re.bind(null,e),uniqueName:ae.bind(null,e),uniqueSymbol:de.bind(null,e),componentForArray:ne.bind(null,e),activeComponentId:ue.bind(null,e),clearPreviewForComponentChange:te.bind(null,e),cloneWithUniqueIds:pe.bind(null,e),defaultArrayItem:be.bind(null,e),displayItemName:oe.bind(null,e),referenceItemLabel:me.bind(null,e),insertionIndexFor:he.bind(null,e),checkArrayInsertionLimit:se.bind(null,e),insertArrayItem:fe.bind(null,e),menuButton:Be.bind(null,e),isToggleEnabledItemPath:ye.bind(null,e),availableMenuButton:ce.bind(null,e),panelLayoutDefaults:ve.bind(null,e),readPanelSize:Se.bind(null,e),setGraphicsHeight:we.bind(null,e),bindWidthSplitter:ge.bind(null,e),bindGraphicsHeightSplitter:Pe.bind(null,e),restorePanelLayout:Re.bind(null,e),applicationRequestOptions:Ae.bind(null,e),configureGraphicsWidget:Ie.bind(null,e),enablePreviewLayer:Ee.bind(null,e),showDefaultGraphicsScene:Le.bind(null,e),showGeometryView:Fe.bind(null,e),renderSweepTable:Te.bind(null,e),restoreApplicationPreview:We.bind(null,e),exitEditor:$e.bind(null,e),setTab:Me.bind(null,e)}}export{Ke as createController};
+import { applicationExtension, editorDomain, editorEndpoint, editorFactory, editorOptions, editorAllows, applicationResultAdapter, activateApplicationPackage, resizeWidthsFor, applyResizeWidths, restoreResizeWidths, beginColumnResize, nudgeColumnBoundary, prepareResizableTable, prepareResizableTables, setStatus, updateWorkflowPanels, currentSelectionIsLoaded, commitVisibleEditorState, updateBuildButtons, updatePreviewRunbar, editorWorkflow, invalidatePreviewArtifacts, esc, valueAt, componentVariantSource, hasEditorRole, editorRolePath, editorRolePathAt, isEditorRoleRoot, isEditorRoleItem, hasAnyEditorRole, profileCopy, profileCopyFormat, sharedUiCopy, formatChoiceLabel, profileDataLabel, activeScenario, activeScenarioDimension, applyProfileAttributes, applyProfileVisibility, applyUiProfile, loadUiProfile, pathLabel, compatibleUnitsFor, commitInputsBeforeRowMove, addItem, samePath, uniqueId, uniqueName, uniqueSymbol, componentForArray, activeComponentId, clearPreviewForComponentChange, cloneWithUniqueIds, defaultArrayItem, displayItemName, referenceItemLabel, insertionIndexFor, checkArrayInsertionLimit, insertArrayItem, isToggleEnabledItemPath, availableMenuButton, panelLayoutDefaults, readPanelSize, setGraphicsHeight, bindWidthSplitter, bindGraphicsHeightSplitter, restorePanelLayout, applicationRequestOptions, configureGraphicsWidget, enablePreviewLayer, showDefaultGraphicsScene, showGeometryView, renderSweepTable, restoreApplicationPreview, exitEditor, setTab } from "./workspace-controller-actions.js";
+import React from "../../shared/react/react-runtime.js";
+import { renderOwnedView, joinView } from "../../../runtime/owned-view.js";
+import { SchemaField, SchemaObject, SchemaStructure } from "../schema-form.js";
+import { RowMoveControls } from "../../shared/react/collection-controls.js";
+function addSettingRow(sessionContext, label, value, path, schemaNode = null, widgetRenderers = {}) {
+  const context = sessionContext.schemaFieldContext(widgetRenderers);
+  return /* @__PURE__ */ React.createElement(SchemaField, { ...{ label, value, path, schemaNode, context } });
+}
+function renderRepairMode(sessionContext) {
+  sessionContext.reactTreeMount?.dispose();
+  sessionContext.reactTreeMount = null;
+  sessionContext.reactTreeProjection = null;
+  sessionContext.selectedPath = null;
+  sessionContext.selectedCollection = null;
+  sessionContext.selectedLabel = "";
+  sessionContext.settingsDraft = null;
+  sessionContext.settingsDraftDirty = false;
+  sessionContext.updateFieldSummary({ overview: false });
+  sessionContext.settingsTable.classList.remove("hidden");
+  sessionContext.resultRenderSequence++;
+  sessionContext.activeResultActionId = null;
+  sessionContext.lastSweepRender = null;
+  sessionContext.fieldPlotState = null;
+  sessionContext.fullJson.value = JSON.stringify(sessionContext.model, null, 2);
+  sessionContext.jsonDraftDirty = false;
+  renderOwnedView(sessionContext.treeContent, /* @__PURE__ */ React.createElement("div", { className: "settings-empty" }, sessionContext.profileCopy("repairSchemaNotice", "This manifest does not satisfy {schema}. Select Validate to see the schema issues.").replaceAll("{schema}", sessionContext.model?.modelFormat || sessionContext.activeApplicationPackage?.modelSchema?.title || "the model schema")));
+  renderOwnedView(sessionContext.settingsTable.tBodies[0], /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement("tr", null, /* @__PURE__ */ React.createElement("td", { colSpan: Number("2"), className: "settings-empty" }, "Model settings are unavailable until the JSON structure is repaired."))));
+  sessionContext.$("#resolved-values").textContent = `Model JSON has ${sessionContext.modelRepairErrors.length} issue(s):
+${sessionContext.modelRepairErrors.slice(0, 80).join("\n")}`;
+  sessionContext.$("#selection-title").textContent = sessionContext.model?.metadata?.name || sessionContext.loadedModelFile || "Invalid model";
+  sessionContext.$("#selection-path").textContent = "Model JSON needs repair";
+  sessionContext.$("#editor-note").textContent = "This model cannot be edited here because its structure does not match the active schema. Correct the model file in its project folder, then select Refresh.";
+  sessionContext.updateSelectionActionVisibility();
+  if (sessionContext.applicationExtension("resultSettings")) sessionContext.applicationExtension("resultSettings").hidden = true;
+  sessionContext.updateWorkflowPanels();
+  sessionContext.$("#result-chart").hidden = true;
+  sessionContext.$("#result-legend").replaceChildren();
+  sessionContext.$("#results-toolbar").replaceChildren();
+  sessionContext.$("#geometry-view").hidden = false;
+  sessionContext.$("#geometry-note").hidden = false;
+  sessionContext.$("#geometry-note").textContent = "The graphics preview is unavailable until this model JSON is repaired.";
+  sessionContext.$("#geometry-controls").hidden = true;
+  sessionContext.$("#results-view").hidden = true;
+  sessionContext.$("#results-note").hidden = true;
+  sessionContext.$("#result-message").hidden = true;
+  sessionContext.$("#preview-summary").textContent = "Model JSON needs repair";
+  sessionContext.previewContext.clearRect(0, 0, sessionContext.previewCanvas.width, sessionContext.previewCanvas.height);
+  sessionContext.setTab();
+  sessionContext.syncModelActionAvailability();
+  sessionContext.updateModelEditState();
+}
+function menuButton(sessionContext, label, action, { disabled = false, reason = "" } = {}) {
+  return /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement("button", { className: "context-menu-item", type: "button", role: "menuitem", "data-action": action, ...disabled ? { "disabled": true, "aria-disabled": "true" } : {}, ...reason ? { "title": reason } : {} }, label));
+}
+function createController(context) {
+  return {
+    applicationExtension: applicationExtension.bind(null, context),
+    editorDomain: editorDomain.bind(null, context),
+    editorEndpoint: editorEndpoint.bind(null, context),
+    editorFactory: editorFactory.bind(null, context),
+    editorOptions: editorOptions.bind(null, context),
+    editorAllows: editorAllows.bind(null, context),
+    applicationResultAdapter: applicationResultAdapter.bind(null, context),
+    activateApplicationPackage: activateApplicationPackage.bind(null, context),
+    resizeWidthsFor: resizeWidthsFor.bind(null, context),
+    applyResizeWidths: applyResizeWidths.bind(null, context),
+    restoreResizeWidths: restoreResizeWidths.bind(null, context),
+    beginColumnResize: beginColumnResize.bind(null, context),
+    nudgeColumnBoundary: nudgeColumnBoundary.bind(null, context),
+    prepareResizableTable: prepareResizableTable.bind(null, context),
+    prepareResizableTables: prepareResizableTables.bind(null, context),
+    setStatus: setStatus.bind(null, context),
+    updateWorkflowPanels: updateWorkflowPanels.bind(null, context),
+    currentSelectionIsLoaded: currentSelectionIsLoaded.bind(null, context),
+    commitVisibleEditorState: commitVisibleEditorState.bind(null, context),
+    updateBuildButtons: updateBuildButtons.bind(null, context),
+    updatePreviewRunbar: updatePreviewRunbar.bind(null, context),
+    editorWorkflow: editorWorkflow.bind(null, context),
+    invalidatePreviewArtifacts: invalidatePreviewArtifacts.bind(null, context),
+    esc: esc.bind(null, context),
+    valueAt: valueAt.bind(null, context),
+    componentVariantSource: componentVariantSource.bind(null, context),
+    hasEditorRole: hasEditorRole.bind(null, context),
+    editorRolePath: editorRolePath.bind(null, context),
+    editorRolePathAt: editorRolePathAt.bind(null, context),
+    isEditorRoleRoot: isEditorRoleRoot.bind(null, context),
+    isEditorRoleItem: isEditorRoleItem.bind(null, context),
+    hasAnyEditorRole: hasAnyEditorRole.bind(null, context),
+    profileCopy: profileCopy.bind(null, context),
+    profileCopyFormat: profileCopyFormat.bind(null, context),
+    sharedUiCopy: sharedUiCopy.bind(null, context),
+    formatChoiceLabel: formatChoiceLabel.bind(null, context),
+    profileDataLabel: profileDataLabel.bind(null, context),
+    activeScenario: activeScenario.bind(null, context),
+    activeScenarioDimension: activeScenarioDimension.bind(null, context),
+    applyProfileAttributes: applyProfileAttributes.bind(null, context),
+    applyProfileVisibility: applyProfileVisibility.bind(null, context),
+    applyUiProfile: applyUiProfile.bind(null, context),
+    loadUiProfile: loadUiProfile.bind(null, context),
+    pathLabel: pathLabel.bind(null, context),
+    addSettingRow: addSettingRow.bind(null, context),
+    compatibleUnitsFor: compatibleUnitsFor.bind(null, context),
+    commitInputsBeforeRowMove: commitInputsBeforeRowMove.bind(null, context),
+    addItem: addItem.bind(null, context),
+    samePath: samePath.bind(null, context),
+    renderRepairMode: renderRepairMode.bind(null, context),
+    uniqueId: uniqueId.bind(null, context),
+    uniqueName: uniqueName.bind(null, context),
+    uniqueSymbol: uniqueSymbol.bind(null, context),
+    componentForArray: componentForArray.bind(null, context),
+    activeComponentId: activeComponentId.bind(null, context),
+    clearPreviewForComponentChange: clearPreviewForComponentChange.bind(null, context),
+    cloneWithUniqueIds: cloneWithUniqueIds.bind(null, context),
+    defaultArrayItem: defaultArrayItem.bind(null, context),
+    displayItemName: displayItemName.bind(null, context),
+    referenceItemLabel: referenceItemLabel.bind(null, context),
+    insertionIndexFor: insertionIndexFor.bind(null, context),
+    checkArrayInsertionLimit: checkArrayInsertionLimit.bind(null, context),
+    insertArrayItem: insertArrayItem.bind(null, context),
+    menuButton: menuButton.bind(null, context),
+    isToggleEnabledItemPath: isToggleEnabledItemPath.bind(null, context),
+    availableMenuButton: availableMenuButton.bind(null, context),
+    panelLayoutDefaults: panelLayoutDefaults.bind(null, context),
+    readPanelSize: readPanelSize.bind(null, context),
+    setGraphicsHeight: setGraphicsHeight.bind(null, context),
+    bindWidthSplitter: bindWidthSplitter.bind(null, context),
+    bindGraphicsHeightSplitter: bindGraphicsHeightSplitter.bind(null, context),
+    restorePanelLayout: restorePanelLayout.bind(null, context),
+    applicationRequestOptions: applicationRequestOptions.bind(null, context),
+    configureGraphicsWidget: configureGraphicsWidget.bind(null, context),
+    enablePreviewLayer: enablePreviewLayer.bind(null, context),
+    showDefaultGraphicsScene: showDefaultGraphicsScene.bind(null, context),
+    showGeometryView: showGeometryView.bind(null, context),
+    renderSweepTable: renderSweepTable.bind(null, context),
+    restoreApplicationPreview: restoreApplicationPreview.bind(null, context),
+    exitEditor: exitEditor.bind(null, context),
+    setTab: setTab.bind(null, context)
+  };
+}
+export {
+  createController
+};
 
 //# sourceMappingURL=workspace-controller.js.map

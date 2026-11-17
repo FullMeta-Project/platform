@@ -1,4 +1,109 @@
 // Generated from configured-default-value-design-editor.jsx by scripts/build-frontend.mjs.
-import f from"./react/react-runtime.js";import{mountReactComponent as x}from"./react/mount.js";import{QuantityValueControl as E}from"./quantity-value-control.js";import{renderNumberMapDefault as N}from"./number-map-default.js";function O(a,u){const n=u?.schemaProperty;if(!n)return[];let t=[],d=!1;for(const p of a?.parts||[]){if(!p.schema?.properties?.[n])continue;const e=a.child(p,"properties",n),r=e&&a.resolve(e).schema,i=typeof r?.const=="string"?[r.const]:Array.isArray(r?.enum)?r.enum.filter(s=>typeof s=="string"):null;i&&(t=d?u.merge==="union"?[...new Set([...t,...i])]:t.filter(s=>i.includes(s)):i,d=!0)}return t}function U({view:a,onCommand:u}){const{configuration:n,draft:t,defaultUnit:d,allowedUnits:p}=a;return f.createElement("section",{className:"sd-widget-detail"},n.heading?f.createElement("h3",null,n.heading):null,f.createElement("div",{className:"setting-inline schema-design-quantity"},f.createElement(E,{draft:t,allowedUnits:p,label:n.controlLabel||n.label||"Default value",onChange:(e,r)=>u({type:"default.quantity",draft:e},r)})),n.clearLabel?f.createElement("button",{type:"button",className:"sd-widget-clear-default",hidden:!t.expression.trim()&&(!t.unit||t.unit===d),onClick:e=>u({type:"default.clear"},e)},n.clearLabel):null)}function M(a,u,{source:n,state:t,context:d,annotationKey:p,configuration:e}={}){if(e?.control==="numberMap"){const l=N(a,{source:n,state:t,key:e.key||"default",label:e.heading||e.label||"Initial values",labels:e.labels,validationMessage:e.validationMessage});return l&&e.label&&(l.label=e.label),l}if(e?.control!=="quantityValue")return null;const r=e.key||"default";if(e.hideWhenInheritedWithoutLocalValue&&d?.inheritedWidgetSource&&!Object.hasOwn(n||{},r))return null;const i=Object.hasOwn(n||{},r)?JSON.stringify(n[r]):"";let s;try{s=JSON.parse(typeof t=="string"?t:i)}catch{}let y=typeof t=="string"&&t!==i;const v=n?.[p]??u?.[p]??{},b=v?.[e.defaultUnitFromAnnotation]||"",m=O(d,e.unitChoices);let o={expression:typeof s?.expression=="string"?s.expression:"",unit:typeof s?.unit=="string"?s.unit:b},h;t?.format==="fullmeta-quantity-default-state/1"&&(o=structuredClone(t.draft),y=t.dirty);const c=document.createElement("div");a.append(c);const g=()=>({view:{configuration:e,draft:o,defaultUnit:b,allowedUnits:m},onCommand:k}),k=(l,C)=>{if(l.type==="default.clear")o={expression:"",unit:""};else if(l.type==="default.quantity")o=l.draft;else throw new Error("Unknown configured default command "+l.type);y=!0,h.update(g()),(!C||C.type==="click")&&c.dispatchEvent(new Event("input",{bubbles:!0}))};h=x(c,U,g());const w=()=>y?o.expression.trim()||o.unit.trim()?JSON.stringify(o):"":i;return{label:e.label||"Default value",keys:[r],type:"json",input:{get value(){return w()}},original:i,snapshot:w,snapshotState:()=>({format:"fullmeta-quantity-default-state/1",draft:structuredClone(o),dirty:y}),dispose(){h.dispose(),c.remove()},validate(l){if(!l||Array.isArray(l)||typeof l.expression!="string"||!l.expression.trim()||typeof l.unit!="string"||!l.unit.trim()||m.length&&!m.includes(l.unit))throw new Error(e.validationMessage||"Complete the default expression and unit, or clear it.")}}}export{U as ConfiguredDefaultValueEditor,M as renderConfiguredDefaultValueDesignEditor};
+import React from "./react/react-runtime.js";
+import { mountReactComponent } from "./react/mount.js";
+import { QuantityValueControl } from "./quantity-value-control.js";
+import { renderNumberMapDefault } from "./number-map-default.js";
+function schemaPropertyChoices(context, configuration) {
+  const property = configuration?.schemaProperty;
+  if (!property) return [];
+  let choices = [], initialized = false;
+  for (const part of context?.parts || []) {
+    if (!part.schema?.properties?.[property]) continue;
+    const child = context.child(part, "properties", property), rule = child && context.resolve(child).schema;
+    const permitted = typeof rule?.const === "string" ? [rule.const] : Array.isArray(rule?.enum) ? rule.enum.filter((value) => typeof value === "string") : null;
+    if (permitted) {
+      choices = !initialized ? permitted : configuration.merge === "union" ? [.../* @__PURE__ */ new Set([...choices, ...permitted])] : choices.filter((value) => permitted.includes(value));
+      initialized = true;
+    }
+  }
+  return choices;
+}
+function ConfiguredDefaultValueEditor({ view, onCommand }) {
+  const { configuration: copy, draft, defaultUnit, allowedUnits } = view;
+  return /* @__PURE__ */ React.createElement("section", { className: "sd-widget-detail" }, copy.heading ? /* @__PURE__ */ React.createElement("h3", null, copy.heading) : null, /* @__PURE__ */ React.createElement("div", { className: "setting-inline schema-design-quantity" }, /* @__PURE__ */ React.createElement(
+    QuantityValueControl,
+    {
+      draft,
+      allowedUnits,
+      label: copy.controlLabel || copy.label || "Default value",
+      onChange: (draft2, event) => onCommand({ type: "default.quantity", draft: draft2 }, event)
+    }
+  )), copy.clearLabel ? /* @__PURE__ */ React.createElement(
+    "button",
+    {
+      type: "button",
+      className: "sd-widget-clear-default",
+      hidden: !draft.expression.trim() && (!draft.unit || draft.unit === defaultUnit),
+      onClick: (event) => onCommand({ type: "default.clear" }, event)
+    },
+    copy.clearLabel
+  ) : null);
+}
+function renderConfiguredDefaultValueDesignEditor(parent, schema, { source, state, context, annotationKey, configuration } = {}) {
+  if (configuration?.control === "numberMap") {
+    const field = renderNumberMapDefault(parent, {
+      source,
+      state,
+      key: configuration.key || "default",
+      label: configuration.heading || configuration.label || "Initial values",
+      labels: configuration.labels,
+      validationMessage: configuration.validationMessage
+    });
+    if (field && configuration.label) field.label = configuration.label;
+    return field;
+  }
+  if (configuration?.control !== "quantityValue") return null;
+  const key = configuration.key || "default";
+  if (configuration.hideWhenInheritedWithoutLocalValue && context?.inheritedWidgetSource && !Object.hasOwn(source || {}, key)) return null;
+  const original = Object.hasOwn(source || {}, key) ? JSON.stringify(source[key]) : "";
+  let value;
+  try {
+    value = JSON.parse(typeof state === "string" ? state : original);
+  } catch {
+  }
+  let dirty = typeof state === "string" && state !== original;
+  const annotation = source?.[annotationKey] ?? schema?.[annotationKey] ?? {}, defaultUnit = annotation?.[configuration.defaultUnitFromAnnotation] || "";
+  const allowedUnits = schemaPropertyChoices(context, configuration.unitChoices);
+  let draft = { expression: typeof value?.expression === "string" ? value.expression : "", unit: typeof value?.unit === "string" ? value.unit : defaultUnit }, mount;
+  if (state?.format === "fullmeta-quantity-default-state/1") {
+    draft = structuredClone(state.draft);
+    dirty = state.dirty;
+  }
+  const host = document.createElement("div");
+  parent.append(host);
+  const props = () => ({ view: { configuration, draft, defaultUnit, allowedUnits }, onCommand });
+  const onCommand = (command, event) => {
+    if (command.type === "default.clear") draft = { expression: "", unit: "" };
+    else if (command.type === "default.quantity") draft = command.draft;
+    else throw new Error("Unknown configured default command " + command.type);
+    dirty = true;
+    mount.update(props());
+    if (!event || event.type === "click") host.dispatchEvent(new Event("input", { bubbles: true }));
+  };
+  mount = mountReactComponent(host, ConfiguredDefaultValueEditor, props());
+  const snapshot = () => !dirty ? original : draft.expression.trim() || draft.unit.trim() ? JSON.stringify(draft) : "";
+  return {
+    label: configuration.label || "Default value",
+    keys: [key],
+    type: "json",
+    input: { get value() {
+      return snapshot();
+    } },
+    original,
+    snapshot,
+    snapshotState: () => ({ format: "fullmeta-quantity-default-state/1", draft: structuredClone(draft), dirty }),
+    dispose() {
+      mount.dispose();
+      host.remove();
+    },
+    validate(value2) {
+      if (!value2 || Array.isArray(value2) || typeof value2.expression !== "string" || !value2.expression.trim() || typeof value2.unit !== "string" || !value2.unit.trim() || allowedUnits.length && !allowedUnits.includes(value2.unit)) throw new Error(configuration.validationMessage || "Complete the default expression and unit, or clear it.");
+    }
+  };
+}
+export {
+  ConfiguredDefaultValueEditor,
+  renderConfiguredDefaultValueDesignEditor
+};
 
 //# sourceMappingURL=configured-default-value-design-editor.js.map

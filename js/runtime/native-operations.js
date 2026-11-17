@@ -1,26 +1,57 @@
 // @ts-check
 /** Shared descriptor bindings; no executable path, network dispatch or model transformation. */
-import authority from '../../contracts/native-operations.json' with { type: 'json' };
-import { nativeOperationsDigest, nativeOperationsSnapshot, nativeOperationSchemas } from './native-operations.generated.js';
 import { validateJsonSchema } from '../../model-rust/js/api.js';
 import { serializableEditorValue } from '../debug/controller.js';
 import { createNativeOperationResolver } from './native-operation-contract.js';
 const record = value => value !== null && typeof value === 'object' && !Array.isArray(value);
 const clone = value => serializableEditorValue(value);
-export { nativeOperationsDigest };
+export let nativeOperationsDigest = null;
 export const nativeOperationFormat = 'fullmeta-native-operations/1';
-const resolver = createNativeOperationResolver(authority, nativeOperationsDigest);
-export function nativeOperationChoices() { checkAuthority(); return Object.entries(authority.operations).map(([id, descriptor]) => ({ id, ...clone(descriptor) })); }
-function checkAuthority() {
-  if (authority.format !== nativeOperationFormat || JSON.stringify(authority) !== JSON.stringify(nativeOperationsSnapshot)) throw new Error('Native operation declarations are stale. Rebuild frontend artifacts from the authoritative JSON.');
+const registries = new Map();
+export async function registerNativeOperationRegistry(bytes) {
+  const data = bytes instanceof Uint8Array ? bytes : new Uint8Array(bytes);
+  if (data.byteLength > 4 * 1024 * 1024) throw new Error('The operation registry exceeds 4 MiB.');
+  const authority = JSON.parse(new TextDecoder().decode(data));
+  if (authority?.format !== nativeOperationFormat || !record(authority.operations) || !record(authority.$defs)) throw new Error('Invalid application operation registry.');
+  for (const [id, operation] of Object.entries(authority.operations)) {
+    if (!/^[A-Za-z][A-Za-z0-9_.-]*$/.test(id) || !record(operation)
+      || !Number.isSafeInteger(operation.version) || operation.version < 1
+      || typeof operation.program !== 'string' || !operation.program
+      || typeof operation.entry !== 'string' || !operation.entry
+      || !['json-stdio', 'ndjson-stdio'].includes(operation.protocol)
+      || !(record(operation.inputSchema) || typeof operation.inputSchema === 'boolean')) throw new Error(`Invalid native operation declaration ${id}.`);
+  }
+  const digest = [...new Uint8Array(await crypto.subtle.digest('SHA-256', data))].map(value => value.toString(16).padStart(2, '0')).join('');
+  registries.set(digest, { authority, digest, resolver: createNativeOperationResolver(authority, digest) });
+  nativeOperationsDigest = digest;
+  return digest;
 }
+export async function loadNativeOperationRegistry(schema, schemaUrl) {
+  const name = schema?.['x-fullmeta-runtime']?.operationRegistry;
+  if (name === undefined) { nativeOperationsDigest = null; return null; }
+  if (typeof name !== 'string' || !/^[A-Za-z0-9_-][A-Za-z0-9_.-]*\.json$/.test(name)) throw new Error('The operation registry must be a sibling JSON filename.');
+  const response = await fetch(new URL(name, schemaUrl));
+  if (!response.ok) throw new Error(`Could not load the application operation registry: ${response.status}.`);
+  return registerNativeOperationRegistry(new Uint8Array(await response.arrayBuffer()));
+}
+function selected(binding) {
+  const candidates = binding?.digest ? [registries.get(binding.digest)].filter(Boolean)
+    : [...registries.values()].filter(value => Object.hasOwn(value.authority.operations, binding?.id));
+  if (!binding?.digest && candidates.length > 1) throw new Error('The native operation is declared by more than one application registry; use its digest.');
+  const registry = candidates[0] || (!binding?.digest && registries.get(nativeOperationsDigest));
+  if (!registry) throw new Error('The application operation registry digest is unknown or not loaded.');
+  return registry;
+}
+export function nativeOperationChoices() { const registry = registries.get(nativeOperationsDigest); return registry ? Object.entries(registry.authority.operations).map(([id, descriptor]) => ({ id, ...clone(descriptor) })) : []; }
 /** Optional bindings are explicit; omission retains legacy behavior. */
-export function normalizeNativeOperationBinding(binding) { checkAuthority(); return resolver.normalizeBinding(binding); }
-export function resolveNativeOperation(binding, context = {}) { checkAuthority(); return resolver.resolve(binding, context); }
+export function normalizeNativeOperationBinding(binding) { return binding == null ? null : selected(binding).resolver.normalizeBinding(binding); }
+export function resolveNativeOperation(binding, context = {}) { return selected(binding).resolver.resolve(binding, context); }
 export function nativeOperationSchema(binding, phase = 'input') {
   const { identity } = resolveNativeOperation(binding);
   if (!['input', 'result', 'event'].includes(phase)) throw new Error('Choose native input, result or event validation.');
-  const schema = nativeOperationSchemas[identity.id][phase];
+  const authority = selected(identity).authority;
+  const source = authority.operations[identity.id][`${phase}Schema`];
+  const schema = source === undefined || typeof source === 'boolean' ? source : { $schema: authority.$schema, ...source, $defs: { ...authority.$defs, ...source.$defs } };
   if (schema === undefined) throw new Error(`Native operation ${identity.id} has no ${phase} schema.`);
   return clone(schema);
 }
@@ -39,7 +70,7 @@ export function assertNativeOperationValue(binding, phase, value) {
   return clone(value);
 }
 /** Defaults apply only to explicit opt-in APIs; records are never mutated. @returns {any} */
-export function normalizeNativeApiContract(contract) { checkAuthority(); return resolver.normalizeApi(contract); }
+export function normalizeNativeApiContract(contract, digest) { return contract?.operationContract ? selected({ ...contract.operationContract, digest: contract.operationContract.digest || digest }).resolver.normalizeApi(contract) : clone(contract); }
 
 /** Resolve only the API selected by a declared nativeOperation workflow. */
 export function nativeOperationActionContract(action, apiContracts) {

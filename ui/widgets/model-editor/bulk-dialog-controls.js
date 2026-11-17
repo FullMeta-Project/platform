@@ -1,4 +1,36 @@
 // Generated from bulk-dialog-controls.jsx by scripts/build-frontend.mjs.
-import a from"../shared/react/react-runtime.js";import{structuredValueDraft as i,readStructuredValueDraft as p}from"../shared/structured-value-editor.js";const f=e=>JSON.parse(JSON.stringify(e)),g=e=>p(e),k=(e,t)=>e(i(f(t))),d=(e,t)=>JSON.stringify(e)===JSON.stringify(t),m=e=>e.length?`#/${e.map(t=>String(t).replace(/~/g,"~0").replace(/\//g,"~1")).join("/")}`:"#";function x({label:e,value:t="",onChange:r,disabled:n=!1,placeholder:o="",multiline:s=!1}){const l={"aria-label":e,value:t,disabled:n,placeholder:o,onChange:u=>r(u.target.value)};return a.createElement("label",{className:"schema-bulk-field"},e,s?a.createElement("textarea",{...l,rows:4}):a.createElement("input",{...l,type:"text"}))}function S({label:e,value:t="",choices:r,onChange:n,disabled:o=!1}){const s=r.map(l=>Array.isArray(l)?l:[l,l]);return t&&!s.some(([l])=>l===t)&&s.push([t,`${t} (existing)`]),a.createElement("label",{className:"schema-bulk-field"},e,a.createElement("select",{"aria-label":e,value:t,disabled:o,onChange:l=>n(l.target.value)},s.map(([l,u])=>a.createElement("option",{key:l,value:l},u))))}function y({label:e,value:t=!1,onChange:r,disabled:n=!1}){return a.createElement("label",{className:"schema-bulk-field"},a.createElement("input",{type:"checkbox","aria-label":e,checked:t,disabled:n,onChange:o=>r(o.target.checked)}),e)}function B({children:e,onClick:t,disabled:r=!1,...n}){return a.createElement("button",{...n,type:"button",disabled:r,onClick:t},e)}export{B as BulkButton,S as BulkSelect,x as BulkText,y as BulkToggle,m as bulkPointer,g as bulkState,f as cleanBulkData,d as sameBulkValue,k as updateBulkState};
+import React from "../shared/react/react-runtime.js";
+import { structuredValueDraft, readStructuredValueDraft } from "../shared/structured-value-editor.js";
+const cleanBulkData = (value) => JSON.parse(JSON.stringify(value));
+const bulkState = (draft) => readStructuredValueDraft(draft);
+const updateBulkState = (onDraftChange, value) => onDraftChange(structuredValueDraft(cleanBulkData(value)));
+const sameBulkValue = (left, right) => JSON.stringify(left) === JSON.stringify(right);
+const bulkPointer = (path) => path.length ? `#/${path.map((part) => String(part).replace(/~/g, "~0").replace(/\//g, "~1")).join("/")}` : "#";
+function BulkText({ label, value = "", onChange, disabled = false, placeholder = "", multiline = false }) {
+  const props = { "aria-label": label, value, disabled, placeholder, onChange: (event) => onChange(event.target.value) };
+  return /* @__PURE__ */ React.createElement("label", { className: "schema-bulk-field" }, label, multiline ? /* @__PURE__ */ React.createElement("textarea", { ...props, rows: 4 }) : /* @__PURE__ */ React.createElement("input", { ...props, type: "text" }));
+}
+function BulkSelect({ label, value = "", choices, onChange, disabled = false }) {
+  const entries = choices.map((choice) => Array.isArray(choice) ? choice : [choice, choice]);
+  if (value && !entries.some(([key]) => key === value)) entries.push([value, `${value} (existing)`]);
+  return /* @__PURE__ */ React.createElement("label", { className: "schema-bulk-field" }, label, /* @__PURE__ */ React.createElement("select", { "aria-label": label, value, disabled, onChange: (event) => onChange(event.target.value) }, entries.map(([key, text]) => /* @__PURE__ */ React.createElement("option", { key, value: key }, text))));
+}
+function BulkToggle({ label, value = false, onChange, disabled = false }) {
+  return /* @__PURE__ */ React.createElement("label", { className: "schema-bulk-field" }, /* @__PURE__ */ React.createElement("input", { type: "checkbox", "aria-label": label, checked: value, disabled, onChange: (event) => onChange(event.target.checked) }), label);
+}
+function BulkButton({ children, onClick, disabled = false, ...rest }) {
+  return /* @__PURE__ */ React.createElement("button", { ...rest, type: "button", disabled, onClick }, children);
+}
+export {
+  BulkButton,
+  BulkSelect,
+  BulkText,
+  BulkToggle,
+  bulkPointer,
+  bulkState,
+  cleanBulkData,
+  sameBulkValue,
+  updateBulkState
+};
 
 //# sourceMappingURL=bulk-dialog-controls.js.map

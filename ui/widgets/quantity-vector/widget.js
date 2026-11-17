@@ -1,4 +1,61 @@
 // Generated from widget.jsx by scripts/build-frontend.mjs.
-import t from"../shared/react/react-runtime.js";import{mountReactComponent as A}from"../shared/react/mount.js";import{renderLegacyWidgetMarkup as Q}from"../shared/react/render-markup.js";import{legacyFieldUiView as w,writeFieldUiBehavior as E}from"../../annotation-language.js";import{QuantityVectorDefaultEditor as k,mountQuantityVectorDefaultEditor as T}from"./default-editor.js";import{quantityVectorDesignLabel as B,renderQuantityVectorDesignEditor as I}from"./design-editor.js";import{initialQuantityVectorValue as M}from"./value.js";import{validateQuantityVectorAnnotation as z}from"./fullmeta-ui-quantityVector-1.schema.js";function g({label:o,value:n,path:p=[],schema:s={},context:l={},ui:i={},renderField:v,onCommand:h,fields:V}){const u=Array.isArray(n)?n:[],c=Array.isArray(i.componentLabels)?i.componentLabels:[];let a=[],m="";if(typeof i.componentSource=="string")try{const e=l.quantityVectorComponents?.(i.componentSource,p)??[];if(!Array.isArray(e))throw new Error("The component provider did not return a list.");a=e,u.length&&!a.length&&(m="No vector component descriptors are available.")}catch(e){m=e?.message||"The vector component provider failed."}const b=V||u.map((e,r)=>{const d=typeof c[r]=="string"&&c[r].trim()?c[r]:a[r]?.label||a[r]?.symbol||null,y=l.resolveSchema?.(l.schemaItem?.(s,n,r))||{},f=w(y),S=i.unitReadOnly===!0?E({...f,"x-fullmeta-ui-quantity":{...f["x-fullmeta-ui-quantity"]||{},unitReadOnly:!0,defaultUnit:a[r]?.unit||"1"}},{context:"projectEditing"}):y;return{label:d||String(r+1),labelOverride:d,value:e,path:[...p,r],schemaNode:S,context:l}});return t.createElement(t.Fragment,null,t.createElement("tr",{className:"settings-group"},t.createElement("th",{colSpan:2},o)),m?t.createElement("tr",null,t.createElement("td",{colSpan:2},t.createElement("div",{role:"alert"},"Could not load vector components: ",m))):null,s.description?t.createElement("tr",null,t.createElement("td",{colSpan:2,className:"settings-empty"},s.description)):null,b.map((e,r)=>t.createElement(t.Fragment,{key:e.id||JSON.stringify(e.path)||r},v?.({...e,onCommand:h}))))}function F(o){return t.createElement(g,{...o,...o.view})}const O=o=>Q(g,o,["renderField"]),C=(o,n)=>A(o,F,n);export{g as QuantityVector,k as QuantityVectorDefaultEditor,F as Widget,M as initialQuantityVectorValue,T as mountQuantityVectorDefaultEditor,C as mountWidget,B as quantityVectorDesignLabel,O as renderQuantityVector,I as renderQuantityVectorDesignEditor,z as validateQuantityVectorAnnotation};
+import React from "../shared/react/react-runtime.js";
+import { mountReactComponent } from "../shared/react/mount.js";
+import { renderLegacyWidgetMarkup } from "../shared/react/render-markup.js";
+import { legacyFieldUiView, writeFieldUiBehavior } from "../../annotation-language.js";
+import { QuantityVectorDefaultEditor, mountQuantityVectorDefaultEditor } from "./default-editor.js";
+import { quantityVectorDesignLabel, renderQuantityVectorDesignEditor } from "./design-editor.js";
+import { initialQuantityVectorValue } from "./value.js";
+import { validateQuantityVectorAnnotation } from "./fullmeta-ui-quantityVector-1.schema.js";
+function QuantityVector({ label, value, path = [], schema = {}, context = {}, ui = {}, renderField, onCommand, fields }) {
+  const entries = Array.isArray(value) ? value : [], labels = Array.isArray(ui.componentLabels) ? ui.componentLabels : [];
+  let descriptors = [], providerError = "";
+  if (typeof ui.componentSource === "string") {
+    try {
+      const result = context.quantityVectorComponents?.(ui.componentSource, path) ?? [];
+      if (!Array.isArray(result)) throw new Error("The component provider did not return a list.");
+      descriptors = result;
+      if (entries.length && !descriptors.length) providerError = "No vector component descriptors are available.";
+    } catch (error) {
+      providerError = error?.message || "The vector component provider failed.";
+    }
+  }
+  const resolved = fields || entries.map((entry, index) => {
+    const componentLabel = typeof labels[index] === "string" && labels[index].trim() ? labels[index] : descriptors[index]?.label || descriptors[index]?.symbol || null;
+    const itemSchema = context.resolveSchema?.(context.schemaItem?.(schema, value, index)) || {};
+    const itemView = legacyFieldUiView(itemSchema);
+    const schemaNode = ui.unitReadOnly === true ? writeFieldUiBehavior({ ...itemView, "x-fullmeta-ui-quantity": {
+      ...itemView["x-fullmeta-ui-quantity"] || {},
+      unitReadOnly: true,
+      defaultUnit: descriptors[index]?.unit || "1"
+    } }, { context: "projectEditing" }) : itemSchema;
+    return {
+      label: componentLabel || String(index + 1),
+      labelOverride: componentLabel,
+      value: entry,
+      path: [...path, index],
+      schemaNode,
+      context
+    };
+  });
+  return /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement("tr", { className: "settings-group" }, /* @__PURE__ */ React.createElement("th", { colSpan: 2 }, label)), providerError ? /* @__PURE__ */ React.createElement("tr", null, /* @__PURE__ */ React.createElement("td", { colSpan: 2 }, /* @__PURE__ */ React.createElement("div", { role: "alert" }, "Could not load vector components: ", providerError))) : null, schema.description ? /* @__PURE__ */ React.createElement("tr", null, /* @__PURE__ */ React.createElement("td", { colSpan: 2, className: "settings-empty" }, schema.description)) : null, resolved.map((field, index) => /* @__PURE__ */ React.createElement(React.Fragment, { key: field.id || JSON.stringify(field.path) || index }, renderField?.({ ...field, onCommand }))));
+}
+function Widget(props) {
+  return /* @__PURE__ */ React.createElement(QuantityVector, { ...props, ...props.view });
+}
+const renderQuantityVector = (props) => renderLegacyWidgetMarkup(QuantityVector, props, ["renderField"]);
+const mountWidget = (container, props) => mountReactComponent(container, Widget, props);
+export {
+  QuantityVector,
+  QuantityVectorDefaultEditor,
+  Widget,
+  initialQuantityVectorValue,
+  mountQuantityVectorDefaultEditor,
+  mountWidget,
+  quantityVectorDesignLabel,
+  renderQuantityVector,
+  renderQuantityVectorDesignEditor,
+  validateQuantityVectorAnnotation
+};
 
 //# sourceMappingURL=widget.js.map

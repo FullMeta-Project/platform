@@ -1,4 +1,165 @@
 // Generated from candidate-dialog.jsx by scripts/build-frontend.mjs.
-import r from"../shared/react/react-runtime.js";import{mountReactComponent as j}from"../shared/react/mount.js";import{StructuredValueEditor as J,structuredValueDraft as v,readStructuredValueDraft as $}from"../shared/structured-value-editor.js";import{assertDeclarativeDocument as B}from"../validation-program/widget.js";const m=e=>structuredClone(e),L=(e,o)=>e.entries?.find(s=>s.key===o)?.value;function S(e,o,s){const l=e.entries||[];return{...e,entries:l.some(u=>u.key===o)?l.map(u=>u.key===o?{...u,value:s}:u):[...l,{key:o,value:s}]}}function V({draft:e,name:o,label:s=o,choices:l,onDraftChange:u}){const h=L(e,o)||v(""),k=t=>u(S(e,o,v(t)));return l?r.createElement("label",null,s,r.createElement("select",{"aria-label":s,value:h.value??"",onChange:t=>k(t.target.value)},l.map(t=>r.createElement("option",{key:t.value??t,value:t.value??t},t.label??t)))):h.type==="boolean"?r.createElement("label",null,r.createElement("input",{"aria-label":s,type:"checkbox",checked:h.value===!0,onChange:t=>k(t.target.checked)}),s):h.type==="string"||h.type==="number"?r.createElement("label",null,s,r.createElement("input",{"aria-label":s,value:h.value,onChange:t=>u(S(e,o,{...h,value:t.target.value}))})):r.createElement(J,{draft:h,label:s,onDraftChange:t=>u(S(e,o,t))})}function q({draft:e,label:o="Rows",columns:s=[],template:l={},onDraftChange:u}){const h=(t,i)=>{const b=[...e.items];i<0||i>=b.length||([b[t],b[i]]=[b[i],b[t]],u({...e,items:b}))},k=()=>{try{const t=e.batchText||"";let i;if(t.trim().startsWith("[")){if(i=JSON.parse(t),!Array.isArray(i))throw new Error("Import a record array.")}else i=t.replace(/^\uFEFF/,"").split(/\r?\n/).filter(d=>d.trim()).map((d,f)=>{const w=d.split("	");if(!f&&s.every((c,n)=>w[n]?.trim().toLowerCase()===c.name.toLowerCase()))return null;if(w.length!==s.length)throw new Error(`Line ${f+1}: use ${s.map(c=>c.name).join(", ")} columns.`);const p={...l};return s.forEach((c,n)=>{const y=w[n];p[c.name]=typeof l[c.name]=="boolean"?y.trim()==="true":Array.isArray(l[c.name])||l[c.name]&&typeof l[c.name]=="object"?JSON.parse(y):y}),p}).filter(Boolean);if(!i.length)throw new Error("Enter at least one row.");u({...e,items:e.batchMode==="replace"?i.map(v):[...e.items||[],...i.map(v)],batchText:"",batchPending:!1,batchError:""})}catch(t){u({...e,batchError:t.message})}};return r.createElement("section",null,r.createElement("h3",null,o),r.createElement("table",{className:"schema-structure-table schema-bulk-table"},r.createElement("thead",null,r.createElement("tr",null,s.map(t=>r.createElement("th",{key:t.name},t.label||t.name)),r.createElement("th",null,"Actions"))),r.createElement("tbody",null,(e.items||[]).map((t,i)=>r.createElement("tr",{key:i},s.map(b=>r.createElement("td",{key:b.name},r.createElement(V,{...b,draft:t,onDraftChange:d=>u({...e,items:e.items.map((f,w)=>w===i?d:f)})}))),r.createElement("td",null,r.createElement("button",{type:"button",disabled:!i,onClick:()=>h(i,i-1)},"Up"),r.createElement("button",{type:"button",disabled:i===e.items.length-1,onClick:()=>h(i,i+1)},"Down"),r.createElement("button",{type:"button",onClick:()=>u({...e,items:e.items.filter((b,d)=>d!==i)})},"Remove row")))))),r.createElement("button",{type:"button",onClick:()=>u({...e,items:[...e.items||[],v(l)]})},"Add row"),r.createElement("details",null,r.createElement("summary",null,"Import JSON or TSV rows"),r.createElement("p",null,"TSV columns: ",s.map(t=>t.name).join(", "),". Nested values use JSON."),r.createElement("textarea",{"aria-label":`${o} batch rows`,rows:4,value:e.batchText||"",onChange:t=>u({...e,batchText:t.target.value,batchPending:!!t.target.value})}),r.createElement("select",{"aria-label":`${o} import operation`,value:e.batchMode||"append",onChange:t=>u({...e,batchMode:t.target.value})},r.createElement("option",{value:"append"},"Append rows"),r.createElement("option",{value:"replace"},"Replace rows")),r.createElement("button",{type:"button",onClick:k},"Load rows"),r.createElement("button",{type:"button",onClick:()=>u({...e,batchText:"",batchPending:!1,batchError:""})},"Clear batch text"),e.batchError?r.createElement("p",{role:"alert"},e.batchError):null))}function E(e){if(!(!e||typeof e!="object")){if(e.batchPending)throw new Error("Load or Clear pending batch text before Preview.");for(const o of Object.values(e))o&&typeof o=="object"&&(Array.isArray(o)?o.forEach(E):E(o))}}function F({model:e,commands:o,Editor:s}){return r.createElement("dialog",{className:`schema-bulk-dialog ${e.className||""}`,ref:o.ref,onCancel:l=>{l.preventDefault(),o.close()},onClose:o.close},r.createElement("div",{className:"schema-bulk-content"},r.createElement("header",{className:"schema-validation-dialog-head"},r.createElement("h2",null,e.title),r.createElement("button",{type:"button","aria-label":"Close dialog",onClick:o.close},"\xD7")),r.createElement("div",{className:"schema-bulk-body"},e.source===null?null:s?r.createElement(s,{draft:e.draft,onDraftChange:o.change,source:e.source,context:e.context,error:e.error}):r.createElement(J,{draft:e.draft,label:e.title,onDraftChange:o.change,error:e.error}),r.createElement("p",{role:"status",className:"schema-ui-annotation-feedback"},e.status),e.error?r.createElement("p",{role:"alert"},e.error):null,e.previewText?r.createElement("details",{className:"schema-bulk-preview",open:!0},r.createElement("summary",null,"Generated candidate"),r.createElement("pre",null,e.previewText)):null),r.createElement("footer",{className:"schema-validation-dialog-actions"},r.createElement("button",{type:"button",onClick:o.preview},"Preview"),r.createElement("button",{type:"button",disabled:!e.ready,onClick:o.apply},"Apply"))))}function z({title:e,toolId:o,className:s="",getDocument:l,validateCandidate:u,applyCandidate:h,initialDraft:k,buildCandidate:t,Editor:i,message:b=`Applied ${e}. Save the schema to keep changes.`}){const d=document.createElement("div");document.body.append(d);let f,w,p=null,c=null,n={title:e,toolId:o,className:s,source:null,context:{},draft:v({}),open:!1,ready:!1,status:"",error:"",previewText:""};const y=()=>{w.update({model:n,commands:N,Editor:i}),n.open&&!f.open?f.showModal():!n.open&&f.open&&f.close()},P=a=>{throw p=null,n={...n,ready:!1,error:a.message},y(),a},C=()=>{try{if(!n.open)throw new Error("Open the authoring dialog first.");E(n.draft);const a=$(n.draft),g=t(n.source,a,n.context),x=g?.candidate||g?.document||g;if(JSON.stringify(x)===JSON.stringify(n.source))throw new Error("Change at least one setting before Preview.");const O=g?.allowGeneratedSubtrees?{allowGeneratedSubtrees:g.allowGeneratedSubtrees}:{};return B(x),u(x,O),p={candidate:x,options:O,base:JSON.stringify(n.source)},n={...n,ready:!0,error:"",previewText:JSON.stringify(g?.changes||x,null,2),status:"Preview ready. Apply updates the open draft; Save persists it."},y(),{ready:!0,toolId:o}}catch(a){return P(a)}},T=()=>{try{if(!p||!n.ready)throw new Error("Preview a valid candidate before Apply.");if(l()!==c||JSON.stringify(l())!==p.base)throw new Error("The schema changed since Preview. Reopen the dialog.");return h(p.candidate,b,p.options),N.close(),{applied:!0,toolId:o}}catch(a){return P(a)}},A=a=>()=>{try{a()}catch{}},N={ref(a){f=a},close(){n.open&&(n={...n,open:!1},y())},change(a){p=null,n={...n,draft:a,ready:!1,status:"",error:"",previewText:""},y()},preview:A(C),apply:A(T)};return w=j(d,F,{model:n,commands:N,Editor:i}),{open(a={}){c=l();const g=m(c);n={...n,source:g,context:m(a),draft:v(k(g,a)),open:!0,ready:!1,status:"",error:"",previewText:""},p=null,y()},updateDraft:N.change,snapshot(){return{format:"fullmeta-schema-candidate-dialog/1",toolId:o,source:m(n.source),context:m(n.context),draft:m(n.draft),open:n.open,hadPreview:!!p,status:n.status,error:n.error}},restore(a){if(a?.format!=="fullmeta-schema-candidate-dialog/1"||a.toolId!==o||JSON.stringify(a.source)!==JSON.stringify(l()))throw new Error("Authoring state belongs to a different source document or tool.");return c=l(),n={...n,source:m(a.source),context:m(a.context),draft:m(a.draft),open:a.open!==!1,ready:!1,status:a.status||"",error:a.error||"",previewText:""},p=null,y(),a.hadPreview&&C(),{restored:!0,previewReady:!!p}},preview:C,apply:T,close:N.close,get dialog(){return f},dispose(){w.dispose(),d.remove()}}}export{V as CandidateField,q as CandidateRows,F as SchemaCandidateDialog,z as createCandidateDialog,L as draftProperty,S as withDraftProperty};
+import React from "../shared/react/react-runtime.js";
+import { mountReactComponent } from "../shared/react/mount.js";
+import { StructuredValueEditor, structuredValueDraft, readStructuredValueDraft } from "../shared/structured-value-editor.js";
+import { assertDeclarativeDocument } from "../validation-program/widget.js";
+const clone = (value) => structuredClone(value);
+const draftProperty = (draft, key) => draft.entries?.find((entry) => entry.key === key)?.value;
+function withDraftProperty(draft, key, value) {
+  const entries = draft.entries || [];
+  return { ...draft, entries: entries.some((entry) => entry.key === key) ? entries.map((entry) => entry.key === key ? { ...entry, value } : entry) : [...entries, { key, value }] };
+}
+function CandidateField({ draft, name, label = name, choices, onDraftChange }) {
+  const node = draftProperty(draft, name) || structuredValueDraft("");
+  const change = (value) => onDraftChange(withDraftProperty(draft, name, structuredValueDraft(value)));
+  if (choices) return /* @__PURE__ */ React.createElement("label", null, label, /* @__PURE__ */ React.createElement("select", { "aria-label": label, value: node.value ?? "", onChange: (event) => change(event.target.value) }, choices.map((choice) => /* @__PURE__ */ React.createElement("option", { key: choice.value ?? choice, value: choice.value ?? choice }, choice.label ?? choice))));
+  if (node.type === "boolean") return /* @__PURE__ */ React.createElement("label", null, /* @__PURE__ */ React.createElement("input", { "aria-label": label, type: "checkbox", checked: node.value === true, onChange: (event) => change(event.target.checked) }), label);
+  if (node.type === "string" || node.type === "number") return /* @__PURE__ */ React.createElement("label", null, label, /* @__PURE__ */ React.createElement("input", { "aria-label": label, value: node.value, onChange: (event) => onDraftChange(withDraftProperty(draft, name, { ...node, value: event.target.value })) }));
+  return /* @__PURE__ */ React.createElement(StructuredValueEditor, { draft: node, label, onDraftChange: (value) => onDraftChange(withDraftProperty(draft, name, value)) });
+}
+function CandidateRows({ draft, label = "Rows", columns = [], template = {}, onDraftChange }) {
+  const move = (from, to) => {
+    const items = [...draft.items];
+    if (to < 0 || to >= items.length) return;
+    [items[from], items[to]] = [items[to], items[from]];
+    onDraftChange({ ...draft, items });
+  };
+  const load = () => {
+    try {
+      const text = draft.batchText || "";
+      let rows;
+      if (text.trim().startsWith("[")) {
+        rows = JSON.parse(text);
+        if (!Array.isArray(rows)) throw new Error("Import a record array.");
+      } else {
+        const lines = text.replace(/^\uFEFF/, "").split(/\r?\n/).filter((line) => line.trim());
+        rows = lines.map((line, index) => {
+          const cells = line.split("	");
+          if (!index && columns.every((column, at) => cells[at]?.trim().toLowerCase() === column.name.toLowerCase())) return null;
+          if (cells.length !== columns.length) throw new Error(`Line ${index + 1}: use ${columns.map((column) => column.name).join(", ")} columns.`);
+          const row = { ...template };
+          columns.forEach((column, at) => {
+            const value = cells[at];
+            row[column.name] = typeof template[column.name] === "boolean" ? value.trim() === "true" : Array.isArray(template[column.name]) || template[column.name] && typeof template[column.name] === "object" ? JSON.parse(value) : value;
+          });
+          return row;
+        }).filter(Boolean);
+      }
+      if (!rows.length) throw new Error("Enter at least one row.");
+      onDraftChange({ ...draft, items: draft.batchMode === "replace" ? rows.map(structuredValueDraft) : [...draft.items || [], ...rows.map(structuredValueDraft)], batchText: "", batchPending: false, batchError: "" });
+    } catch (error) {
+      onDraftChange({ ...draft, batchError: error.message });
+    }
+  };
+  return /* @__PURE__ */ React.createElement("section", null, /* @__PURE__ */ React.createElement("h3", null, label), /* @__PURE__ */ React.createElement("table", { className: "schema-structure-table schema-bulk-table" }, /* @__PURE__ */ React.createElement("thead", null, /* @__PURE__ */ React.createElement("tr", null, columns.map((column) => /* @__PURE__ */ React.createElement("th", { key: column.name }, column.label || column.name)), /* @__PURE__ */ React.createElement("th", null, "Actions"))), /* @__PURE__ */ React.createElement("tbody", null, (draft.items || []).map((row, index) => /* @__PURE__ */ React.createElement("tr", { key: index }, columns.map((column) => /* @__PURE__ */ React.createElement("td", { key: column.name }, /* @__PURE__ */ React.createElement(CandidateField, { ...column, draft: row, onDraftChange: (value) => onDraftChange({ ...draft, items: draft.items.map((item, at) => at === index ? value : item) }) }))), /* @__PURE__ */ React.createElement("td", null, /* @__PURE__ */ React.createElement("button", { type: "button", disabled: !index, onClick: () => move(index, index - 1) }, "Up"), /* @__PURE__ */ React.createElement("button", { type: "button", disabled: index === draft.items.length - 1, onClick: () => move(index, index + 1) }, "Down"), /* @__PURE__ */ React.createElement("button", { type: "button", onClick: () => onDraftChange({ ...draft, items: draft.items.filter((_, at) => at !== index) }) }, "Remove row")))))), /* @__PURE__ */ React.createElement("button", { type: "button", onClick: () => onDraftChange({ ...draft, items: [...draft.items || [], structuredValueDraft(template)] }) }, "Add row"), /* @__PURE__ */ React.createElement("details", null, /* @__PURE__ */ React.createElement("summary", null, "Import JSON or TSV rows"), /* @__PURE__ */ React.createElement("p", null, "TSV columns: ", columns.map((column) => column.name).join(", "), ". Nested values use JSON."), /* @__PURE__ */ React.createElement("textarea", { "aria-label": `${label} batch rows`, rows: 4, value: draft.batchText || "", onChange: (event) => onDraftChange({ ...draft, batchText: event.target.value, batchPending: Boolean(event.target.value) }) }), /* @__PURE__ */ React.createElement("select", { "aria-label": `${label} import operation`, value: draft.batchMode || "append", onChange: (event) => onDraftChange({ ...draft, batchMode: event.target.value }) }, /* @__PURE__ */ React.createElement("option", { value: "append" }, "Append rows"), /* @__PURE__ */ React.createElement("option", { value: "replace" }, "Replace rows")), /* @__PURE__ */ React.createElement("button", { type: "button", onClick: load }, "Load rows"), /* @__PURE__ */ React.createElement("button", { type: "button", onClick: () => onDraftChange({ ...draft, batchText: "", batchPending: false, batchError: "" }) }, "Clear batch text"), draft.batchError ? /* @__PURE__ */ React.createElement("p", { role: "alert" }, draft.batchError) : null));
+}
+function assertNoPendingBatch(value) {
+  if (!value || typeof value !== "object") return;
+  if (value.batchPending) throw new Error("Load or Clear pending batch text before Preview.");
+  for (const child of Object.values(value)) if (child && typeof child === "object") {
+    if (Array.isArray(child)) child.forEach(assertNoPendingBatch);
+    else assertNoPendingBatch(child);
+  }
+}
+function SchemaCandidateDialog({ model, commands, Editor }) {
+  return /* @__PURE__ */ React.createElement("dialog", { className: `schema-bulk-dialog ${model.className || ""}`, ref: commands.ref, onCancel: (event) => {
+    event.preventDefault();
+    commands.close();
+  }, onClose: commands.close }, /* @__PURE__ */ React.createElement("div", { className: "schema-bulk-content" }, /* @__PURE__ */ React.createElement("header", { className: "schema-validation-dialog-head" }, /* @__PURE__ */ React.createElement("h2", null, model.title), /* @__PURE__ */ React.createElement("button", { type: "button", "aria-label": "Close dialog", onClick: commands.close }, "\xD7")), /* @__PURE__ */ React.createElement("div", { className: "schema-bulk-body" }, model.source === null ? null : Editor ? /* @__PURE__ */ React.createElement(Editor, { draft: model.draft, onDraftChange: commands.change, source: model.source, context: model.context, error: model.error }) : /* @__PURE__ */ React.createElement(StructuredValueEditor, { draft: model.draft, label: model.title, onDraftChange: commands.change, error: model.error }), /* @__PURE__ */ React.createElement("p", { role: "status", className: "schema-ui-annotation-feedback" }, model.status), model.error ? /* @__PURE__ */ React.createElement("p", { role: "alert" }, model.error) : null, model.previewText ? /* @__PURE__ */ React.createElement("details", { className: "schema-bulk-preview", open: true }, /* @__PURE__ */ React.createElement("summary", null, "Generated candidate"), /* @__PURE__ */ React.createElement("pre", null, model.previewText)) : null), /* @__PURE__ */ React.createElement("footer", { className: "schema-validation-dialog-actions" }, /* @__PURE__ */ React.createElement("button", { type: "button", onClick: commands.preview }, "Preview"), /* @__PURE__ */ React.createElement("button", { type: "button", disabled: !model.ready, onClick: commands.apply }, "Apply"))));
+}
+function createCandidateDialog({ title, toolId, className = "", getDocument, validateCandidate, applyCandidate, initialDraft, buildCandidate, Editor, message = `Applied ${title}. Save the schema to keep changes.` }) {
+  const host = document.createElement("div");
+  document.body.append(host);
+  let dialog, mount, preview = null, owner = null;
+  let model = { title, toolId, className, source: null, context: {}, draft: structuredValueDraft({}), open: false, ready: false, status: "", error: "", previewText: "" };
+  const render = () => {
+    mount.update({ model, commands, Editor });
+    if (model.open && !dialog.open) dialog.showModal();
+    else if (!model.open && dialog.open) dialog.close();
+  };
+  const fail = (error) => {
+    preview = null;
+    model = { ...model, ready: false, error: error.message };
+    render();
+    throw error;
+  };
+  const previewNow = () => {
+    try {
+      if (!model.open) throw new Error("Open the authoring dialog first.");
+      assertNoPendingBatch(model.draft);
+      const changes = readStructuredValueDraft(model.draft), result = buildCandidate(model.source, changes, model.context), candidate = result?.candidate || result?.document || result;
+      if (JSON.stringify(candidate) === JSON.stringify(model.source)) throw new Error("Change at least one setting before Preview.");
+      const options = result?.allowGeneratedSubtrees ? { allowGeneratedSubtrees: result.allowGeneratedSubtrees } : {};
+      assertDeclarativeDocument(candidate);
+      validateCandidate(candidate, options);
+      preview = { candidate, options, base: JSON.stringify(model.source) };
+      model = { ...model, ready: true, error: "", previewText: JSON.stringify(result?.changes || candidate, null, 2), status: "Preview ready. Apply updates the open draft; Save persists it." };
+      render();
+      return { ready: true, toolId };
+    } catch (error) {
+      return fail(error);
+    }
+  };
+  const applyNow = () => {
+    try {
+      if (!preview || !model.ready) throw new Error("Preview a valid candidate before Apply.");
+      if (getDocument() !== owner || JSON.stringify(getDocument()) !== preview.base) throw new Error("The schema changed since Preview. Reopen the dialog.");
+      applyCandidate(preview.candidate, message, preview.options);
+      commands.close();
+      return { applied: true, toolId };
+    } catch (error) {
+      return fail(error);
+    }
+  };
+  const ui = (action) => () => {
+    try {
+      action();
+    } catch {
+    }
+  };
+  const commands = { ref(node) {
+    dialog = node;
+  }, close() {
+    if (!model.open) return;
+    model = { ...model, open: false };
+    render();
+  }, change(draft) {
+    preview = null;
+    model = { ...model, draft, ready: false, status: "", error: "", previewText: "" };
+    render();
+  }, preview: ui(previewNow), apply: ui(applyNow) };
+  mount = mountReactComponent(host, SchemaCandidateDialog, { model, commands, Editor });
+  const api = { open(context = {}) {
+    owner = getDocument();
+    const source = clone(owner);
+    model = { ...model, source, context: clone(context), draft: structuredValueDraft(initialDraft(source, context)), open: true, ready: false, status: "", error: "", previewText: "" };
+    preview = null;
+    render();
+  }, updateDraft: commands.change, snapshot() {
+    return { format: "fullmeta-schema-candidate-dialog/1", toolId, source: clone(model.source), context: clone(model.context), draft: clone(model.draft), open: model.open, hadPreview: Boolean(preview), status: model.status, error: model.error };
+  }, restore(value) {
+    if (value?.format !== "fullmeta-schema-candidate-dialog/1" || value.toolId !== toolId || JSON.stringify(value.source) !== JSON.stringify(getDocument())) throw new Error("Authoring state belongs to a different source document or tool.");
+    owner = getDocument();
+    model = { ...model, source: clone(value.source), context: clone(value.context), draft: clone(value.draft), open: value.open !== false, ready: false, status: value.status || "", error: value.error || "", previewText: "" };
+    preview = null;
+    render();
+    if (value.hadPreview) previewNow();
+    return { restored: true, previewReady: Boolean(preview) };
+  }, preview: previewNow, apply: applyNow, close: commands.close, get dialog() {
+    return dialog;
+  }, dispose() {
+    mount.dispose();
+    host.remove();
+  } };
+  return api;
+}
+export {
+  CandidateField,
+  CandidateRows,
+  SchemaCandidateDialog,
+  createCandidateDialog,
+  draftProperty,
+  withDraftProperty
+};
 
 //# sourceMappingURL=candidate-dialog.js.map

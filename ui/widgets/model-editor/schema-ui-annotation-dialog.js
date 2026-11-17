@@ -1,4 +1,251 @@
 // Generated from schema-ui-annotation-dialog.jsx by scripts/build-frontend.mjs.
-import n from"../shared/react/react-runtime.js";import{mountReactComponent as J}from"../shared/react/mount.js";import{mountSchemaUiAnnotationAuthoring as q}from"./schema-ui-annotation-authoring.js";import{mountSchemaAnnotationAuthoring as z}from"./schema-annotation-authoring.js";import{mountStructuredValueEditor as Y}from"../shared/structured-value-editor.js";import{createSchemaAuthoringPathPicker as G}from"../shared/schema-authoring-path-picker.js";import{FIELD_UI_BEHAVIOR_KEY as Q,fieldUiBehavior as X,legacyFieldUiView as Z}from"../../annotation-language.js";import{validateInlineUiEditorState as H}from"./inline-ui-state.js";import{referenceDraftForSchema as R,schemaWithReferenceDraft as ee,schemaWithWidget as T,compactCatalog as te,annotationDefinitions as ne,schemaWithPresentationDefaults as ie}from"./schema-ui-annotation-dialog-model.js";import{schemaWithReferenceDraft as be}from"./schema-ui-annotation-dialog-model.js";const c=o=>structuredClone(o),w=(o,r)=>JSON.stringify(o)===JSON.stringify(r),ae=o=>o!==null&&typeof o=="object"&&!Array.isArray(o);function oe({model:o,commands:r,refs:C}){const{entry:e,reference:a,selectedWidget:s}=o,y=[["","Current component"],["model","Project document"],["root","Project root"]];a.scope&&!y.some(([i])=>i===a.scope)&&y.push([a.scope,a.scope]);const f=e.widgetOptions||[];return n.createElement(n.Fragment,null,n.createElement("div",{className:"schema-ui-annotation-meta"},n.createElement("label",null,"JSON key",n.createElement("input",{className:"schema-ui-annotation-meta-input","aria-label":"JSON property key",value:o.jsonKey,onChange:i=>r.patch({jsonKey:i.target.value}),ref:C.key})),n.createElement("label",null,"Widget",n.createElement("select",{className:"schema-ui-annotation-meta-input","aria-label":"UI widget",value:s,onChange:i=>r.widget(i.target.value)},n.createElement("option",{value:""},"Presentation only"),f.map(i=>n.createElement("option",{key:i.widget,value:i.widget},i.label||i.widget)),s&&!f.some(i=>i.widget===s)?n.createElement("option",{value:s},s," \xB7 unsupported"):null))),n.createElement("div",{className:"schema-ui-annotation-editor"},n.createElement("h3",null,"Widget settings"),s?null:n.createElement("p",{className:"schema-ui-annotation-hint"},"No widget selected. Choose one to add its structured settings."),s&&!f.find(i=>i.widget===s)?.profile?n.createElement("p",{className:"schema-ui-annotation-hint"},"This widget has no specialized form. Its settings remain editable as structured fields."):null,n.createElement("div",{className:"schema-ui-annotation-widget-fields",ref:C.widget}),n.createElement("section",{className:"schema-ui-annotation-reference"},n.createElement("div",{className:"schema-ui-annotation-reference-heading"},n.createElement("h3",null,"Reference source"),n.createElement("button",{type:"button",className:"button",onClick:()=>r.reference({enabled:!a.enabled})},a.enabled?"Remove reference source":"Add reference source")),a.enabled?n.createElement(n.Fragment,null,n.createElement("div",{className:"schema-ui-annotation-reference-fields"},n.createElement("label",null,"Look in",n.createElement("select",{className:"schema-ui-annotation-meta-input","aria-label":"Reference scope",value:a.scope,onChange:i=>r.reference({scope:i.target.value})},y.map(([i,l])=>n.createElement("option",{key:i,value:i},l)))),n.createElement("label",null,"Target path \xB7 dotted property keys",n.createElement("input",{className:"schema-ui-annotation-meta-input","aria-label":"Reference target path",placeholder:"selections or model.selections",value:a.targetPath,onChange:i=>r.reference({targetPath:i.target.value})})),r.pick?n.createElement(n.Fragment,null,n.createElement("p",{className:"schema-ui-annotation-hint"},"Reference bindings use source scope plus dotted property keys. Picking a schema field uses its root path and selects Project root."),n.createElement("button",{type:"button",className:"button",onClick:r.pick},"Choose reference path\u2026")):null,n.createElement("label",null,"Choice label",n.createElement("input",{className:"schema-ui-annotation-meta-input","aria-label":"Reference target label",placeholder:"Optional, e.g. boundary selection",value:a.targetLabel,onChange:i=>r.reference({targetLabel:i.target.value})})),a.filterMode==="advanced"?n.createElement("p",{className:"schema-ui-annotation-hint schema-ui-annotation-reference-note"},"This reference has a compound target filter. It is preserved when you change the source path or label."):n.createElement(n.Fragment,null,n.createElement("label",null,"Filter target property",n.createElement("input",{className:"schema-ui-annotation-meta-input","aria-label":"Reference filter property",placeholder:"Optional, e.g. entity",value:a.filterProperty,onChange:i=>r.reference({filterProperty:i.target.value})})),n.createElement("label",null,"Must equal",n.createElement("input",{className:"schema-ui-annotation-meta-input","aria-label":"Reference filter value",placeholder:"Optional, e.g. boundary or domain",value:a.filterValue,onChange:i=>r.reference({filterValue:i.target.value})})))),n.createElement("p",{className:"schema-ui-annotation-hint"},s==="referenceSelector"?"Maximum visible options is in Reference selector widget settings above.":"Choose the Reference selector widget above to present these choices in the project editor.")):null),n.createElement("details",{className:"schema-ui-annotation-presentation",open:o.presentationOpen,onToggle:i=>r.details(i.currentTarget.open)},n.createElement("summary",null,"Other UI annotations",o.handledCount?` \xB7 ${o.handledCount} editable`:""),n.createElement("div",{className:"schema-ui-annotation-presentation-body"},n.createElement("div",{className:"schema-ui-annotation-add-row"},n.createElement("select",{className:"schema-ui-annotation-add-select","aria-label":"Choose a presentation setting to add",disabled:!o.available.length,value:o.addKey,onChange:i=>r.patch({addKey:i.target.value})},n.createElement("option",{value:""},o.available.length?"Add a presentation setting\u2026":"No more settings to add"),o.available.map(i=>n.createElement("option",{key:i.key,value:i.key},i.label||i.key))),n.createElement("button",{type:"button",className:"button",disabled:!o.available.length,onClick:r.add},"Add")),n.createElement("div",{className:"schema-ui-annotation-presentation-fields",ref:C.presentation}),o.handledCount?null:n.createElement("p",{className:"schema-ui-annotation-hint"},"Add a presentation setting above, or keep other values in their structured fields.")),n.createElement("p",{className:"schema-ui-annotation-hint"},"Visibility and other presentation annotations belong here. Widget-specific parameters belong in Widget settings above; reference bindings use their own source and dotted path controls."))),n.createElement("p",{className:"schema-ui-annotation-feedback",role:"status","data-kind":o.error?"error":"status",hidden:!o.error},o.error),n.createElement("div",{className:"schema-ui-annotation-actions"},n.createElement("button",{type:"button",className:"button",onClick:r.close},"Close"),n.createElement("button",{type:"button",className:"button primary",disabled:o.pending||!o.dirty,onClick:r.apply},"Apply changes")))}function ge({onApply:o,getDocument:r}={}){const C=r?G({getDocument:r}):null;let e=null,a=null,s=null,y=null,f=null,i=null,l=null,d=null,S="",A="",N=new Map,b=null,k=new Map,W=null;const K={widget:n.createRef(),presentation:n.createRef(),key:n.createRef()},x=()=>{l&&e?.selectedWidget&&k.set(e.selectedWidget,c(l.snapshot())),d&&(W=c(d.snapshot()))},D=()=>{l?.dispose?.(),d?.dispose?.(),l=null,d=null,S="",A=""},I=t=>{e&&t.target.closest?.(".schema-ui-annotation-widget-fields, .schema-ui-annotation-presentation-fields")&&u()};function j(){if(a)for(const t of["input","change","click"])a.removeEventListener(t,I);if(D(),i?.dispose(),i=null,f?.dispose(),f=null,s?.isConnected){const t=s.previousElementSibling;t?.hasAttribute("data-schema-ui-annotation-title-label")?(t.hidden=!1,s.replaceChildren()):s.textContent=e?.entry.displayTitle||""}a&&(a.replaceChildren(),a.hidden=!0),y?.setAttribute("aria-expanded","false"),e=null,a=null,s=null,y=null}function M(){return ie(T(e.entry.schema,e.selectedWidget,e.entry.catalog),new Set(e.addedKeys),e.entry.presentationDefinitions)}function u(){if(!e||!f)return;const t=N.get(e.selectedWidget);e.dirty=e.title!==e.originalTitle||e.jsonKey!==e.originalKey||e.selectedWidget!==e.originalWidget||!w(e.reference,e.referenceBaseline)||!!(l&&t&&!w(l.snapshot(),t))||!!(d&&b&&!w(d.snapshot(),b)),f.update({model:e,commands:V,refs:K}),i?.update(L())}function B(){const t=e.selectedWidget;if(S!==t&&(l?.dispose?.(),l=null,S=t,t))try{const h=e.entry.widgetOptions?.find(g=>g.widget===t),P=T(e.entry.schema,t,e.entry.catalog);if(h?.profile){const g=e.entry.widgetContexts?.[t];l=z({container:K.widget.current,declaration:P,widget:t,state:k.get(t),context:g?{...g,presentation:"focused"}:null,configuration:h.profile,fieldContext:e.entry.fieldContext,onDraftChange:m=>{k.set(t,c(m)),u()}})}else{const g=X(P)?.payload?.widget?.settings||{},m=Y({container:K.widget.current,value:g,label:`${t} settings`,onChange:()=>u()}),O=k.get(t);O?.format==="fullmeta-structured-widget-state/1"&&m.restore(O.draft),l={ownedUiAnnotations:[],snapshot:()=>({format:"fullmeta-structured-widget-state/1",draft:m.draft()}),commit($){const F=c($);return F[Q].payload.widget.settings=m.commit(),F},dispose:()=>m.dispose()}}N.has(t)||N.set(t,c(l.snapshot()))}catch(h){e.error=h.message}const p=t+"|"+e.addedKeys.join("|");if(A!==p){d&&(W=c(d.snapshot())),d?.dispose?.(),d=null,A=p;try{d=q({container:K.presentation.current,declaration:M(),catalog:e.entry.compactCatalog,fieldContext:e.entry.fieldContext,excludedKeys:l?.ownedUiAnnotations||[],state:W,onDraftChange:()=>u()}),b||(b=c(d.snapshot()))}catch(h){e.error=h.message}}const v=Z(M()),E=v["x-fullmeta-ui"]||{},U=new Set(l?.ownedUiAnnotations||[]);e.available=e.entry.presentationDefinitions.filter(h=>!U.has(h.key)&&!Object.hasOwn(E,h.key)),e.handledCount=d?.handledKeys.length||0,u()}const L=()=>({value:e.title,placeholder:e.entry.displayTitle||"Title",onChange:t=>{e.title=t,u()}}),V={patch(t){Object.assign(e,t),u()},reference(t){Object.assign(e.reference,t),u()},details(t){e&&(e.presentationOpen=t)},widget(t){x(),e.selectedWidget=t,u(),B()},add(){const t=e.addKey;e.available.some(p=>p.key===t)&&(x(),e.addedKeys.push(t),e.addKey="",e.presentationOpen=!0,u(),B())},close:j,pick:C?()=>C.open({representation:"referencePath",onPick:t=>{e&&(Object.assign(e.reference,{targetPath:t.referencePath,scope:"root"}),u())}}):null,apply(){if(!(!e||e.pending||!e.dirty)){x();try{let t=c(e.entry.schema);const p=e.selectedWidget!==e.originalWidget||!!(l&&!w(l.snapshot(),N.get(e.selectedWidget))),v=!!(d&&!w(d.snapshot(),b));(p||v)&&(t=T(t,e.selectedWidget,e.entry.catalog),e.selectedWidget&&l&&p&&(t=l.commit(t)),d&&v&&(t=d.commit(t))),w(e.reference,e.referenceBaseline)||(t=ee(t,e.reference,e.referenceBaseline)),e.pending=!0,u(),o?.({entry:e.entry,schema:t,title:e.title,jsonKey:e.jsonKey}),j()}catch(t){e.pending=!1,e.error=t.message||"Could not apply the field changes.",u(),/key/i.test(e.error)&&K.key.current?.focus()}}}},_=({value:t,placeholder:p,onChange:v})=>n.createElement("input",{"data-inline-ui-editor":"true",className:"schema-ui-annotation-title-input",type:"text","aria-label":"Schema title",value:t,placeholder:p,onChange:E=>v(E.target.value)});return{open(t,p,v,E){if(a===p&&p?.isConnected&&!p.hidden)return j(),!1;if(j(),!ae(t?.schema)||!p)return!1;const U=te(t.catalog),h=R(t.schema),P=typeof t.schema.title=="string"?t.schema.title:"",g=typeof t.propertyName=="string"?t.propertyName:"",m=typeof t.widget=="string"?t.widget:"";if(e={entry:{...t,schema:c(t.schema),compactCatalog:U,presentationDefinitions:ne(U)},title:P,originalTitle:P,jsonKey:g,originalKey:g,selectedWidget:m,originalWidget:m,reference:h,referenceBaseline:c(h),addedKeys:[],available:[],addKey:"",handledCount:0,presentationOpen:!1,pending:!1,error:"",dirty:!1},k=new Map,N=new Map,W=null,b=null,S="!",A="!",a=p,a.dataset.inlineUiEditor="true",s=E||null,y=v||null,a.hidden=!1,y?.setAttribute("aria-expanded","true"),f=J(a,oe,{model:e,commands:V,refs:K}),s){const O=s.previousElementSibling;O?.hasAttribute("data-schema-ui-annotation-title-label")&&(O.hidden=!0),i=J(s,_,L())}B();for(const O of["input","change","click"])a.addEventListener(O,I);return!0},snapshot(){return!e||!a?.isConnected||a.hidden?null:(x(),e?{format:"fullmeta-inline-ui-state/1",target:{file:e.entry.file||null,path:e.entry.path||null,propertyName:e.entry.propertyName||""},sourceSchema:c(e.entry.schema),title:e.title,jsonKey:e.jsonKey,selectedWidget:e.selectedWidget,reference:c(e.reference),addedKeys:[...e.addedKeys],widgetStates:Object.fromEntries(k),widgetBaselines:Object.fromEntries(N),presentationBaseline:c(b),presentationState:c(W),presentationOpen:e.presentationOpen}:null)},restore(t){if(!e||t?.format!=="fullmeta-inline-ui-state/1")throw new Error("Open a field before restoring its UI draft.");if(H(t),!w(t.target,{file:e.entry.file||null,path:e.entry.path||null,propertyName:e.entry.propertyName||""})||!w(t.sourceSchema,e.entry.schema))throw new Error("The inline UI draft belongs to a different source declaration.");D(),Object.assign(e,{title:t.title,jsonKey:t.jsonKey,selectedWidget:t.selectedWidget,reference:c(t.reference),addedKeys:[...t.addedKeys],presentationOpen:t.presentationOpen,pending:!1,error:""}),k=new Map(Object.entries(t.widgetStates||{})),N=new Map(Object.entries(t.widgetBaselines||{})),W=c(t.presentationState),b=c(t.presentationBaseline),S="!",A="!",u(),B()},close:j,dispose(){j(),C?.dispose?.()}}}export{oe as SchemaUiAnnotationEditor,ge as createSchemaUiAnnotationEditor,be as schemaWithReferenceDraft};
+import React from "../shared/react/react-runtime.js";
+import { mountReactComponent } from "../shared/react/mount.js";
+import { mountSchemaUiAnnotationAuthoring } from "./schema-ui-annotation-authoring.js";
+import { mountSchemaAnnotationAuthoring } from "./schema-annotation-authoring.js";
+import { mountStructuredValueEditor } from "../shared/structured-value-editor.js";
+import { createSchemaAuthoringPathPicker } from "../shared/schema-authoring-path-picker.js";
+import { FIELD_UI_BEHAVIOR_KEY, fieldUiBehavior, legacyFieldUiView } from "../../annotation-language.js";
+import { validateInlineUiEditorState } from "./inline-ui-state.js";
+import { referenceDraftForSchema, schemaWithReferenceDraft, schemaWithWidget, compactCatalog, annotationDefinitions, schemaWithPresentationDefaults } from "./schema-ui-annotation-dialog-model.js";
+import { schemaWithReferenceDraft as schemaWithReferenceDraft2 } from "./schema-ui-annotation-dialog-model.js";
+const clone = (value) => structuredClone(value), same = (a, b) => JSON.stringify(a) === JSON.stringify(b);
+const object = (value) => value !== null && typeof value === "object" && !Array.isArray(value);
+function SchemaUiAnnotationEditor({ model, commands, refs }) {
+  const { entry, reference, selectedWidget } = model;
+  const scopes = [["", "Current component"], ["model", "Project document"], ["root", "Project root"]];
+  if (reference.scope && !scopes.some(([key]) => key === reference.scope)) scopes.push([reference.scope, reference.scope]);
+  const widgets = entry.widgetOptions || [];
+  return /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement("div", { className: "schema-ui-annotation-meta" }, /* @__PURE__ */ React.createElement("label", null, "JSON key", /* @__PURE__ */ React.createElement("input", { className: "schema-ui-annotation-meta-input", "aria-label": "JSON property key", value: model.jsonKey, onChange: (e) => commands.patch({ jsonKey: e.target.value }), ref: refs.key })), /* @__PURE__ */ React.createElement("label", null, "Widget", /* @__PURE__ */ React.createElement("select", { className: "schema-ui-annotation-meta-input", "aria-label": "UI widget", value: selectedWidget, onChange: (e) => commands.widget(e.target.value) }, /* @__PURE__ */ React.createElement("option", { value: "" }, "Presentation only"), widgets.map((option) => /* @__PURE__ */ React.createElement("option", { key: option.widget, value: option.widget }, option.label || option.widget)), selectedWidget && !widgets.some((option) => option.widget === selectedWidget) ? /* @__PURE__ */ React.createElement("option", { value: selectedWidget }, selectedWidget, " \xB7 unsupported") : null))), /* @__PURE__ */ React.createElement("div", { className: "schema-ui-annotation-editor" }, /* @__PURE__ */ React.createElement("h3", null, "Widget settings"), !selectedWidget ? /* @__PURE__ */ React.createElement("p", { className: "schema-ui-annotation-hint" }, "No widget selected. Choose one to add its structured settings.") : null, selectedWidget && !widgets.find((option) => option.widget === selectedWidget)?.profile ? /* @__PURE__ */ React.createElement("p", { className: "schema-ui-annotation-hint" }, "This widget has no specialized form. Its settings remain editable as structured fields.") : null, /* @__PURE__ */ React.createElement("div", { className: "schema-ui-annotation-widget-fields", ref: refs.widget }), /* @__PURE__ */ React.createElement("section", { className: "schema-ui-annotation-reference" }, /* @__PURE__ */ React.createElement("div", { className: "schema-ui-annotation-reference-heading" }, /* @__PURE__ */ React.createElement("h3", null, "Reference source"), /* @__PURE__ */ React.createElement("button", { type: "button", className: "button", onClick: () => commands.reference({ enabled: !reference.enabled }) }, reference.enabled ? "Remove reference source" : "Add reference source")), reference.enabled ? /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement("div", { className: "schema-ui-annotation-reference-fields" }, /* @__PURE__ */ React.createElement("label", null, "Look in", /* @__PURE__ */ React.createElement("select", { className: "schema-ui-annotation-meta-input", "aria-label": "Reference scope", value: reference.scope, onChange: (e) => commands.reference({ scope: e.target.value }) }, scopes.map(([value, label]) => /* @__PURE__ */ React.createElement("option", { key: value, value }, label)))), /* @__PURE__ */ React.createElement("label", null, "Target path \xB7 dotted property keys", /* @__PURE__ */ React.createElement("input", { className: "schema-ui-annotation-meta-input", "aria-label": "Reference target path", placeholder: "selections or model.selections", value: reference.targetPath, onChange: (e) => commands.reference({ targetPath: e.target.value }) })), commands.pick ? /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement("p", { className: "schema-ui-annotation-hint" }, "Reference bindings use source scope plus dotted property keys. Picking a schema field uses its root path and selects Project root."), /* @__PURE__ */ React.createElement("button", { type: "button", className: "button", onClick: commands.pick }, "Choose reference path\u2026")) : null, /* @__PURE__ */ React.createElement("label", null, "Choice label", /* @__PURE__ */ React.createElement("input", { className: "schema-ui-annotation-meta-input", "aria-label": "Reference target label", placeholder: "Optional, e.g. boundary selection", value: reference.targetLabel, onChange: (e) => commands.reference({ targetLabel: e.target.value }) })), reference.filterMode === "advanced" ? /* @__PURE__ */ React.createElement("p", { className: "schema-ui-annotation-hint schema-ui-annotation-reference-note" }, "This reference has a compound target filter. It is preserved when you change the source path or label.") : /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement("label", null, "Filter target property", /* @__PURE__ */ React.createElement("input", { className: "schema-ui-annotation-meta-input", "aria-label": "Reference filter property", placeholder: "Optional, e.g. entity", value: reference.filterProperty, onChange: (e) => commands.reference({ filterProperty: e.target.value }) })), /* @__PURE__ */ React.createElement("label", null, "Must equal", /* @__PURE__ */ React.createElement("input", { className: "schema-ui-annotation-meta-input", "aria-label": "Reference filter value", placeholder: "Optional, e.g. boundary or domain", value: reference.filterValue, onChange: (e) => commands.reference({ filterValue: e.target.value }) })))), /* @__PURE__ */ React.createElement("p", { className: "schema-ui-annotation-hint" }, selectedWidget === "referenceSelector" ? "Maximum visible options is in Reference selector widget settings above." : "Choose the Reference selector widget above to present these choices in the project editor.")) : null), /* @__PURE__ */ React.createElement("details", { className: "schema-ui-annotation-presentation", open: model.presentationOpen, onToggle: (e) => commands.details(e.currentTarget.open) }, /* @__PURE__ */ React.createElement("summary", null, "Other UI annotations", model.handledCount ? ` \xB7 ${model.handledCount} editable` : ""), /* @__PURE__ */ React.createElement("div", { className: "schema-ui-annotation-presentation-body" }, /* @__PURE__ */ React.createElement("div", { className: "schema-ui-annotation-add-row" }, /* @__PURE__ */ React.createElement("select", { className: "schema-ui-annotation-add-select", "aria-label": "Choose a presentation setting to add", disabled: !model.available.length, value: model.addKey, onChange: (e) => commands.patch({ addKey: e.target.value }) }, /* @__PURE__ */ React.createElement("option", { value: "" }, model.available.length ? "Add a presentation setting\u2026" : "No more settings to add"), model.available.map((item) => /* @__PURE__ */ React.createElement("option", { key: item.key, value: item.key }, item.label || item.key))), /* @__PURE__ */ React.createElement("button", { type: "button", className: "button", disabled: !model.available.length, onClick: commands.add }, "Add")), /* @__PURE__ */ React.createElement("div", { className: "schema-ui-annotation-presentation-fields", ref: refs.presentation }), !model.handledCount ? /* @__PURE__ */ React.createElement("p", { className: "schema-ui-annotation-hint" }, "Add a presentation setting above, or keep other values in their structured fields.") : null), /* @__PURE__ */ React.createElement("p", { className: "schema-ui-annotation-hint" }, "Visibility and other presentation annotations belong here. Widget-specific parameters belong in Widget settings above; reference bindings use their own source and dotted path controls."))), /* @__PURE__ */ React.createElement("p", { className: "schema-ui-annotation-feedback", role: "status", "data-kind": model.error ? "error" : "status", hidden: !model.error }, model.error), /* @__PURE__ */ React.createElement("div", { className: "schema-ui-annotation-actions" }, /* @__PURE__ */ React.createElement("button", { type: "button", className: "button", onClick: commands.close }, "Close"), /* @__PURE__ */ React.createElement("button", { type: "button", className: "button primary", disabled: model.pending || !model.dirty, onClick: commands.apply }, "Apply changes")));
+}
+function createSchemaUiAnnotationEditor({ onApply, getDocument } = {}) {
+  const pathPicker = getDocument ? createSchemaAuthoringPathPicker({ getDocument }) : null;
+  let model = null, host = null, titleHost = null, trigger = null, mount = null, titleMount = null, widgetEditor = null, presentationEditor = null;
+  let widgetRevision = "", presentationRevision = "", widgetBaselines = /* @__PURE__ */ new Map(), presentationBaseline = null, widgetStates = /* @__PURE__ */ new Map(), presentationState = null;
+  const refs = { widget: React.createRef(), presentation: React.createRef(), key: React.createRef() };
+  const remember = () => {
+    if (widgetEditor && model?.selectedWidget) widgetStates.set(model.selectedWidget, clone(widgetEditor.snapshot()));
+    if (presentationEditor) presentationState = clone(presentationEditor.snapshot());
+  };
+  const clearChildren = () => {
+    widgetEditor?.dispose?.();
+    presentationEditor?.dispose?.();
+    widgetEditor = null;
+    presentationEditor = null;
+    widgetRevision = "";
+    presentationRevision = "";
+  };
+  const childDraftEvent = (event) => {
+    if (model && event.target.closest?.(".schema-ui-annotation-widget-fields, .schema-ui-annotation-presentation-fields")) refresh();
+  };
+  function close() {
+    if (host) for (const type of ["input", "change", "click"]) host.removeEventListener(type, childDraftEvent);
+    clearChildren();
+    titleMount?.dispose();
+    titleMount = null;
+    mount?.dispose();
+    mount = null;
+    if (titleHost?.isConnected) {
+      const label = titleHost.previousElementSibling;
+      if (label?.hasAttribute("data-schema-ui-annotation-title-label")) {
+        label.hidden = false;
+        titleHost.replaceChildren();
+      } else titleHost.textContent = model?.entry.displayTitle || "";
+    }
+    if (host) {
+      host.replaceChildren();
+      host.hidden = true;
+    }
+    trigger?.setAttribute("aria-expanded", "false");
+    model = null;
+    host = null;
+    titleHost = null;
+    trigger = null;
+  }
+  function source() {
+    return schemaWithPresentationDefaults(schemaWithWidget(model.entry.schema, model.selectedWidget, model.entry.catalog), new Set(model.addedKeys), model.entry.presentationDefinitions);
+  }
+  function refresh() {
+    if (!model || !mount) return;
+    const baseline = widgetBaselines.get(model.selectedWidget);
+    model.dirty = model.title !== model.originalTitle || model.jsonKey !== model.originalKey || model.selectedWidget !== model.originalWidget || !same(model.reference, model.referenceBaseline) || Boolean(widgetEditor && baseline && !same(widgetEditor.snapshot(), baseline)) || Boolean(presentationEditor && presentationBaseline && !same(presentationEditor.snapshot(), presentationBaseline));
+    mount.update({ model, commands, refs });
+    titleMount?.update(titleProps());
+  }
+  function attach() {
+    const key = model.selectedWidget;
+    if (widgetRevision !== key) {
+      widgetEditor?.dispose?.();
+      widgetEditor = null;
+      widgetRevision = key;
+      if (key) try {
+        const option = model.entry.widgetOptions?.find((item) => item.widget === key), declaration2 = schemaWithWidget(model.entry.schema, key, model.entry.catalog);
+        if (option?.profile) {
+          const context = model.entry.widgetContexts?.[key];
+          widgetEditor = mountSchemaAnnotationAuthoring({ container: refs.widget.current, declaration: declaration2, widget: key, state: widgetStates.get(key), context: context ? { ...context, presentation: "focused" } : null, configuration: option.profile, fieldContext: model.entry.fieldContext, onDraftChange: (snapshot) => {
+            widgetStates.set(key, clone(snapshot));
+            refresh();
+          } });
+        } else {
+          const initial = fieldUiBehavior(declaration2)?.payload?.widget?.settings || {}, editor = mountStructuredValueEditor({ container: refs.widget.current, value: initial, label: `${key} settings`, onChange: () => refresh() });
+          const saved = widgetStates.get(key);
+          if (saved?.format === "fullmeta-structured-widget-state/1") editor.restore(saved.draft);
+          widgetEditor = { ownedUiAnnotations: [], snapshot: () => ({ format: "fullmeta-structured-widget-state/1", draft: editor.draft() }), commit(declaration3) {
+            const next = clone(declaration3);
+            next[FIELD_UI_BEHAVIOR_KEY].payload.widget.settings = editor.commit();
+            return next;
+          }, dispose: () => editor.dispose() };
+        }
+        if (!widgetBaselines.has(key)) widgetBaselines.set(key, clone(widgetEditor.snapshot()));
+      } catch (error) {
+        model.error = error.message;
+      }
+    }
+    const nextRevision = key + "|" + model.addedKeys.join("|");
+    if (presentationRevision !== nextRevision) {
+      if (presentationEditor) presentationState = clone(presentationEditor.snapshot());
+      presentationEditor?.dispose?.();
+      presentationEditor = null;
+      presentationRevision = nextRevision;
+      try {
+        presentationEditor = mountSchemaUiAnnotationAuthoring({ container: refs.presentation.current, declaration: source(), catalog: model.entry.compactCatalog, fieldContext: model.entry.fieldContext, excludedKeys: widgetEditor?.ownedUiAnnotations || [], state: presentationState, onDraftChange: () => refresh() });
+        if (!presentationBaseline) presentationBaseline = clone(presentationEditor.snapshot());
+      } catch (error) {
+        model.error = error.message;
+      }
+    }
+    const declaration = legacyFieldUiView(source()), present = declaration["x-fullmeta-ui"] || {}, owned = new Set(widgetEditor?.ownedUiAnnotations || []);
+    model.available = model.entry.presentationDefinitions.filter((item) => !owned.has(item.key) && !Object.hasOwn(present, item.key));
+    model.handledCount = presentationEditor?.handledKeys.length || 0;
+    refresh();
+  }
+  const titleProps = () => ({ value: model.title, placeholder: model.entry.displayTitle || "Title", onChange: (value) => {
+    model.title = value;
+    refresh();
+  } });
+  const commands = {
+    patch(patch) {
+      Object.assign(model, patch);
+      refresh();
+    },
+    reference(patch) {
+      Object.assign(model.reference, patch);
+      refresh();
+    },
+    details(open) {
+      if (model) model.presentationOpen = open;
+    },
+    widget(value) {
+      remember();
+      model.selectedWidget = value;
+      refresh();
+      attach();
+    },
+    add() {
+      const key = model.addKey;
+      if (!model.available.some((item) => item.key === key)) return;
+      remember();
+      model.addedKeys.push(key);
+      model.addKey = "";
+      model.presentationOpen = true;
+      refresh();
+      attach();
+    },
+    close,
+    pick: pathPicker ? () => pathPicker.open({ representation: "referencePath", onPick: (selected) => {
+      if (model) {
+        Object.assign(model.reference, { targetPath: selected.referencePath, scope: "root" });
+        refresh();
+      }
+    } }) : null,
+    apply() {
+      if (!model || model.pending || !model.dirty) return;
+      remember();
+      try {
+        let next = clone(model.entry.schema);
+        const widgetChanged = model.selectedWidget !== model.originalWidget || Boolean(widgetEditor && !same(widgetEditor.snapshot(), widgetBaselines.get(model.selectedWidget))), presentationChanged = Boolean(presentationEditor && !same(presentationEditor.snapshot(), presentationBaseline));
+        if (widgetChanged || presentationChanged) {
+          next = schemaWithWidget(next, model.selectedWidget, model.entry.catalog);
+          if (model.selectedWidget && widgetEditor && widgetChanged) next = widgetEditor.commit(next);
+          if (presentationEditor && presentationChanged) next = presentationEditor.commit(next);
+        }
+        if (!same(model.reference, model.referenceBaseline)) next = schemaWithReferenceDraft(next, model.reference, model.referenceBaseline);
+        model.pending = true;
+        refresh();
+        onApply?.({ entry: model.entry, schema: next, title: model.title, jsonKey: model.jsonKey });
+        close();
+      } catch (error) {
+        model.pending = false;
+        model.error = error.message || "Could not apply the field changes.";
+        refresh();
+        if (/key/i.test(model.error)) refs.key.current?.focus();
+      }
+    }
+  };
+  const Title = ({ value, placeholder, onChange }) => /* @__PURE__ */ React.createElement("input", { "data-inline-ui-editor": "true", className: "schema-ui-annotation-title-input", type: "text", "aria-label": "Schema title", value, placeholder, onChange: (e) => onChange(e.target.value) });
+  return {
+    open(entry, nextHost, nextTrigger, nextTitleHost) {
+      if (host === nextHost && nextHost?.isConnected && !nextHost.hidden) {
+        close();
+        return false;
+      }
+      close();
+      if (!object(entry?.schema) || !nextHost) return false;
+      const catalog = compactCatalog(entry.catalog), reference = referenceDraftForSchema(entry.schema), title = typeof entry.schema.title === "string" ? entry.schema.title : "", jsonKey = typeof entry.propertyName === "string" ? entry.propertyName : "", widget = typeof entry.widget === "string" ? entry.widget : "";
+      model = { entry: { ...entry, schema: clone(entry.schema), compactCatalog: catalog, presentationDefinitions: annotationDefinitions(catalog) }, title, originalTitle: title, jsonKey, originalKey: jsonKey, selectedWidget: widget, originalWidget: widget, reference, referenceBaseline: clone(reference), addedKeys: [], available: [], addKey: "", handledCount: 0, presentationOpen: false, pending: false, error: "", dirty: false };
+      widgetStates = /* @__PURE__ */ new Map();
+      widgetBaselines = /* @__PURE__ */ new Map();
+      presentationState = null;
+      presentationBaseline = null;
+      widgetRevision = "!";
+      presentationRevision = "!";
+      host = nextHost;
+      host.dataset.inlineUiEditor = "true";
+      titleHost = nextTitleHost || null;
+      trigger = nextTrigger || null;
+      host.hidden = false;
+      trigger?.setAttribute("aria-expanded", "true");
+      mount = mountReactComponent(host, SchemaUiAnnotationEditor, { model, commands, refs });
+      if (titleHost) {
+        const label = titleHost.previousElementSibling;
+        if (label?.hasAttribute("data-schema-ui-annotation-title-label")) label.hidden = true;
+        titleMount = mountReactComponent(titleHost, Title, titleProps());
+      }
+      attach();
+      for (const type of ["input", "change", "click"]) host.addEventListener(type, childDraftEvent);
+      return true;
+    },
+    snapshot() {
+      if (!model || !host?.isConnected || host.hidden) return null;
+      remember();
+      return model ? { format: "fullmeta-inline-ui-state/1", target: { file: model.entry.file || null, path: model.entry.path || null, propertyName: model.entry.propertyName || "" }, sourceSchema: clone(model.entry.schema), title: model.title, jsonKey: model.jsonKey, selectedWidget: model.selectedWidget, reference: clone(model.reference), addedKeys: [...model.addedKeys], widgetStates: Object.fromEntries(widgetStates), widgetBaselines: Object.fromEntries(widgetBaselines), presentationBaseline: clone(presentationBaseline), presentationState: clone(presentationState), presentationOpen: model.presentationOpen } : null;
+    },
+    restore(state) {
+      if (!model || state?.format !== "fullmeta-inline-ui-state/1") throw new Error("Open a field before restoring its UI draft.");
+      validateInlineUiEditorState(state);
+      if (!same(state.target, { file: model.entry.file || null, path: model.entry.path || null, propertyName: model.entry.propertyName || "" }) || !same(state.sourceSchema, model.entry.schema)) throw new Error("The inline UI draft belongs to a different source declaration.");
+      clearChildren();
+      Object.assign(model, { title: state.title, jsonKey: state.jsonKey, selectedWidget: state.selectedWidget, reference: clone(state.reference), addedKeys: [...state.addedKeys], presentationOpen: state.presentationOpen, pending: false, error: "" });
+      widgetStates = new Map(Object.entries(state.widgetStates || {}));
+      widgetBaselines = new Map(Object.entries(state.widgetBaselines || {}));
+      presentationState = clone(state.presentationState);
+      presentationBaseline = clone(state.presentationBaseline);
+      widgetRevision = "!";
+      presentationRevision = "!";
+      refresh();
+      attach();
+    },
+    close,
+    dispose() {
+      close();
+      pathPicker?.dispose?.();
+    }
+  };
+}
+export {
+  SchemaUiAnnotationEditor,
+  createSchemaUiAnnotationEditor,
+  schemaWithReferenceDraft2 as schemaWithReferenceDraft
+};
 
 //# sourceMappingURL=schema-ui-annotation-dialog.js.map

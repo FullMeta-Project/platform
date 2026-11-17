@@ -1,4 +1,37 @@
 // Generated from design-labels.jsx by scripts/build-frontend.mjs.
-import i from"./react/react-runtime.js";import{mountReactComponent as m}from"./react/mount.js";function b({view:n,onCommand:p}){return i.createElement("section",{className:"sd-widget-detail"},i.createElement("h3",null,n.heading),i.createElement("div",{className:"sd-scan-setting-grid"},n.labels.map(([a,o])=>i.createElement("label",{key:a},o,i.createElement("input",{"aria-label":o,type:"text",value:n.values[a]??"",onChange:t=>p({type:"labels.change",key:a,value:t.target.value},t)})))))}function f(n,p,{heading:a,labels:o=[]}){const t=document.createElement("div");n.append(t);let r=Object.fromEntries(o.map(([e])=>[e,p.labels?.[e]??""])),d;const u=()=>({view:{heading:a,labels:o,values:r},onCommand(e,l){if(l?.stopPropagation(),e.type!=="labels.change"||!o.some(([s])=>s===e.key))throw new Error("Unknown label command.");r={...r,[e.key]:e.value},d.update(u()),t.dispatchEvent(new Event("input",{bubbles:!0}))}});return d=m(t,b,u()),{element:t,applyTo(e){const l={...e.labels||{}};for(const[s]of o)r[s].trim()?l[s]=r[s].trim():delete l[s];Object.keys(l).length?e.labels=l:delete e.labels},dispose(){d.dispose(),t.remove()}}}export{b as WidgetLabelsEditor,f as createWidgetLabelsEditor};
+import React from "./react/react-runtime.js";
+import { mountReactComponent } from "./react/mount.js";
+function WidgetLabelsEditor({ view, onCommand }) {
+  return /* @__PURE__ */ React.createElement("section", { className: "sd-widget-detail" }, /* @__PURE__ */ React.createElement("h3", null, view.heading), /* @__PURE__ */ React.createElement("div", { className: "sd-scan-setting-grid" }, view.labels.map(([key, caption]) => /* @__PURE__ */ React.createElement("label", { key }, caption, /* @__PURE__ */ React.createElement("input", { "aria-label": caption, type: "text", value: view.values[key] ?? "", onChange: (event) => onCommand({ type: "labels.change", key, value: event.target.value }, event) })))));
+}
+function createWidgetLabelsEditor(parent, current, { heading, labels = [] }) {
+  const host = document.createElement("div");
+  parent.append(host);
+  let values = Object.fromEntries(labels.map(([key]) => [key, current.labels?.[key] ?? ""])), mount;
+  const props = () => ({ view: { heading, labels, values }, onCommand(command, event) {
+    event?.stopPropagation();
+    if (command.type !== "labels.change" || !labels.some(([key]) => key === command.key)) throw new Error("Unknown label command.");
+    values = { ...values, [command.key]: command.value };
+    mount.update(props());
+    host.dispatchEvent(new Event("input", { bubbles: true }));
+  } });
+  mount = mountReactComponent(host, WidgetLabelsEditor, props());
+  return { element: host, applyTo(next) {
+    const output = { ...next.labels || {} };
+    for (const [key] of labels) {
+      if (values[key].trim()) output[key] = values[key].trim();
+      else delete output[key];
+    }
+    if (Object.keys(output).length) next.labels = output;
+    else delete next.labels;
+  }, dispose() {
+    mount.dispose();
+    host.remove();
+  } };
+}
+export {
+  WidgetLabelsEditor,
+  createWidgetLabelsEditor
+};
 
 //# sourceMappingURL=design-labels.js.map

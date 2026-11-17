@@ -1,5 +1,116 @@
 // Generated from schema-authoring-path-picker.jsx by scripts/build-frontend.mjs.
-import a from"./react/react-runtime.js";import{mountReactComponent as k}from"./react/mount.js";import{schemaAuthoringPathEntries as N}from"./schema-authoring-path-model.js";import{schemaAuthoringPathEntries as x,schemaAuthoringPathRepresentations as J}from"./schema-authoring-path-model.js";const P=[["schemaPointer","Schema JSON Pointer"],["dataPointer","Validation data JSON Pointer"],["referencePath","Annotation reference dotted keys"]],d=u=>u.schemaPointer+`
-`+(u.dataPointer??"(unbound)");function w({view:u,onCommand:p}){const{title:m,query:y,visible:n,selected:i,representation:l,status:c}=u;return a.createElement("div",{className:"schema-bulk-content"},a.createElement("header",{className:"schema-validation-dialog-head"},a.createElement("h2",null,m),a.createElement("button",{type:"button",className:"button",onClick:()=>p({type:"path.close"})},"Close")),a.createElement("div",{className:"schema-bulk-body"},a.createElement("input",{type:"search",placeholder:"Filter by title, property key, or path",value:y,"aria-label":"Find schema or data path",onChange:e=>p({type:"path.query",value:e.target.value})}),a.createElement("select",{size:9,"aria-label":"Available schema or data paths",value:i?d(i):"",onChange:e=>p({type:"path.select",key:e.target.value})},n.map(e=>a.createElement("option",{key:d(e),value:d(e)},e.title," \xB7 ",e[l]||"(root)",e.type?" \xB7 "+e.type:""))),a.createElement("div",{className:"schema-authoring-path-representations"},i?P.map(([e,o])=>a.createElement("label",{key:e},o,a.createElement("input",{readOnly:!0,value:i[e]===null?"Unavailable for this declaration":i[e],"aria-label":o}),a.createElement("button",{type:"button",className:"button","aria-label":"Copy "+o.toLowerCase(),disabled:i[e]===null,onClick:()=>p({type:"path.copy",key:e,label:o})},"Copy"))):null),a.createElement("p",{className:"schema-bulk-note"},"Schema pointers identify declarations. Data pointers identify model values and use * for collection items. Reference paths use dotted property keys and a separately selected source."),a.createElement("p",{role:"status",className:"schema-bulk-note"},c)),a.createElement("footer",{className:"schema-validation-dialog-actions"},a.createElement("button",{type:"button",className:"button",onClick:()=>p({type:"path.close"})},"Cancel"),a.createElement("button",{type:"button",className:"button",disabled:!i,onClick:()=>p({type:"path.use"})},"Use path")))}function q({getDocument:u,onPick:p,title:m="Choose a schema or data path"}){let y=[],n={},i="",l=null,c="",e;const o=document.createElement("dialog");o.className="schema-bulk-dialog schema-authoring-path-dialog",document.body.append(o);const f=()=>{const t=i.trim().toLowerCase(),s=n.representation||"schemaPointer",r=y.filter(h=>h[s]!==null&&(!t||[h.title,h.schemaPointer,h.dataPointer||"",h.referencePath||""].join(" ").toLowerCase().includes(t))),b=r.find(h=>d(h)===l)||r[0]||null;return l=b?d(b):null,{title:m,query:i,representation:s,visible:r,selected:b,status:c||r.length+" available paths."}},v=()=>e.update({view:f(),onCommand:g}),g=async t=>{if(t.type==="path.query")i=t.value,l=null,c="";else if(t.type==="path.select")l=t.key,c="";else if(t.type==="path.close"){o.close();return}else if(t.type==="path.use"){const s=f().selected;s&&(n.onPick||p)?.(structuredClone(s)),o.close();return}else if(t.type==="path.copy"){const s=f().selected;if(!s||s[t.key]===null)return;try{await navigator.clipboard.writeText(s[t.key]),c="Copied "+t.label.toLowerCase()+"."}catch{const r=[...o.querySelectorAll("input")].find(b=>b.getAttribute("aria-label")===t.label);r?.focus(),r?.select(),c="Select and copy the highlighted path."}}else throw new Error("Unknown path picker command "+t.type);v()};return e=k(o,w,{view:f(),onCommand:g}),{open(t={}){if(n={representation:"schemaPointer",...t},!P.some(([s])=>s===n.representation))throw new Error("Choose a supported path representation.");if(y=N(u()),i="",c="",l=null,Array.isArray(n.initialPath)){const s=y.find(r=>JSON.stringify(r.schemaPath)===JSON.stringify(n.initialPath));s&&(l=d(s))}v(),o.showModal(),o.querySelector('input[type="search"]')?.focus()},snapshot:()=>({format:"fullmeta-schema-path-picker-state/1",query:i,selectedKey:l,representation:n.representation||"schemaPointer",open:o.open}),dispose(){e.dispose(),o.remove()}}}export{w as SchemaAuthoringPathPicker,q as createSchemaAuthoringPathPicker,x as schemaAuthoringPathEntries,J as schemaAuthoringPathRepresentations};
+import React from "./react/react-runtime.js";
+import { mountReactComponent } from "./react/mount.js";
+import { schemaAuthoringPathEntries } from "./schema-authoring-path-model.js";
+import { schemaAuthoringPathEntries as schemaAuthoringPathEntries2, schemaAuthoringPathRepresentations } from "./schema-authoring-path-model.js";
+const representations = [["schemaPointer", "Schema JSON Pointer"], ["dataPointer", "Validation data JSON Pointer"], ["referencePath", "Annotation reference dotted keys"]];
+const identity = (entry) => entry.schemaPointer + "\n" + (entry.dataPointer ?? "(unbound)");
+function SchemaAuthoringPathPicker({ view, onCommand }) {
+  const { title, query, visible, selected, representation, status } = view;
+  return /* @__PURE__ */ React.createElement("div", { className: "schema-bulk-content" }, /* @__PURE__ */ React.createElement("header", { className: "schema-validation-dialog-head" }, /* @__PURE__ */ React.createElement("h2", null, title), /* @__PURE__ */ React.createElement("button", { type: "button", className: "button", onClick: () => onCommand({ type: "path.close" }) }, "Close")), /* @__PURE__ */ React.createElement("div", { className: "schema-bulk-body" }, /* @__PURE__ */ React.createElement(
+    "input",
+    {
+      type: "search",
+      placeholder: "Filter by title, property key, or path",
+      value: query,
+      "aria-label": "Find schema or data path",
+      onChange: (event) => onCommand({ type: "path.query", value: event.target.value })
+    }
+  ), /* @__PURE__ */ React.createElement(
+    "select",
+    {
+      size: 9,
+      "aria-label": "Available schema or data paths",
+      value: selected ? identity(selected) : "",
+      onChange: (event) => onCommand({ type: "path.select", key: event.target.value })
+    },
+    visible.map((entry) => /* @__PURE__ */ React.createElement("option", { key: identity(entry), value: identity(entry) }, entry.title, " \xB7 ", entry[representation] || "(root)", entry.type ? " \xB7 " + entry.type : ""))
+  ), /* @__PURE__ */ React.createElement("div", { className: "schema-authoring-path-representations" }, selected ? representations.map(([key, label]) => /* @__PURE__ */ React.createElement("label", { key }, label, /* @__PURE__ */ React.createElement("input", { readOnly: true, value: selected[key] === null ? "Unavailable for this declaration" : selected[key], "aria-label": label }), /* @__PURE__ */ React.createElement(
+    "button",
+    {
+      type: "button",
+      className: "button",
+      "aria-label": "Copy " + label.toLowerCase(),
+      disabled: selected[key] === null,
+      onClick: () => onCommand({ type: "path.copy", key, label })
+    },
+    "Copy"
+  ))) : null), /* @__PURE__ */ React.createElement("p", { className: "schema-bulk-note" }, "Schema pointers identify declarations. Data pointers identify model values and use * for collection items. Reference paths use dotted property keys and a separately selected source."), /* @__PURE__ */ React.createElement("p", { role: "status", className: "schema-bulk-note" }, status)), /* @__PURE__ */ React.createElement("footer", { className: "schema-validation-dialog-actions" }, /* @__PURE__ */ React.createElement("button", { type: "button", className: "button", onClick: () => onCommand({ type: "path.close" }) }, "Cancel"), /* @__PURE__ */ React.createElement("button", { type: "button", className: "button", disabled: !selected, onClick: () => onCommand({ type: "path.use" }) }, "Use path")));
+}
+function createSchemaAuthoringPathPicker({ getDocument, onPick, title = "Choose a schema or data path" }) {
+  let entries = [], options = {}, query = "", selectedKey = null, status = "", mount;
+  const dialog = document.createElement("dialog");
+  dialog.className = "schema-bulk-dialog schema-authoring-path-dialog";
+  document.body.append(dialog);
+  const view = () => {
+    const needle = query.trim().toLowerCase(), representation = options.representation || "schemaPointer";
+    const visible = entries.filter((entry) => entry[representation] !== null && (!needle || [entry.title, entry.schemaPointer, entry.dataPointer || "", entry.referencePath || ""].join(" ").toLowerCase().includes(needle)));
+    const selected = visible.find((entry) => identity(entry) === selectedKey) || visible[0] || null;
+    selectedKey = selected ? identity(selected) : null;
+    return { title, query, representation, visible, selected, status: status || visible.length + " available paths." };
+  };
+  const render = () => mount.update({ view: view(), onCommand });
+  const onCommand = async (command) => {
+    if (command.type === "path.query") {
+      query = command.value;
+      selectedKey = null;
+      status = "";
+    } else if (command.type === "path.select") {
+      selectedKey = command.key;
+      status = "";
+    } else if (command.type === "path.close") {
+      dialog.close();
+      return;
+    } else if (command.type === "path.use") {
+      const selected = view().selected;
+      if (selected) (options.onPick || onPick)?.(structuredClone(selected));
+      dialog.close();
+      return;
+    } else if (command.type === "path.copy") {
+      const selected = view().selected;
+      if (!selected || selected[command.key] === null) return;
+      try {
+        await navigator.clipboard.writeText(selected[command.key]);
+        status = "Copied " + command.label.toLowerCase() + ".";
+      } catch {
+        const input = [...dialog.querySelectorAll("input")].find((node) => node.getAttribute("aria-label") === command.label);
+        input?.focus();
+        input?.select();
+        status = "Select and copy the highlighted path.";
+      }
+    } else throw new Error("Unknown path picker command " + command.type);
+    render();
+  };
+  mount = mountReactComponent(dialog, SchemaAuthoringPathPicker, { view: view(), onCommand });
+  return {
+    open(nextOptions = {}) {
+      options = { representation: "schemaPointer", ...nextOptions };
+      if (!representations.some(([key]) => key === options.representation)) throw new Error("Choose a supported path representation.");
+      entries = schemaAuthoringPathEntries(getDocument());
+      query = "";
+      status = "";
+      selectedKey = null;
+      if (Array.isArray(options.initialPath)) {
+        const selected = entries.find((entry) => JSON.stringify(entry.schemaPath) === JSON.stringify(options.initialPath));
+        if (selected) selectedKey = identity(selected);
+      }
+      render();
+      dialog.showModal();
+      /** @type {HTMLInputElement|null} */
+      dialog.querySelector('input[type="search"]')?.focus();
+    },
+    snapshot: () => ({ format: "fullmeta-schema-path-picker-state/1", query, selectedKey, representation: options.representation || "schemaPointer", open: dialog.open }),
+    dispose() {
+      mount.dispose();
+      dialog.remove();
+    }
+  };
+}
+export {
+  SchemaAuthoringPathPicker,
+  createSchemaAuthoringPathPicker,
+  schemaAuthoringPathEntries2 as schemaAuthoringPathEntries,
+  schemaAuthoringPathRepresentations
+};
 
 //# sourceMappingURL=schema-authoring-path-picker.js.map

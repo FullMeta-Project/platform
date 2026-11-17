@@ -1,4 +1,179 @@
 // Generated from schema-ui-annotation-authoring.jsx by scripts/build-frontend.mjs.
-import t from"../shared/react/react-runtime.js";import{mountReactComponent as K}from"../shared/react/mount.js";import{StructuredValueEditor as J,structuredValueDraft as D,readStructuredValueDraft as F}from"../shared/structured-value-editor.js";import{annotationRow as S,adoptAnnotationRows as T}from"../shared/annotation-control-model.js";import{validValue as P,initialState as q,stateValue as W}from"./schema-ui-annotation-model.js";import{fieldUiBehavior as z,legacyFieldUiView as L,writeFieldUiBehavior as G}from"../../annotation-language.js";const N=i=>i!==null&&typeof i=="object"&&!Array.isArray(i),H=new Set(["text","boolean","stringList","stringMap","json","typedValue"]),M=new WeakMap;function Q(i,u,e){const o=e===void 0?q(i,u):e;if(i==="json"){let a;try{a=o===""?void 0:JSON.parse(o)}catch{a=u}return{enabled:a!==void 0,structured:D(a??{})}}return i==="stringList"?(Array.isArray(o)?o:[]).map(S):i==="stringMap"?(Array.isArray(o)?o:[]).map(([a,s])=>({id:S("").id,key:a,value:s})):structuredClone(o)}const X=(i,u)=>i==="json"?u.enabled?JSON.stringify(F(u.structured)):"":i==="stringList"?u.map(e=>e.value):i==="stringMap"?u.map(e=>[e.key,e.value]):u;function Z({type:i,label:u,draft:e,onChange:o,disabled:a}){return i==="json"?t.createElement(t.Fragment,null,t.createElement("label",{className:"schema-ui-annotation-toggle"},t.createElement("input",{type:"checkbox",checked:e.enabled,disabled:a,onChange:s=>o({...e,enabled:s.target.checked})})," Set value"),e.enabled?t.createElement(J,{draft:e.structured,label:u,disabled:a,onDraftChange:s=>o({...e,structured:s})}):null):i==="boolean"?t.createElement("select",{value:e,disabled:a,"aria-label":u,onChange:s=>o(s.target.value)},t.createElement("option",{value:""},"Not specified"),t.createElement("option",{value:"true"},"Yes"),t.createElement("option",{value:"false"},"No")):i==="typedValue"?t.createElement(t.Fragment,null,t.createElement("select",{value:e.kind,disabled:a,"aria-label":u+" type",onChange:s=>o({...e,kind:s.target.value})},t.createElement("option",{value:"text"},"Text"),t.createElement("option",{value:"number"},"Number"),t.createElement("option",{value:"boolean"},"Yes / no"),t.createElement("option",{value:"null"},"Null")),t.createElement("span",{className:"schema-ui-annotation-typed-value"},e.kind==="null"?null:e.kind==="boolean"?t.createElement("select",{value:e.value==="false"?"false":"true",disabled:a,"aria-label":u,onChange:s=>o({...e,value:s.target.value})},t.createElement("option",{value:"true"},"Yes"),t.createElement("option",{value:"false"},"No")):t.createElement("input",{type:"text",inputMode:e.kind==="number"?"decimal":void 0,value:e.value,disabled:a,"aria-label":u,onChange:s=>o({...e,value:s.target.value})}))):i==="stringList"||i==="stringMap"?t.createElement(t.Fragment,null,t.createElement("div",{className:"schema-ui-annotation-rows"},e.map((s,w)=>t.createElement("div",{className:"schema-ui-annotation-row",key:s.id},i==="stringMap"?t.createElement("input",{type:"text",value:s.key,disabled:a,"aria-label":u+" key "+(w+1),onChange:k=>o(e.map(v=>v.id===s.id?{...v,key:k.target.value}:v))}):null,t.createElement("input",{type:"text",value:s.value,disabled:a,"aria-label":u+(i==="stringMap"?" value ":" item ")+(w+1),onChange:k=>o(e.map(v=>v.id===s.id?{...v,value:k.target.value}:v))}),t.createElement("button",{type:"button",disabled:a,"aria-label":"Remove "+u+" row "+(w+1),onClick:()=>o(e.filter(k=>k.id!==s.id))},"Remove")))),t.createElement("button",{type:"button",disabled:a,onClick:()=>o([...e,i==="stringMap"?{id:S("").id,key:"",value:""}:S("")])},i==="stringMap"?"Add entry":"Add item")):t.createElement("input",{type:"text",value:e,disabled:a,"aria-label":u,onChange:s=>o(s.target.value)})}function _({view:i,onCommand:u}){return t.createElement("div",{className:"schema-ui-annotation-design"},i.groups.map(e=>t.createElement("section",{className:"schema-ui-annotation-group",key:e.id},t.createElement("h3",null,e.title||"UI annotations"),e.entries.map(o=>t.createElement("div",{className:"schema-ui-annotation-entry",key:o.key},o.composite?t.createElement("strong",null,o.label):null,o.fields.map(a=>t.createElement("div",{className:"schema-ui-annotation-field",key:a.key},t.createElement("label",null,a.label,t.createElement(Z,{type:a.type,label:a.label,draft:a.draft,disabled:i.disabled,onChange:s=>u({type:"presentation.change",key:o.key,field:a.key,draft:s})})))))))),i.extras.map(e=>t.createElement("details",{className:"schema-ui-annotation-group schema-ui-annotation-extra",key:e.key},t.createElement("summary",null,e.key," \xB7 structured value"),t.createElement("div",{className:"schema-ui-annotation-extra-value"},t.createElement(J,{draft:e.draft,label:e.key,disabled:i.disabled,onDraftChange:o=>u({type:"presentation.extra",key:e.key,draft:o})})))))}function oe({container:i,declaration:u,catalog:e,excludedKeys:o=[],state:a,fieldContext:s,onDraftChange:w,disabled:k=!1}={}){if(!i||typeof i.replaceChildren!="function"||!N(u))throw new Error("Choose a schema declaration for its UI annotations.");M.get(i)?.dispose();const v=typeof e?.annotationKey=="string"&&e.annotationKey?e.annotationKey:"x-fullmeta-ui-behavior",I=L(u),x=I["x-fullmeta-ui"]||{};if(!N(x))throw new Error("Field presentation settings must be an object.");const O=new Set(o instanceof Set||Array.isArray(o)?o:[]),c=a instanceof Map?Object.fromEntries(a):N(a)?a:{};let b=[],g=[],A=[],j,V=!1;const Y=[...e?.groups||[],...e?.presentationFields?.length?[{title:"Icons",annotations:e.presentationFields.map(n=>({key:n.key,label:n.label||n.key,type:n.type}))}]:[]];for(const[n,p]of Y.entries()){const l=[];for(const d of p.annotations||[]){const r=d.key;if(typeof r!="string"||!r||O.has(r)||!Object.hasOwn(x,r))continue;const y=x[r],m=Array.isArray(d.fields),h=m?d.fields:[{key:r,label:d.label||r,type:d.type}];m&&!N(y)||!h.length||h.some(f=>!H.has(f.type)||!P(f.type,m?y[f.key]:y))||(l.push({key:r,label:d.label||r,composite:m,required:d.required||[],fields:h.map(f=>({key:f.key,label:f.label||f.key,type:f.type,original:q(f.type,m?y[f.key]:y),draft:Q(f.type,m?y[f.key]:y,m?c[r]?.[f.key]:c[r])}))}),A.push(r))}l.length&&b.push({id:n,title:p.title,entries:l})}for(const[n,p]of Object.entries(x))!O.has(n)&&!A.includes(n)&&(g.push({key:n,original:p,draft:D(Object.hasOwn(c,n)?c[n]:p)}),A.push(n));c.format==="fullmeta-ui-annotation-state/1"&&(b=b.map(n=>({...n,entries:n.entries.map(p=>({...p,fields:p.fields.map(l=>{const d=c.groups?.flatMap(r=>r.entries||[]).find(r=>r.key===p.key)?.fields?.find(r=>r.key===l.key&&r.type===l.type);return d?{...l,draft:structuredClone(d.draft)}:l})}))})),g=g.map(n=>{const p=c.extras?.find(l=>l.key===n.key);return p?{...n,draft:structuredClone(p.draft)}:n}),T(b));const C=()=>({view:{groups:b,extras:g,disabled:k},onCommand:B}),E=()=>({format:"fullmeta-ui-annotation-state/1",groups:structuredClone(b),extras:structuredClone(g)}),B=n=>{if(!k){if(n.type==="presentation.change")b=b.map(p=>({...p,entries:p.entries.map(l=>l.key===n.key?{...l,fields:l.fields.map(d=>d.key===n.field?{...d,draft:n.draft}:d)}:l)}));else if(n.type==="presentation.extra")g=g.map(p=>p.key===n.key?{...p,draft:n.draft}:p);else throw new Error("Unknown presentation command "+n.type);j.update(C()),w?.(E())}};j=K(i,_,C());const U={annotationKey:v,handledKeys:A,snapshot:E,disable(n=!0){k=n,j.update(C())},dispose(){V||(V=!0,M.delete(i),j.dispose())},commit(n=u){if(!N(n))throw new Error("The schema declaration is no longer an object.");const p=L(n);let l=N(p["x-fullmeta-ui"])?p["x-fullmeta-ui"]:null;for(const d of b)for(const r of d.entries)for(const y of r.fields){const m=X(y.type,y.draft);if(JSON.stringify(m)===JSON.stringify(y.original))continue;const h=W(y.type,m,y.label);if(h===void 0&&r.required.includes(y.key))throw new Error(y.label+" is required.");if(l||(l=p["x-fullmeta-ui"]={}),r.composite){const f=N(l[r.key])?l[r.key]:l[r.key]={};h===void 0?delete f[y.key]:f[y.key]=h}else h===void 0?delete l[r.key]:l[r.key]=h}for(const d of g){const r=F(d.draft);JSON.stringify(r)!==JSON.stringify(d.original)&&(l||(l=p["x-fullmeta-ui"]={}),l[d.key]=r)}return G(p,{context:z(n)?.context||s||"projectEditing"})}};return M.set(i,U),U}export{_ as SchemaUiAnnotationAuthoring,oe as mountSchemaUiAnnotationAuthoring};
+import React from "../shared/react/react-runtime.js";
+import { mountReactComponent } from "../shared/react/mount.js";
+import { StructuredValueEditor, structuredValueDraft, readStructuredValueDraft } from "../shared/structured-value-editor.js";
+import { annotationRow, adoptAnnotationRows } from "../shared/annotation-control-model.js";
+import { validValue, initialState, stateValue } from "./schema-ui-annotation-model.js";
+import { fieldUiBehavior, legacyFieldUiView, writeFieldUiBehavior } from "../../annotation-language.js";
+const object = (value) => value !== null && typeof value === "object" && !Array.isArray(value), types = /* @__PURE__ */ new Set(["text", "boolean", "stringList", "stringMap", "json", "typedValue"]), mounts = /* @__PURE__ */ new WeakMap();
+function rawDraft(type, value, saved) {
+  const draft = saved === void 0 ? initialState(type, value) : saved;
+  if (type === "json") {
+    let current;
+    try {
+      current = draft === "" ? void 0 : JSON.parse(draft);
+    } catch {
+      current = value;
+    }
+    return { enabled: current !== void 0, structured: structuredValueDraft(current ?? {}) };
+  }
+  if (type === "stringList") return (Array.isArray(draft) ? draft : []).map(annotationRow);
+  if (type === "stringMap") return (Array.isArray(draft) ? draft : []).map(([key, value2]) => ({ id: annotationRow("").id, key, value: value2 }));
+  return structuredClone(draft);
+}
+const readRaw = (type, draft) => type === "json" ? draft.enabled ? JSON.stringify(readStructuredValueDraft(draft.structured)) : "" : type === "stringList" ? draft.map((row) => row.value) : type === "stringMap" ? draft.map((row) => [row.key, row.value]) : draft;
+function PresentationControl({ type, label, draft, onChange, disabled }) {
+  if (type === "json") return /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement("label", { className: "schema-ui-annotation-toggle" }, /* @__PURE__ */ React.createElement(
+    "input",
+    {
+      type: "checkbox",
+      checked: draft.enabled,
+      disabled,
+      onChange: (event) => onChange({ ...draft, enabled: event.target.checked })
+    }
+  ), " Set value"), draft.enabled ? /* @__PURE__ */ React.createElement(
+    StructuredValueEditor,
+    {
+      draft: draft.structured,
+      label,
+      disabled,
+      onDraftChange: (structured) => onChange({ ...draft, structured })
+    }
+  ) : null);
+  if (type === "boolean") return /* @__PURE__ */ React.createElement("select", { value: draft, disabled, "aria-label": label, onChange: (event) => onChange(event.target.value) }, /* @__PURE__ */ React.createElement("option", { value: "" }, "Not specified"), /* @__PURE__ */ React.createElement("option", { value: "true" }, "Yes"), /* @__PURE__ */ React.createElement("option", { value: "false" }, "No"));
+  if (type === "typedValue") return /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement("select", { value: draft.kind, disabled, "aria-label": label + " type", onChange: (event) => onChange({ ...draft, kind: event.target.value }) }, /* @__PURE__ */ React.createElement("option", { value: "text" }, "Text"), /* @__PURE__ */ React.createElement("option", { value: "number" }, "Number"), /* @__PURE__ */ React.createElement("option", { value: "boolean" }, "Yes / no"), /* @__PURE__ */ React.createElement("option", { value: "null" }, "Null")), /* @__PURE__ */ React.createElement("span", { className: "schema-ui-annotation-typed-value" }, draft.kind === "null" ? null : draft.kind === "boolean" ? /* @__PURE__ */ React.createElement("select", { value: draft.value === "false" ? "false" : "true", disabled, "aria-label": label, onChange: (event) => onChange({ ...draft, value: event.target.value }) }, /* @__PURE__ */ React.createElement("option", { value: "true" }, "Yes"), /* @__PURE__ */ React.createElement("option", { value: "false" }, "No")) : /* @__PURE__ */ React.createElement("input", { type: "text", inputMode: draft.kind === "number" ? "decimal" : void 0, value: draft.value, disabled, "aria-label": label, onChange: (event) => onChange({ ...draft, value: event.target.value }) })));
+  if (type === "stringList" || type === "stringMap") return /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement("div", { className: "schema-ui-annotation-rows" }, draft.map((row, index) => /* @__PURE__ */ React.createElement("div", { className: "schema-ui-annotation-row", key: row.id }, type === "stringMap" ? /* @__PURE__ */ React.createElement("input", { type: "text", value: row.key, disabled, "aria-label": label + " key " + (index + 1), onChange: (event) => onChange(draft.map((item) => item.id === row.id ? { ...item, key: event.target.value } : item)) }) : null, /* @__PURE__ */ React.createElement(
+    "input",
+    {
+      type: "text",
+      value: row.value,
+      disabled,
+      "aria-label": label + (type === "stringMap" ? " value " : " item ") + (index + 1),
+      onChange: (event) => onChange(draft.map((item) => item.id === row.id ? { ...item, value: event.target.value } : item))
+    }
+  ), /* @__PURE__ */ React.createElement("button", { type: "button", disabled, "aria-label": "Remove " + label + " row " + (index + 1), onClick: () => onChange(draft.filter((item) => item.id !== row.id)) }, "Remove")))), /* @__PURE__ */ React.createElement("button", { type: "button", disabled, onClick: () => onChange([...draft, type === "stringMap" ? { id: annotationRow("").id, key: "", value: "" } : annotationRow("")]) }, type === "stringMap" ? "Add entry" : "Add item"));
+  return /* @__PURE__ */ React.createElement("input", { type: "text", value: draft, disabled, "aria-label": label, onChange: (event) => onChange(event.target.value) });
+}
+function SchemaUiAnnotationAuthoring({ view, onCommand }) {
+  return /* @__PURE__ */ React.createElement("div", { className: "schema-ui-annotation-design" }, view.groups.map((group) => /* @__PURE__ */ React.createElement("section", { className: "schema-ui-annotation-group", key: group.id }, /* @__PURE__ */ React.createElement("h3", null, group.title || "UI annotations"), group.entries.map((annotation) => /* @__PURE__ */ React.createElement("div", { className: "schema-ui-annotation-entry", key: annotation.key }, annotation.composite ? /* @__PURE__ */ React.createElement("strong", null, annotation.label) : null, annotation.fields.map((field) => /* @__PURE__ */ React.createElement("div", { className: "schema-ui-annotation-field", key: field.key }, /* @__PURE__ */ React.createElement("label", null, field.label, /* @__PURE__ */ React.createElement(
+    PresentationControl,
+    {
+      type: field.type,
+      label: field.label,
+      draft: field.draft,
+      disabled: view.disabled,
+      onChange: (draft) => onCommand({ type: "presentation.change", key: annotation.key, field: field.key, draft })
+    }
+  )))))))), view.extras.map((extra) => /* @__PURE__ */ React.createElement("details", { className: "schema-ui-annotation-group schema-ui-annotation-extra", key: extra.key }, /* @__PURE__ */ React.createElement("summary", null, extra.key, " \xB7 structured value"), /* @__PURE__ */ React.createElement("div", { className: "schema-ui-annotation-extra-value" }, /* @__PURE__ */ React.createElement(
+    StructuredValueEditor,
+    {
+      draft: extra.draft,
+      label: extra.key,
+      disabled: view.disabled,
+      onDraftChange: (draft) => onCommand({ type: "presentation.extra", key: extra.key, draft })
+    }
+  )))));
+}
+function mountSchemaUiAnnotationAuthoring({ container, declaration, catalog, excludedKeys = [], state, fieldContext, onDraftChange, disabled = false } = {}) {
+  if (!container || typeof container.replaceChildren !== "function" || !object(declaration)) throw new Error("Choose a schema declaration for its UI annotations.");
+  mounts.get(container)?.dispose();
+  const annotationKey = typeof catalog?.annotationKey === "string" && catalog.annotationKey ? catalog.annotationKey : "x-fullmeta-ui-behavior";
+  const declarationView = legacyFieldUiView(declaration), source = declarationView["x-fullmeta-ui"] || {};
+  if (!object(source)) throw new Error("Field presentation settings must be an object.");
+  const excluded = new Set(excludedKeys instanceof Set ? excludedKeys : Array.isArray(excludedKeys) ? excludedKeys : []), saved = state instanceof Map ? Object.fromEntries(state) : object(state) ? state : {};
+  let groups = [], extras = [], handledKeys = [], mount, disposed = false;
+  const definitions = [...catalog?.groups || [], ...catalog?.presentationFields?.length ? [{ title: "Icons", annotations: catalog.presentationFields.map((field) => ({ key: field.key, label: field.label || field.key, type: field.type })) }] : []];
+  for (const [index, group] of definitions.entries()) {
+    const entries = [];
+    for (const annotation of group.annotations || []) {
+      const key = annotation.key;
+      if (typeof key !== "string" || !key || excluded.has(key) || !Object.hasOwn(source, key)) continue;
+      const value = source[key], composite = Array.isArray(annotation.fields), specs = composite ? annotation.fields : [{ key, label: annotation.label || key, type: annotation.type }];
+      if (composite && !object(value) || !specs.length || specs.some((spec) => !types.has(spec.type) || !validValue(spec.type, composite ? value[spec.key] : value))) continue;
+      entries.push({ key, label: annotation.label || key, composite, required: annotation.required || [], fields: specs.map((spec) => ({
+        key: spec.key,
+        label: spec.label || spec.key,
+        type: spec.type,
+        original: initialState(spec.type, composite ? value[spec.key] : value),
+        draft: rawDraft(spec.type, composite ? value[spec.key] : value, composite ? saved[key]?.[spec.key] : saved[key])
+      })) });
+      handledKeys.push(key);
+    }
+    if (entries.length) groups.push({ id: index, title: group.title, entries });
+  }
+  for (const [key, value] of Object.entries(source)) if (!excluded.has(key) && !handledKeys.includes(key)) {
+    extras.push({ key, original: value, draft: structuredValueDraft(Object.hasOwn(saved, key) ? saved[key] : value) });
+    handledKeys.push(key);
+  }
+  if (saved.format === "fullmeta-ui-annotation-state/1") {
+    groups = groups.map((group) => ({ ...group, entries: group.entries.map((annotation) => ({ ...annotation, fields: annotation.fields.map((field) => {
+      const prior = saved.groups?.flatMap((group2) => group2.entries || []).find((entry) => entry.key === annotation.key)?.fields?.find((entry) => entry.key === field.key && entry.type === field.type);
+      return prior ? { ...field, draft: structuredClone(prior.draft) } : field;
+    }) })) }));
+    extras = extras.map((extra) => {
+      const prior = saved.extras?.find((entry) => entry.key === extra.key);
+      return prior ? { ...extra, draft: structuredClone(prior.draft) } : extra;
+    });
+    adoptAnnotationRows(groups);
+  }
+  const props = () => ({ view: { groups, extras, disabled }, onCommand });
+  const snapshot = () => ({ format: "fullmeta-ui-annotation-state/1", groups: structuredClone(groups), extras: structuredClone(extras) });
+  const onCommand = (command) => {
+    if (disabled) return;
+    if (command.type === "presentation.change") groups = groups.map((group) => ({ ...group, entries: group.entries.map((annotation) => annotation.key === command.key ? { ...annotation, fields: annotation.fields.map((field) => field.key === command.field ? { ...field, draft: command.draft } : field) } : annotation) }));
+    else if (command.type === "presentation.extra") extras = extras.map((extra) => extra.key === command.key ? { ...extra, draft: command.draft } : extra);
+    else throw new Error("Unknown presentation command " + command.type);
+    mount.update(props());
+    onDraftChange?.(snapshot());
+  };
+  mount = mountReactComponent(container, SchemaUiAnnotationAuthoring, props());
+  const api = {
+    annotationKey,
+    handledKeys,
+    snapshot,
+    disable(value = true) {
+      disabled = value;
+      mount.update(props());
+    },
+    dispose() {
+      if (disposed) return;
+      disposed = true;
+      mounts.delete(container);
+      mount.dispose();
+    },
+    commit(declarationSource = declaration) {
+      if (!object(declarationSource)) throw new Error("The schema declaration is no longer an object.");
+      const next = legacyFieldUiView(declarationSource);
+      let target = object(next["x-fullmeta-ui"]) ? next["x-fullmeta-ui"] : null;
+      for (const group of groups) for (const annotation of group.entries) for (const field of annotation.fields) {
+        const draft = readRaw(field.type, field.draft);
+        if (JSON.stringify(draft) === JSON.stringify(field.original)) continue;
+        const value = stateValue(field.type, draft, field.label);
+        if (value === void 0 && annotation.required.includes(field.key)) throw new Error(field.label + " is required.");
+        if (!target) target = next["x-fullmeta-ui"] = {};
+        if (annotation.composite) {
+          const owner = object(target[annotation.key]) ? target[annotation.key] : target[annotation.key] = {};
+          if (value === void 0) delete owner[field.key];
+          else owner[field.key] = value;
+        } else if (value === void 0) delete target[annotation.key];
+        else target[annotation.key] = value;
+      }
+      for (const extra of extras) {
+        const value = readStructuredValueDraft(extra.draft);
+        if (JSON.stringify(value) !== JSON.stringify(extra.original)) {
+          if (!target) target = next["x-fullmeta-ui"] = {};
+          target[extra.key] = value;
+        }
+      }
+      return writeFieldUiBehavior(next, { context: fieldUiBehavior(declarationSource)?.context || fieldContext || "projectEditing" });
+    }
+  };
+  mounts.set(container, api);
+  return api;
+}
+export {
+  SchemaUiAnnotationAuthoring,
+  mountSchemaUiAnnotationAuthoring
+};
 
 //# sourceMappingURL=schema-ui-annotation-authoring.js.map

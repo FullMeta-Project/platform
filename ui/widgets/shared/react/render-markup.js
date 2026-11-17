@@ -1,4 +1,25 @@
 // Generated from render-markup.jsx by scripts/build-frontend.mjs.
-import s,{renderWidgetMarkup as d}from"./react-runtime.js";function g(i,r,u=["renderField","renderObject"]){const n=[],f=globalThis.crypto?.randomUUID?.()||String(Math.random()).slice(2),l={...r};for(const e of u)typeof r[e]=="function"&&(l[e]=(...c)=>{const t=r[e](...c);if(typeof t!="string")return t;if(!t)return null;const a=`FULLMETA_SERIALIZED_SLOT_${f}_${n.length}_END`;return n.push([a,t]),a});let o=d(s.createElement(i,{...l}));for(const[e,c]of n)o=o.replaceAll(e,()=>c);return o}export{g as renderLegacyWidgetMarkup};
+import React, { renderWidgetMarkup } from "./react-runtime.js";
+function renderLegacyWidgetMarkup(Component, props, recursiveKeys = ["renderField", "renderObject"]) {
+  const replacements = [];
+  const salt = globalThis.crypto?.randomUUID?.() || String(Math.random()).slice(2);
+  const adapted = { ...props };
+  for (const key of recursiveKeys) if (typeof props[key] === "function") {
+    adapted[key] = (...args) => {
+      const value = props[key](...args);
+      if (typeof value !== "string") return value;
+      if (!value) return null;
+      const token = `FULLMETA_SERIALIZED_SLOT_${salt}_${replacements.length}_END`;
+      replacements.push([token, value]);
+      return token;
+    };
+  }
+  let result = renderWidgetMarkup(/* @__PURE__ */ React.createElement(Component, { ...adapted }));
+  for (const [token, markup] of replacements) result = result.replaceAll(token, () => markup);
+  return result;
+}
+export {
+  renderLegacyWidgetMarkup
+};
 
 //# sourceMappingURL=render-markup.js.map

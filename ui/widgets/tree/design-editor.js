@@ -1,4 +1,56 @@
 // Generated from design-editor.jsx by scripts/build-frontend.mjs.
-import u from"../shared/react/react-runtime.js";import{mountReactComponent as C}from"../shared/react/mount.js";import{StructuredValueEditor as b,structuredValueDraft as v,readStructuredValueDraft as x}from"../shared/structured-value-editor.js";import{validateUiTreeAnnotation as A}from"./tree-schema.js";const D="Tree composition";function E({draft:o,onDraftChange:c,heading:i=D,error:n}){return u.createElement("section",{className:"sd-widget-detail","data-jsx-widget":"tree-design"},u.createElement("h3",null,i),u.createElement(b,{draft:o,label:"Tree composition",onDraftChange:c,error:n}))}function J(o,c,{source:i,state:n,configuration:a}={}){const s=a?.annotation||"x-fullmeta-ui-tree",t=i?.[s];if(!t||typeof t!="object"||Array.isArray(t))return null;const w=JSON.stringify(t);let p=t;if(typeof n=="string")try{p=JSON.parse(n)}catch{}let e=v(p),f="",d;const l=document.createElement("div");o.append(l);const g=()=>d.update({draft:e,error:f,heading:a?.authoring?.heading,onDraftChange:m}),m=r=>{e=r,f="",g()};d=C(l,E,{draft:e,onDraftChange:m});const h=()=>JSON.stringify(x(e));return{annotationKey:s,ownedUiAnnotations:a?.authoring?.ownedUiAnnotations||["label","widget","placeholder"],fields:[{label:D,keys:[s],type:"json",input:{get value(){return h()}},original:w,snapshot:h,validate(r){const y=A(r);if(y.length)throw new Error(y[0])}}],draft:()=>structuredClone(e),restore(r){e=structuredClone(r),g()},dispose(){d.dispose(),l.remove()}}}export{E as TreeDesignEditor,J as renderTreeDesignEditor,D as treeDesignLabel};
+import React from "../shared/react/react-runtime.js";
+import { mountReactComponent } from "../shared/react/mount.js";
+import { StructuredValueEditor, structuredValueDraft, readStructuredValueDraft } from "../shared/structured-value-editor.js";
+import { validateUiTreeAnnotation } from "./tree-schema.js";
+const treeDesignLabel = "Tree composition";
+function TreeDesignEditor({ draft, onDraftChange, heading = treeDesignLabel, error }) {
+  return /* @__PURE__ */ React.createElement("section", { className: "sd-widget-detail", "data-jsx-widget": "tree-design" }, /* @__PURE__ */ React.createElement("h3", null, heading), /* @__PURE__ */ React.createElement(StructuredValueEditor, { draft, label: "Tree composition", onDraftChange, error }));
+}
+function renderTreeDesignEditor(parent, schema, { source, state, configuration } = {}) {
+  const key = configuration?.annotation || "x-fullmeta-ui-tree", annotation = source?.[key];
+  if (!annotation || typeof annotation !== "object" || Array.isArray(annotation)) return null;
+  const original = JSON.stringify(annotation);
+  let initial = annotation;
+  if (typeof state === "string") try {
+    initial = JSON.parse(state);
+  } catch {
+  }
+  let draft = structuredValueDraft(initial), error = "", mounted;
+  const container = document.createElement("div");
+  parent.append(container);
+  const render = () => mounted.update({ draft, error, heading: configuration?.authoring?.heading, onDraftChange: change });
+  const change = (next) => {
+    draft = next;
+    error = "";
+    render();
+  };
+  mounted = mountReactComponent(container, TreeDesignEditor, { draft, onDraftChange: change });
+  const snapshot = () => JSON.stringify(readStructuredValueDraft(draft));
+  return {
+    annotationKey: key,
+    ownedUiAnnotations: configuration?.authoring?.ownedUiAnnotations || ["label", "widget", "placeholder"],
+    fields: [{ label: treeDesignLabel, keys: [key], type: "json", input: { get value() {
+      return snapshot();
+    } }, original, snapshot, validate(value) {
+      const errors = validateUiTreeAnnotation(value);
+      if (errors.length) throw new Error(errors[0]);
+    } }],
+    draft: () => structuredClone(draft),
+    restore(next) {
+      draft = structuredClone(next);
+      render();
+    },
+    dispose() {
+      mounted.dispose();
+      container.remove();
+    }
+  };
+}
+export {
+  TreeDesignEditor,
+  renderTreeDesignEditor,
+  treeDesignLabel
+};
 
 //# sourceMappingURL=design-editor.js.map

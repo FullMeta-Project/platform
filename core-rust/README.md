@@ -33,10 +33,9 @@ matching model and operation-contracts DLLs. The browser WASM is built by the
 separate command below. Cleaning the target means the next native build will
 need to compile its dependencies again.
 
-For the proposed application-neutral native language context, see the
-[compiled language context design](compiled-language-context-design.md). It
-distinguishes the planned context from the individual-expression DLL interface
-that exists today.
+The application-neutral native language context has an initial implementation.
+See the [compiled language context design](compiled-language-context-design.md)
+for its current scope and longer-term design.
 
 ## Build the browser WASM module
 
@@ -114,7 +113,7 @@ try {
 
 `analyze_expression_definitions` accepts definition rows, parameter rows, symbol rows, callable rows, and rule tables. The caller supplies FullMeta-specific policy such as reserved names, allowed function arities, integration operator metadata, and scope restrictions. This keeps the Rust engine independent of the FullMeta model tree while letting callers apply their own semantics.
 
-The generic JavaScript bridge is `platform/core-rust/js/api.js`. The FEM adapter in `applications/fem3/js/core-fullmeta.js` supplies application policy for its table API. `platform/model-rust/` and `platform/kernel-server-rust/` also depend on this Rust library for shared expression operations.
+The generic JavaScript bridge is `platform/core-rust/js/api.js`. Applications supply their own policies for the table API. `platform/model-rust/` and `platform/kernel-server-rust/` also depend on this Rust library for shared expression operations.
 
 ## Explicit real evaluation policies
 

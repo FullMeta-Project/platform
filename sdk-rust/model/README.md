@@ -1,6 +1,6 @@
 # Model Rust SDK
 
-This adapter exposes FEM's required model operations through
+This adapter exposes model operations through
 `fullmeta_model.dll`. It uses the platform's core Rust types and ordinary
 `serde`/`serde_json` dependencies. The current interface targets Windows.
 
@@ -16,8 +16,9 @@ releases them when no longer needed.
 rule and policy methods reuse that context instead of sending the full schema
 with every request. Schema annotation results are cached per context.
 
-FEM's prebuilt build compiles this adapter against its matching prebuilt core
-and Rust dependencies. It does not require the model implementation source.
+Applications compile this adapter and the core SDK from their Rust sources,
+using ordinary Cargo dependencies, and load the matching platform DLLs. They do
+not require the platform model or core implementation source.
 To run the SDK's tests after building the model DLL:
 
 ```powershell

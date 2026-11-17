@@ -20,9 +20,12 @@ and that every export with that DLL's own prefix is declared in the header.
 It uses `objdump` from the Windows GNU toolchain. Unsupported C syntax and
 header/export mismatches fail with a diagnostic instead of producing guessed
 bindings. `node platform/sdk-rust/update.mjs --check` checks without writing.
-The full-source DLL preparation command at
-`applications/fem/fem-rust/prebuilt-tools/prepare.mjs` runs the generator after
-building and publishing the DLLs. Calling Cargo directly does not run it.
+Applications can run this generator after building and publishing the DLLs.
+Calling Cargo directly does not run it.
+
+On Windows, a Git checkout that converts generated files to CRLF can cause
+`--check` to report differences in line endings. Use LF line endings for the
+generated files when running the check.
 
 The generated `native::NativeApi` contains low-level, `unsafe` function
 pointers. Its loader takes a symbol resolver; the application must keep the

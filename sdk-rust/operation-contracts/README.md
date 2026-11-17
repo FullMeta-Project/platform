@@ -44,5 +44,5 @@ $env:FULLMETA_CONTRACTS_DLL = (Resolve-Path platform/operation-contracts-rust/li
 cargo +stable-x86_64-pc-windows-gnu test --locked --manifest-path platform/sdk-rust/operation-contracts/Cargo.toml
 ```
 
-FEM uses this SDK for operation contracts and the model SDK for model access.
-Its core dependency is still built through its existing Rust library path.
+Applications can use this SDK alongside the core and model SDKs to access the
+matching platform DLLs without building the platform implementation crates.

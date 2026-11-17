@@ -2,7 +2,7 @@
 
 `widget.js` exposes `mountEditor(container, context)` and the schema-authoring interfaces used by other packages. Internal implementation modules are private to this folder. The shared widget catalog declares the mount export and supported options.
 
-The widget creates the tree, graphics and settings panels from `template.html`, loads its styles, then mounts `runtime.js`. The top-level `platform/loader.html` document host supplies a container and starts `platform/loader.js`, which resolves the interpreting schema and mounts its selected editor through the catalog.
+The widget loads its styles, mounts the React `EditorLayout` from `layout.js` for the tree, graphics and settings panels, then mounts `runtime.js`. The top-level `platform/loader.html` document host supplies a container and starts `platform/loader.js`, which resolves the interpreting schema and mounts its selected editor through the catalog.
 
 The shared editor profile contract, [`fullmeta-ui-profile-1.schema.json`](fullmeta-ui-profile-1.schema.json), belongs to this widget. It describes the layout, tree behavior and labels consumed by the editor. Applications supply their profile data and may extend that shared contract with application-specific settings.
 

@@ -37,7 +37,7 @@ The Core and Model JavaScript APIs belong to their Rust libraries: `platform/cor
 
 The JavaScript schema loader keeps stable canonical `$id` identifiers when folders change. Relative external `$ref` paths are local imports resolved against the declaring file's location, confined to the FullMeta workspace, and normalized to the imported document's canonical identifier when loaded. Absolute identifiers retain the logical identifier-directory mapping used by existing schema graphs. This lets widget contracts import a sibling widget's contract without tying their public identifiers to the folder layout.
 
-This physical-import convention applies to the JavaScript loader used by browser and Node callers. The native Rust file loader still requires imported files to follow the root identifier's directory mapping. FEM's native solver and mesher load the application model schema, which does not import widget contracts; browser-loaded schema documents are normalized before they are supplied to the Model WASM library.
+This physical-import convention applies to the JavaScript loader used by browser and Node callers. The native Rust file loader still requires imported files to follow the root identifier's directory mapping. Browser-loaded schema documents are normalized before they are supplied to the Model WASM library.
 
 Widget styles live in the corresponding widget folders, including `platform/ui/widgets/json-choice-table/widget.css`.
 

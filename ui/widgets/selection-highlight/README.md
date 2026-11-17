@@ -3,7 +3,7 @@
 `widget.js` resolves a selected tree item to one or more scene targets using
 the graphics console's declared focus mode. The mode binds a source and can
 follow references through bound collections. The widget returns `{target,
-values}`; it does not assume that targets are FEM geometry.
+values}` without assuming a particular application domain.
 
 For renderers using normalized scene primitives, `selectionHighlightPrimitives`
 creates a styled overlay from primitives tagged with `id` or `ownerId`, or

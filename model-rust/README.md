@@ -24,9 +24,9 @@ The module currently provides:
 - `schema_resolve`: resolves a fragment's top-level `$ref` chain, retaining alternatives and sibling annotations.
 - `schema_at_path`: finds the effective schema for `request.path` in `request.model`. Paths contain object keys and nonnegative array indexes, including the empty root path. `resolveVariant: false` retains the terminal alternatives for controls that offer a choice of variants.
 - `schema_property` / `schema_item`: obtains a raw property or array-item rule after resolving the parent's active schema. `request.value` is optional for incomplete drafts. The key or index is supplied as `request.key` or `request.index`.
-- `transaction` / `validated_transaction`: replace, insert, clone and remove items; move items between schema-enabled collections; rename a declared symbol and its uses; or report deletion blockers. `move_item` accepts source/destination paths; `rename_symbol` accepts a declaration path and `nextSymbol`. The previous move and collection/index rename names remain compatibility aliases. Insertions take complete item data; named FEM insertion preparations have been retired. `validated_transaction` returns the candidate model and its structural validation errors.
+- `transaction` / `validated_transaction`: replace, insert, clone and remove items; move items between schema-enabled collections; rename a declared symbol and its uses; or report deletion blockers. `move_item` accepts source/destination paths; `rename_symbol` accepts a declaration path and `nextSymbol`. The previous move and collection/index rename names remain compatibility aliases. Insertions take complete item data. `validated_transaction` returns the candidate model and its structural validation errors.
 
-The editor and Kernel call the module through `platform/model-rust/js/api.js`. The application calls `configureModelSchema(schema, documents)` with the root schema and its referenced documents; the JavaScript adapter bundles references and registers the prepared schema in WASM. Server registrations use the canonical opened-file key; browser registrations are tab-local. WASM performs no filesystem or manifest loading and embeds no FEM schema. FEM static schema/capability/action checks live in `applications/fem3/js/model/model-schema.js`; JavaScript creates application defaults and snapshots models for asynchronous saves.
+Browser callers use `platform/model-rust/js/api.js`. The application calls `configureModelSchema(schema, documents)` with the root schema and its referenced documents; the JavaScript adapter bundles references and registers the prepared schema in WASM. Browser registrations are tab-local. WASM performs no filesystem or manifest loading and embeds no application schema. Native callers use the native model interface and supply their own schema and application policy.
 
 ### Additional public data operations
 
@@ -95,7 +95,7 @@ filesystem access, link checks, confinement and native path semantics. No host
 is installed implicitly. The data-based `program_registry` operation remains
 available in WASM.
 
-`validate_model` combines structural validation with any schema-declared rules. `study_result_csv_columns` is rejected because result-output contracts belong to the caller. The JavaScript compatibility helper `validateModel()` performs structural schema validation only. The FEM editor's **Validate** button sends the current model through its HTTP server and FEM application adapter to model WASM's structural and rule validation without launching a native executable. Native preparation and Study commands complete their preflight before scenario dispatch; scenarios retain numerical and mesh-dependent guards.
+`validate_model` combines structural validation with any schema-declared rules. `study_result_csv_columns` is rejected because result-output contracts belong to the caller. The JavaScript compatibility helper `validateModel()` performs structural schema validation only; callers that need rule validation can use the corresponding validation report APIs. Applications own any additional domain-specific checks.
 
 ## Schema navigation
 
@@ -103,7 +103,7 @@ The public native `navigation` module and the JSON operations above share the mo
 
 Fragment operations select their input using `schemaPath` within the supplied root. They also accept `schemaNode` for a fragment already bound to that prepared root, including a previous navigation result. Supply exactly one of these fields. The JavaScript adapter retains this reference context for returned schema nodes; keep returned nodes immutable and retain their object identity when making subsequent navigation calls. Presentation labels can be supplied separately. Imported or original unused definitions should be selected from their original schema context so their references can be prepared explicitly.
 
-`applications/fem3/js/model-editor-schema.js` delegates generic reference, path, property and item lookups through `platform/model-rust/js/api.js`. Its remaining code selects FEM actions, scenario options and physical defaults. Model values are supplied per operation. The WASM `SCHEMAS` map retains `RegisteredSchema { source, bundled, rule_context }` by schema handle in the browser; JavaScript retains its corresponding bundle and navigation caches. Browser tabs load separate WASM instances. The Rust Kernel does not retain model-WASM registrations. See [Document Kernels and interpreting schemas](../docs/kernel-contexts-and-interpreting-schemas.md) for storage ownership and lifetime.
+Applications can use `platform/model-rust/js/api.js` for generic reference, path, property and item lookups and supply their own actions and defaults. Model values are supplied per operation. The WASM `SCHEMAS` map retains `RegisteredSchema { source, bundled, rule_context }` by schema handle in the browser; JavaScript retains its corresponding bundle and navigation caches. Browser tabs load separate WASM instances. The Rust Kernel does not retain model-WASM registrations. See [Document Kernels and interpreting schemas](../docs/kernel-contexts-and-interpreting-schemas.md) for storage ownership and lifetime.
 
 ## Declarative editing
 
@@ -229,15 +229,13 @@ resolution and process execution remain operations of the native caller.
 
 ## Explicit schema contexts
 
-Every schema-backed request requires its schema on native and WASM targets. There is no embedded FEM fallback, model-version selection, application manifest reader or implicit installed-document lookup. Missing external documents are errors. A root schema and its reference imports form one logical schema; they are not separate application metadata sources.
+Every schema-backed request requires its schema on native and WASM targets. There is no embedded application schema fallback, model-version selection, application manifest reader or implicit installed-document lookup. Missing external documents are errors. A root schema and its reference imports form one logical schema; they are not separate application metadata sources.
 
 Native callers construct `SchemaContext::new(root, documents)`. Its `root()` is a bundled schema with local references; `documents()` retains the supplied original declarations. `new_with_entrypoints(root, documents, pointers)` also prepares explicitly selected definitions for other operations, such as request validation, while preserving root-relative references. Generic annotation queries expose document annotations and reachable schema nodes without interpreting application-specific keys. `model_role_values(model, role)` finds values marked by `x-fullmeta-role` in the active schema. Roles are opaque strings (or lists of strings) declared on schema nodes; the calling application determines their meaning. Schema-node queries follow the root and requested entry-point reference graph. Within annotations, only the exact `x-fullmeta-modelReference.targetSchema` position is traversed as schema, including its references. Other annotations, defaults and arbitrary data remain data.
 
 The optional native `schema_documents::load_schema_documents(root_path)` loads an explicitly selected root file and follows its local reference graph. It performs no application discovery and no network requests. The loader preserves document annotations and root-then-import order. Applications may instead provide documents directly or supply an already bundled schema, including in WASM requests.
 
-The FEM caller adapter is `fem-rust/src/model_schema.rs`. It selects the FEM root path, caches a context, interprets FEM profile/field/material/capability declarations, and supplies that context to generic validation. Profile and formulation values, plot-part declarations and integration-selection contracts are discovered using schema role annotations. FEM typed conversions and physical interpretation remain in that caller; no field or material lists are copied into Rust.
-
-Both `fullmeta-fem.exe` and the scenario executables link the native model library. The dispatcher passes the model, logical schema and metadata context to the generic validation program; scenario executables continue to use generic schema and metadata queries while performing numerical work. Scenario `x-fem-validation` flags are ordinary application data selected by that schema program; the library assigns no FEM meaning to those keys. Model and schema ownership remain with the caller.
+A native application selects its schema and can cache a context for generic validation and schema queries. The application interprets its own role annotations, domain-specific declarations and data. Model and schema ownership remain with the caller; the shared model library does not assign application-specific meanings to those declarations.
 
 ## Build the WASM module
 
@@ -249,7 +247,7 @@ npm run build:model-wasm
 
 The WASM module is built in `platform/model-rust/.build/wasm/` and copied to `platform/model-rust/wasm/fullmeta-model.wasm`. Cargo compiles it against the current `platform/core-rust` source. Running `npm run build:core-wasm` also rebuilds and publishes model WASM, so the normal core build refreshes both compiled copies. Set `FULLMETA_RUST_TOOLCHAIN` to select an installed toolchain when needed.
 
-Both the browser and Kernel compatibility API worker load the module through the same JavaScript adapter, once per runtime. Each operation sends one JSON request and receives one JSON response.
+Browser callers load the module through the JavaScript adapter. Each operation sends one JSON request and receives one JSON response. The Rust Kernel uses native platform components rather than a JavaScript compatibility worker.
 
 ## Runtime policy binding over JSON and WASM
 

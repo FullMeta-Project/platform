@@ -1,8 +1,8 @@
 # Widget packages
 
-Each visual widget folder has authoritative `widget.jsx`, compiled to the public
-`widget.js` and source map. Edit JSX, not its generated sibling. Pure behavior
-and data providers remain ordinary JS. Callers in the
+Widgets with a `widget.jsx` source compile it to the public `widget.js` entry
+and a source map. Edit JSX, not its generated sibling. Pure behavior and data
+providers remain ordinary JS. Callers in the
 editor, applications, schemas, and other widget folders import supported named
 exports from that entry. Files such as `runtime.js`, `design-editor.js`,
 `actions.js`, and `contract.js` implement the widget and are used directly only
@@ -72,12 +72,12 @@ application `ui/schemas/` folder when they need their own shared UI contracts.
 
 A schema declares its catalog paths in
 `x-fullmeta-ui-graphicsInterfaces.catalogs`. Those paths are relative to the
-schema file. For FEM they are `../../platform/ui/widgets/catalog.json` and
-`ui/widgets/catalog.json`. The generic loader in `shared/catalog.js` combines them and
+schema file. An application can declare both a shared platform catalog and its
+own catalog. The generic loader in `shared/catalog.js` combines them and
 reports duplicate catalog or widget IDs.
 Optional `uses` IDs declare dependencies on other entries in the combined
-catalogs. For example, the FEM vector component provider uses the shared
-`quantityVector` widget; it supplies metadata without duplicating its renderer.
+catalogs. For example, an application component can use the shared
+`quantityVector` widget and supply metadata without duplicating its renderer.
 
 In the schema editor, **Project integration → Widget catalogs** edits the path
 table and loads the combined list. **Use catalog widget** fills a Graphics
@@ -115,9 +115,8 @@ widgets simply because they use tables.
 The editor supplies document context and handles document transactions, validation,
 and persistence. Widgets render and edit the inputs supplied by their host.
 Application adapters interpret solver or application model data before passing
-normalized inputs to the shared widgets. FEM field artifacts are handled under
-`applications/fem3/js/results/`; the shared colorbar receives only a numeric
-range, label, units, and color function.
+normalized inputs to the shared widgets. For example, the shared colorbar
+receives only a numeric range, label, units, and color function.
 
 The composite `modelEditor` widget owns the complete tree/graphics/settings layout.
 An interpreting schema selects it with `x-fullmeta-ui-editor.widget`; the catalog

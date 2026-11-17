@@ -1,6 +1,6 @@
 # Shared plotting support
 
-These renderers accept application-neutral numeric data. An application adapter chooses the source data and converts it to the contracts owned by `plot-1d/`, `plot-2d/`, and `plot-3d/`; the plot widgets know nothing about a model schema, FEM, or a solver.
+These renderers accept application-neutral numeric data. An application adapter chooses the source data and converts it to the contracts owned by `plot-1d/`, `plot-2d/`, and `plot-3d/`; the plot widgets do not depend on a particular model schema or application.
 
 Numeric table selection and reconciliation are documented in [`../tables/README.md`](../tables/README.md). The public Plot 1D and Table widgets consume the same selected table view.
 
